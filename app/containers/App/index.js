@@ -81,6 +81,12 @@ export default function App() {
           render={routeProps=>(
             <Dashboard {...routeProps} />
           )} />
+        
+        <Route 
+          path="/inbox"
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} />
 
         
         

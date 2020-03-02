@@ -39,6 +39,7 @@ import FormPengajuan from '../FormPengajuan/Loadable';
 import UserDashboard from 'containers/UserDashboard/Loadable';
 import FormSubmissionStep from 'containers/FormSubmissionStep';
 import UserProfile from 'containers/UserProfile/Loadable';
+import UserInbox from 'containers/UserInbox/Loadable';
 // import ProductSelection from 'containers/ProductSelection/Loadable';
 // import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
@@ -86,6 +87,9 @@ class Dashboard extends React.Component {
     }
     if(value === "profil"){
       return history.replace('/profil');
+    }
+    if(value === "inbox"){
+      return history.replace('/inbox');
     }
     if(value === "pinjaman"){
       return null;
@@ -169,6 +173,14 @@ class Dashboard extends React.Component {
                       render={routeProps=>(
                         <UserProfile history={history} {...routeProps} />
                       )} />
+                    
+                    <Route 
+                      path="/inbox"
+                      render={routeProps=>(
+                        <UserInbox history={history} {...routeProps} />
+                      )} />
+                    
+
 
                     {/* <Route 
                       path="/application-form/step/customer/installment"
