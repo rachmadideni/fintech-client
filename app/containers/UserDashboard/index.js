@@ -7,7 +7,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
@@ -22,6 +22,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
+import { ArrowForwardSharp } from '@material-ui/icons';
 
 // Component
 import DashboardContainer from 'components/DashboardContainer';
@@ -51,6 +52,7 @@ class UserDashboard extends React.Component {
   }
 
   render(){
+    const { intl } = this.props
     return (
       <DashboardContainer 
         container 
@@ -61,18 +63,40 @@ class UserDashboard extends React.Component {
             imgProps={demimoore} 
             welcomeText={`Selamat datang \nMochammad Ibrahim Aprianto`} />
 
+          <Grid item style={{ paddingLeft:20, paddingRight:20 }}>
+            <Typography 
+              variant="body2"
+              align="center"              
+              style={{
+                fontFamily:typography.fontFamily,
+                fontSize:13,
+              }}>
+              {intl.formatMessage(messages.noApplicationYet)}
+            </Typography>
+            <Typography 
+              variant="body2"
+              align="center"
+              gutterBottom
+              style={{
+                fontFamily:typography.fontFamily,
+                fontSize:14,
+                fontWeight:'normal',
+                color:color.black
+              }}>
+              {intl.formatMessage(messages.pembiayaanMultiGuna)}
+            </Typography>
+          </Grid>
           <DashboardProduct 
-            chooseProductText="produk syariah"
+            chooseProductText=""
             productButtonProps={
-              <>
-              
+              <>              
               <DashboardButton 
                 fullWidth 
                 variant="contained" 
                 color="primary"
                 disableElevation
-                startIcon={<PagesIcon size="small" />}
-                text="Al Ijarah"
+                endIcon={<ArrowForwardSharp size="small" />}
+                text={intl.formatMessage(messages.btnPengajuan)}
                 onClick={this.onClickProduct} />
               
               {/* <DashboardButton 
@@ -175,5 +199,6 @@ const withConnect = connect(
 
 export default compose(
   withConnect,
+  injectIntl,
   memo,
 )(UserDashboard);

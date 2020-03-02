@@ -7,7 +7,10 @@ import {
     Apps,
     Book,
     Face,
-    MailOutline 
+    AccountCircleOutlined,
+    MailOutline,
+    EmailOutlined,
+    ListAltSharp 
   } from '@material-ui/icons'
 
 export const DEFAULT_ACTION = 'app/Dashboard/DEFAULT_ACTION';
@@ -17,15 +20,15 @@ export const TABS = [{
     value:'dashboard',
     icon:Apps
 },{
-    label:'pinjaman',
-    value:'pinjaman',
-    icon:Book
+    label:'history',
+    value:'aplikasi',
+    icon:ListAltSharp
 },{
-    label:'akun',
-    value:'akun',
-    icon:Face
+    label:'profil',
+    value:'profil',
+    icon:AccountCircleOutlined
 },{
-    label:'pesan',
+    label:'inbox',
     value:'pesan',
-    icon:MailOutline
+    icon:EmailOutlined
 }]

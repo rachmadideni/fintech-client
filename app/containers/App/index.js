@@ -14,8 +14,10 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from 'containers/Login/Loadable';
 import Verifikasi from 'containers/Verifikasi/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
-import ProductSelection from 'containers/ProductSelection/Loadable';
+// import ProductSelection from 'containers/ProductSelection/Loadable';
+import UserProfile from 'containers/UserProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+// import UserDashboard from 'containers/UserDashboard/Loadable';
 
 import GlobalStyle from '../../global-styles';
 
@@ -73,6 +75,13 @@ export default function App() {
           render={routeProps=>(
             <Dashboard {...routeProps} />
           )} />
+        
+        <Route 
+          path="/profil"
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} />
+
         
         
         {/* Disable sementara */}

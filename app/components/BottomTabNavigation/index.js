@@ -35,7 +35,7 @@ const NavigationAction = styled(BottomNavigationAction).attrs({
   .label {
     text-transform:capitalize;
     padding-top:2px;
-    font-size:11px;
+    font-size:10px;
     font-weight:bold;
     color:${color.white};
   } 
