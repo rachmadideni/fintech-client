@@ -9,13 +9,13 @@ import { defineMessages } from 'react-intl';
 export const scope = 'app.containers.Verifikasi';
 
 export default defineMessages({
-  header: {
+  verifikasi: {
     id: `${scope}.header`,
-    defaultMessage: 'Verifikasi akun',
+    defaultMessage: 'Verifikasi user',
   },
   nik:{
     id:`${scope}.nik`,
-    defaultMessage:'Nomor Induk Karyawan'
+    defaultMessage:'NIK'
   },
   email:{
     id:`${scope}.email`,
@@ -27,10 +27,34 @@ export default defineMessages({
   },
   btnVerifikasi:{
     id:`${scope}.btnVerifikasi`,
-    defaultMessage:'proses'
+    defaultMessage:'proses verifikasi'
+  },
+  btnCancel:{
+    id:`${scope}.btnCancel`,
+    defaultMessage:'Batal'
   },
   goBack:{
     id:`${scope}.goBack`,
     defaultMessage:'kembali'
+  },
+  emptyNik:{
+    id:`${scope}.emptyNik`,
+    defaultMessage:'NIK wajib diisi'
+  },
+  emptyEmail:{
+    id:`${scope}.emptyEmail`,
+    defaultMessage:'alamat email wajib diisi'
+  },
+  wrongEmailFormat:{
+    id:`${scope}.wrongEmailFormat`,
+    defaultMessage:'format email salah'
+  },
+  emptyNomorTelpon:{
+    id:`${scope}.emptyNomorTelpon`,
+    defaultMessage:'nomor telpon wajib diisi'
+  },
+  pleaseWaitIsLoading:{
+    id:`${scope}.pleaseWaitIsLoading`,
+    defaultMessage:'mohon tunggu\n sedang melakukan verifikasi'
   }
 });

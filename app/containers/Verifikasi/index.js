@@ -7,63 +7,66 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectVerifikasi from './selectors';
+import injectSaga from 'utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import {
+  makeSelectIsLoading,
+  makeSelectUser,
+  makeSelectErrorMessage
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Button,
-  Grid,
-  Typography,
-  TextField,
-  FormControl,
-  Backdrop,
-  CircularProgress
-} from '@material-ui/core';
+  changeNikAction,
+  changeEmailAction,
+  changeTeleponAction,
+  verifikasiAction
+} from './actions'
 
-import {
-  ChevronLeft
-} from '@material-ui/icons';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
 
-import { color } from '../../styles/constants';
+import { color, typography } from '../../styles/constants';
 
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
-import isMobilePhone from 'validator/lib/isMobilePhone';
+// import isMobilePhone from 'validator/lib/isMobilePhone';
 
 class Verifikasi extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      nik:"",
-      email:"",
-      nomorTelpon:"",
+      // nik:"",
+      // email:"",
+      // nomorTelpon:"",
       error:{
         nik:null,
         email:null,
         nomorTelpon:null
       },
       isSubmitTriggered:false,
-      isProcessing:false
+      // isProcessing:false
     }
   }
 
   validateNik = nik => {
+    const { intl } = this.props
     let isError = false;
     let errorMsg = null;
     if(isEmpty(nik)){
       isError = true;
-      errorMsg = 'nomor induk karyawan tidak boleh kosong'
+      errorMsg = intl.formatMessage(messages.emptyNik);
     } else {
       isError = false;
       errorMsg = null
@@ -80,14 +83,15 @@ class Verifikasi extends React.Component {
   }
 
   validateEmail = email => {
+    const { intl } = this.props
     let isError = false;
     let errorMsg = null;
     if(isEmpty(email)){
       isError = true;
-      errorMsg = 'email tidak boleh kosong'
+      errorMsg = intl.formatMessage(messages.emptyEmail);
     } else if (!isEmail(email)){
       isError = true;
-      errorMsg = 'format email salah';
+      errorMsg = intl.formatMessage(messages.wrongEmailFormat);
     } else {
       isError = false;
       errorMsg = null
@@ -104,11 +108,12 @@ class Verifikasi extends React.Component {
   }
 
   validateTelpon = telpon => {
+    const { intl } = this.props
     let isError = false;
     let errorMsg = null;
     if(isEmpty(telpon)){
       isError = true;
-      errorMsg = 'nomor telpon tidak boleh kosong'
+      errorMsg = intl.formatMessage(messages.emptyNomorTelpon);
     } 
     // else if (isMobilePhone(telpon)){
     //   console.log(isMobilePhone(telpon));
@@ -128,54 +133,25 @@ class Verifikasi extends React.Component {
       }
     }));
     return !isError;
-  }
-
-  changeNik = nik => {
-    this.setState(state=>({
-      ...state,
-      nik
-    }))
-  }
-  
-  changeEmail = email => {
-    this.setState(state=>({
-      ...state,
-      email
-    }))
-  }
-  
-  changeNomorTelpon = nomorTelpon => {
-    this.setState(state=>({
-      ...state,
-      nomorTelpon
-    }))
-  }
-
-  handleProcessing = () => {
-    this.setState(state=>({
-      ...state,
-      isProcessing:false
-    }))
-  }
+  }  
 
   handleSubmit = evt => {
     evt.preventDefault();
-    const { nik, email, nomorTelpon } = this.state;
-    this.setState(state=>({
+    const { user } = this.props;
+    
+      this.setState(state=>({
       ...state,
       isSubmitTriggered:true
     }));
 
-    if(this.validateNik(nik) && this.validateEmail(email) && this.validateTelpon(nomorTelpon)){
-      console.log('okay');
-      this.setState( state => ({
-        ...state,
-        isProcessing:true
-      }))
+    if(
+      this.validateNik(user.nik) && 
+      this.validateEmail(user.email) && 
+      this.validateTelpon(user.nomtel)
+    ){      
+      return this.props.verifikasi();
     }
-
     return false;
-
   }
 
   handleBack = () => {
@@ -184,147 +160,187 @@ class Verifikasi extends React.Component {
   }
 
   render(){
-    const { intl } = this.props
+    const { 
+      intl,
+      changeNik,
+      changeEmail,
+      changeTelepon,
+      user,
+      isLoading
+    } = this.props
     return (
       <Grid 
         container
         wrap="nowrap"
+        direction="column"
         style={{
-          height:'100%',
+          // height:'100%',
           justifyContent:'center',
-          alignItems:'center'
+          alignItems:'center',
+          paddingLeft:40,
+          paddingRight:40
         }}>
-          <Backdrop 
-            open={this.state.isProcessing} 
-            onClick={this.handleProcessing}
-            style={{
-              zIndex:1000,
-              color:'#FFFFFF'
-            }}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-          <AppBar style={{
-            backgroundColor:'transparent',
-            boxShadow:'none'
-          }}>
-            <Toolbar>
-            <IconButton 
-              edge="start" 
-              onClick={this.handleBack}
+          <Grid item xs>
+            <Backdrop 
+              open={isLoading} 
+              onClick={()=>console.log('backdrop is clicked!')}
               style={{
-                color:color.grey
+                zIndex:1000,
+                color:'#FFFFFF'
               }}>
-                <ChevronLeft />
-            </IconButton>
-            <Typography                
-              style={{
-                fontSize:16,
-                color:color.grey
-              }}>
-                {intl.formatMessage(messages.goBack)}
-            </Typography>
-            </Toolbar>
-          </AppBar>
+                <Grid 
+                  container 
+                  wrap="nowrap" 
+                  direction="column"
+                  justify="center"
+                  alignItems="center"
+                  style={{
+                    width:150,                    
+                  }}>
+                  <Typography 
+                    variant="body2"
+                    align="center"
+                    gutterBottom
+                    style={{
+                      fontFamily:typography.fontFamily,
+                      marginBottom:20
+                    }}>
+                      <FormattedMessage {...messages.pleaseWaitIsLoading} />
+                      {/* {intl.formatMessage(messages.pleaseWaitIsLoading)} */}
+                      
+                  </Typography>
+                  <CircularProgress 
+                    color="inherit" />
+                </Grid>
+            </Backdrop>
+          </Grid>
           <Grid
-            item
-            xs={10}
-            sm={10}
-            lg={10}
-            style={{              
-              flex:1,
-              backgroundColor:'transparent'
-            }}>
+            item xs>
               <Grid 
                 container
                 wrap="nowrap"
-                direction="column" 
-                style={{ 
-                  backgroundColor:'transparent'
-                }}>
-                  <Grid item xs>
+                direction="column">
+                  <Grid 
+                    item xs
+                    style={{
+                      justifyContent:'center',
+                      alignItems:'center'
+                    }}>
+
                     <form 
                       autoComplete="off">
-                        <Grid item>
-                          <Typography 
-                            variant="h6"
-                            color="primary"
-                            align="center"
-                            gutterBottom
-                            style={{
-                              fontWeight:'bold'
+                        <Grid 
+                          container 
+                          wrap="nowrap"
+                          direction="column">
+                            <Grid item style={{
+                              marginTop:100
                             }}>
-                            {intl.formatMessage(messages.header)}  
-                            </Typography>
-                            
-                            <FormControl 
-                              margin="normal" 
-                              fullWidth>
-                                <TextField 
-                                  id="nik" 
-                                  name="nik"                               
-                                  label={intl.formatMessage(messages.nik)}
-                                  value={this.state.nik}
-                                  type="text" 
-                                  fullWidth
-                                  onChange={ evt => {
-                                    if(this.state.isSubmitTriggered){
-                                      this.validateNik(evt.target.value);
-                                    }
-                                    return this.changeNik(evt.target.value)
-                                  }}
-                                  error={!!this.state.error.nik}
-                                  helperText={this.state.error.nik} />
-                            </FormControl>
-                            <FormControl 
-                              margin="normal" 
-                              fullWidth>
-                                <TextField 
-                                  id="email" 
-                                  name="email"                               
-                                  label={intl.formatMessage(messages.email)}
-                                  value={this.state.email}
-                                  type="email" 
-                                  fullWidth
-                                  onChange={ evt => {
-                                    if(this.state.isSubmitTriggered){
-                                      this.validateEmail(evt.target.value);
-                                    }
-                                    return this.changeEmail(evt.target.value)
-                                  }}
-                                  error={!!this.state.error.email}
-                                  helperText={this.state.error.email} />
-                              </FormControl>
-                              <FormControl 
-                                margin="normal" 
-                                fullWidth>
-                                <TextField 
-                                  id="nomtel" 
-                                  name="nomtel"                               
-                                  label={intl.formatMessage(messages.nomorTelpon)}
-                                  value={this.state.nomorTelpon}
-                                  type="number" 
-                                  fullWidth
-                                  onChange={ evt => {
-                                    if(this.state.isSubmitTriggered){
-                                      this.validateTelpon(evt.target.value);
-                                    }
-                                    return this.changeNomorTelpon(evt.target.value)
-                                  }}
-                                  error={!!this.state.error.nomorTelpon}
-                                  helperText={this.state.error.nomorTelpon} />
-                            </FormControl>
-                            <Button
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              disabled={!!this.state.error.email || !!this.state.error.nik || !!this.state.error.nomorTelpon}
-                              onClick={this.handleSubmit}
-                              style={{
-                                marginTop:10
-                              }}>
-                                {intl.formatMessage(messages.btnVerifikasi)}
-                            </Button>
-                        </Grid>
+                              <Typography 
+                                variant="h6"
+                                color="primary"
+                                align="center"
+                                gutterBottom
+                                style={{
+                                  fontWeight:'bold'
+                                }}>
+                                {intl.formatMessage(messages.verifikasi)}  
+                                </Typography>
+
+                                <FormControl 
+                                  margin="normal" 
+                                  fullWidth>
+                                    <TextField 
+                                      id="nik" 
+                                      name="nik"                               
+                                      label={intl.formatMessage(messages.nik)}
+                                      value={user.nik}
+                                      type="text" 
+                                      fullWidth
+                                      onChange={ evt => {
+                                        if(this.state.isSubmitTriggered){
+                                          this.validateNik(evt.target.value);
+                                        }
+                                        return changeNik(evt.target.value)
+                                      }}
+                                      error={!!this.state.error.nik}
+                                      helperText={this.state.error.nik}
+                                      style={{
+                                        fontFamily:typography.fontFamily                                        
+                                      }} />
+                                </FormControl>
+                                <FormControl 
+                                  margin="normal" 
+                                  fullWidth>
+                                    <TextField 
+                                      id="email" 
+                                      name="email"                               
+                                      label={intl.formatMessage(messages.email)}
+                                      value={user.email}
+                                      type="email" 
+                                      fullWidth
+                                      onChange={ evt => {
+                                        if(this.state.isSubmitTriggered){
+                                          this.validateEmail(evt.target.value);
+                                        }
+                                        return changeEmail(evt.target.value)
+                                      }}
+                                      error={!!this.state.error.email}
+                                      helperText={this.state.error.email}
+                                      style={{
+                                        fontFamily:typography.fontFamily
+                                      }} />
+                                  </FormControl>
+                                  <FormControl 
+                                    margin="normal" 
+                                    fullWidth>
+                                      <TextField 
+                                        id="nomtel" 
+                                        name="nomtel"                               
+                                        label={intl.formatMessage(messages.nomorTelpon)}
+                                        value={user.nomtel}
+                                        type="number" 
+                                        fullWidth
+                                        onChange={ evt => {
+                                          if(this.state.isSubmitTriggered){
+                                            this.validateTelpon(evt.target.value);
+                                          }
+                                          return changeTelepon(evt.target.value)
+                                        }}
+                                        error={!!this.state.error.nomorTelpon}
+                                        helperText={this.state.error.nomorTelpon}
+                                        style={{
+                                          fontFamily:typography.fontFamily
+                                        }} />
+                                  </FormControl>
+                                  <Button
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={!!this.state.error.email || !!this.state.error.nik || !!this.state.error.nomorTelpon}
+                                    onClick={this.handleSubmit}
+                                    disableElevation
+                                    style={{
+                                      marginTop:10,
+                                      fontFamily:typography.fontFamily,
+                                      textTransform:'capitalize'
+                                    }}>
+                                      {intl.formatMessage(messages.btnVerifikasi)}
+                                  </Button>
+                                  <Button
+                                    fullWidth
+                                    variant="outlined"
+                                    color="primary"                                    
+                                    onClick={()=>console.log('cancel')}
+                                    style={{
+                                      marginTop:10,
+                                      fontFamily:typography.fontFamily,
+                                      textTransform:'capitalize'
+                                    }}>
+                                      {intl.formatMessage(messages.btnCancel)}
+                                  </Button>
+                            </Grid>
+                        </Grid>                        
                     </form>
                   </Grid>
                 </Grid>
@@ -334,13 +350,28 @@ class Verifikasi extends React.Component {
   }
 }
 
+Verifikasi.propTypes = {
+  isLoading:PropTypes.bool,
+  user:PropTypes.object,
+  error:PropTypes.object,
+  changeNik:PropTypes.func,
+  changeEmail:PropTypes.func,
+  changeTelepon:PropTypes.func,
+  verifikasi:PropTypes.func
+}
+
 const mapStateToProps = createStructuredSelector({
-  verifikasi: makeSelectVerifikasi(),
+  isLoading: makeSelectIsLoading(),
+  user: makeSelectUser(),
+  error: makeSelectErrorMessage()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    changeNik: (nik) => dispatch(changeNikAction(nik)),
+    changeEmail: (email) => dispatch(changeEmailAction(email)),
+    changeTelepon: (nomtel) => dispatch(changeTeleponAction(nomtel)),
+    verifikasi: () => dispatch(verifikasiAction())
   };
 }
 
@@ -349,8 +380,13 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
+const withReducer = injectReducer({ key:"verifikasi", reducer });
+const withSaga = injectSaga({ key:"verifikasiSaga", saga });
+
 export default compose(
+  withReducer,
+  withSaga,
   withConnect,
-  memo,
   injectIntl,
+  memo,
 )(Verifikasi);
