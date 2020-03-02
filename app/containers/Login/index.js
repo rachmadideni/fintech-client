@@ -7,42 +7,43 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import { makeSelectLogin } from './selectors';
+import injectSaga from 'utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import { 
+  makeSelectLogin,
+  makeSelectCredential,
+  makeSelectError,
+  makeSelectIsLoading } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-
-import { changeEmailAction, changePasswordAction } from './actions';
-
+import { color } from 'styles/constants';
 import {
-  Grid,
-  Typography,
-  TextField,
-  Button,
-  Snackbar,
-  InputAdornment,
-  IconButton,
-  Backdrop,
-  CircularProgress,
-  FormControl
-} from '@material-ui/core'
+  changeNikAction, 
+  changePasswordAction,
+  loginAction
+} from './actions';
 
-import {
-  Visibility,
-  VisibilityOff
-} from '@material-ui/icons'
-import injectReducer from '../../utils/injectReducer';
-import injectSaga from '../../utils/injectSaga';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from '@material-ui/core/FormControl';
 
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import isEmpty from 'validator/lib/isEmpty';
-import isEmail from 'validator/lib/isEmail';
+// import isEmail from 'validator/lib/isEmail';
 
 class Login extends React.Component {
   constructor(props){
@@ -52,11 +53,13 @@ class Login extends React.Component {
       email:"",
       password:"",
       error:{
+        nik:null,
         email:null,
         password:null
       },
       isSubmitTriggered:false,
-      isProcessing:false
+      isProcessing:false,
+      showPassword:false
     }
   }
 
@@ -70,29 +73,27 @@ class Login extends React.Component {
     })
   }
   
-  changeEmail = email => {
-    this.setState(state=>({
-      ...state,
-      email
-    }))
-  }
+  // changeEmail = email => {
+  //   this.setState(state=>({
+  //     ...state,
+  //     email
+  //   }))
+  // }
   
-  changePassword = password => {
-    this.setState(state=>({
-      ...state,
-      password
-    }))
-  }
-
-  validateEmail = email => {
+  // changePassword = password => {
+  //   this.setState(state=>({
+  //     ...state,
+  //     password
+  //   }))
+  // }
+  
+  validateNik = nik => {
+    const { intl } = this.props;
     let isError = false;
     let errorMsg = null;
-    if(isEmpty(email)){
+    if(isEmpty(nik)){
       isError = true;
-      errorMsg = 'email tidak boleh kosong'
-    } else if (!isEmail(email)){
-      isError = true;
-      errorMsg = 'format email salah';
+      errorMsg = intl.formatMessage(messages.emptyNik);
     } else {
       isError = false;
       errorMsg = null
@@ -102,18 +103,19 @@ class Login extends React.Component {
       ...state,
       error:{
         ...state.error,
-        email:errorMsg
+        nik:errorMsg
       }
     }));
     return !isError;
   }
-  
+
   validatePassword = password => {
+    const { intl } = this.props;
     let isError = false;
     let errorMsg = null;
     if(isEmpty(password)){
       isError = true;
-      errorMsg = 'password tidak boleh kosong'
+      errorMsg = intl.formatMessage(messages.emptyPassword);
     } else {
       isError = false;
       errorMsg = null
@@ -136,22 +138,22 @@ class Login extends React.Component {
   
   handleSubmit = evt => {
     evt.preventDefault();
-    const { email, password } = this.state;
+    // const { email, password } = this.state;
+    const { credential } = this.props;
     this.setState(state=>({
       ...state,
       isSubmitTriggered:true
     }));
 
-    if(this.validateEmail(email) && this.validatePassword(password)){
-      console.log('okay');
-      this.setState( state => ({
-        ...state,
-        isProcessing:true
-      }))
+    if(this.validateNik(credential.nik) && this.validatePassword(credential.password)){
+      console.log('validated ok. now youre login');
+      // this.setState( state => ({
+      //   ...state,
+      //   isProcessing:true
+      // }))
+      return this.props.login();
     }
-
-    return false;    
-
+    return false;
   }
 
   handleProcessing = () => {
@@ -161,42 +163,67 @@ class Login extends React.Component {
     }))
   }
 
+  handleClickShowPassword = () => {
+    this.setState(state => ({ showPassword: !state.showPassword }));
+  };
+
   render(){
     const { 
       intl, 
       credential,
       login,
-      changeEmail,
-      changePassword } = this.props;
+      isLoading,
+      changeNik,
+      changePassword 
+    } = this.props;
 
     return (
       <Grid 
         container 
-        wrap="nowrap"      
-        style={{        
-          height:'100%',
+        wrap="nowrap"
+        direction="column"      
+        style={{
           justifyContent:'center',
-          alignItems:'center'
+          alignItems:'center',
+          paddingLeft:40,
+          paddingRight:40
         }}>
-          <Backdrop 
-            open={this.state.isProcessing} 
-            onClick={this.handlePro}
-            style={{
-              zIndex:1000,
-              color:'#FFFFFF'
-            }}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
+          
+          <Grid item xs>            
+            <Backdrop 
+              open={isLoading} 
+              onClick={this.handlePro}
+              style={{
+                zIndex:1000,
+                color:'#FFFFFF'
+              }}>
+                <Grid 
+                  container 
+                  wrap="nowrap" 
+                  direction="column"
+                  justify="center"
+                  alignItems="center"
+                  style={{
+                    width:150,                    
+                  }}>
+                  <Typography 
+                    variant="body2"
+                    align="center"
+                    gutterBottom
+                    style={{
+                      fontFamily:typography.fontFamily,
+                      marginBottom:20
+                    }}>
+                    {intl.formatMessage(messages.pleaseWaitIsLoading)}
+                  </Typography>
+                  <CircularProgress 
+                    color="inherit" />
+              </Grid>
+            </Backdrop>
+          </Grid>
+
           <Grid 
-            item 
-            xs={10} 
-            sm={10} 
-            lg={10} 
-            style={{
-              height:'100%',              
-              // backgroundColor:'#FCFCFC'
-              // backgroundColor:'red'
-            }}>
+            item xs>
               <Grid 
                 container 
                 wrap="nowrap"
@@ -207,59 +234,82 @@ class Login extends React.Component {
                   style={{ 
                     justifyContent:'center',
                     alignItems:'center'
-                    }}>
-                  <form autoComplete="off" style={{ backgroundColor:'transparent' }}>              
-                    <Grid container wrap="nowrap" direction="column" style={{ flex:1 }}>
+                  }}>
+
+                  <form 
+                    autoComplete="off">
+
                     <Grid 
-                      item 
-                      style={{ 
-                        flex:1,
-                        marginTop:180,
-                        backgroundColor:'transparent'
-                      }}>
-                    <Typography 
-                      variant="h5"
-                      color="primary"
-                      align="center"
-                      gutterBottom>
-                        {intl.formatMessage(messages.header)}                    
-                    </Typography>
-                      <FormControl margin="normal" fullWidth>
+                      container 
+                      wrap="nowrap" 
+                      direction="column"
+                      justify="center"
+                      alignItems="center">
+                      
+                      <Grid 
+                        item 
+                        style={{ 
+                          // flex:1,
+                          marginTop:100,
+                          backgroundColor:'transparent'
+                        }}>
+
+                        <Typography 
+                          variant="h5"
+                          color="primary"
+                          align="center"
+                          gutterBottom>
+                            {intl.formatMessage(messages.header)}                    
+                        </Typography>
+                      
+                      <FormControl 
+                        margin="normal" 
+                        fullWidth>
                         <TextField 
-                          id="email" 
-                          name="email"
-                          value={this.state.email} 
-                          label={intl.formatMessage(messages.email)}                  
-                          type="email" 
+                          id="nik" 
+                          name="nik"
+                          value={credential.nik} 
+                          label={intl.formatMessage(messages.nik)}
+                          style={{ textTransform:'capitalize' }}
+                          type="text"
                           fullWidth
                           onChange={evt=>{
                             if(this.state.isSubmitTriggered){
-                              this.validateEmail(evt.target.value);
+                              this.validateNik(evt.target.value);
                             }
-                            return this.changeEmail(evt.target.value)
+                            return changeNik(evt.target.value)
                           }}
-                          error={!!this.state.error.email}
-                          helperText={this.state.error.email} />
+                          error={!!this.state.error.nik}
+                          helperText={this.state.error.nik} />
                       </FormControl>
                       <FormControl margin="normal" fullWidth>
                         <TextField 
                           id="password" 
                           name="password" 
-                          value={this.state.password}
+                          value={credential.password}
                           label={intl.formatMessage(messages.password)}
+                          style={{ textTransform:'capitalize' }}
                           onChange={evt=>{
                             if(this.state.isSubmitTriggered){
                               this.validatePassword(evt.target.value);
                             }
-                            return this.changePassword(evt.target.value);
+                            return changePassword(evt.target.value);
                           }}                 
-                          type="password" 
+                          type={this.state.showPassword ? 'text' : 'password'} 
                           fullWidth
                           InputProps={{
                             endAdornment:(
                               <InputAdornment position="end">
-                                <IconButton color="inherit">
-                                  <Visibility />
+                                <IconButton 
+                                  color="inherit"
+                                  onClick={this.handleClickShowPassword}>
+                                  {
+                                    this.state.showPassword ? (
+                                      <Visibility style={{ color:color.black }} />
+                                    ) : (
+                                      <VisibilityOff style={{ color:color.grey }} />
+                                    )
+                                  }
                                 </IconButton>
                               </InputAdornment>
                             )
@@ -271,7 +321,7 @@ class Login extends React.Component {
                         fullWidth 
                         variant="contained" 
                         color="primary"
-                        onClick={this.toggleBackdrop}
+                        onClick={this.handleSubmit}
                         style={{ 
                           marginTop:10,
                           boxShadow:'none'
@@ -294,8 +344,8 @@ class Login extends React.Component {
                             fontWeight:'bold',
                             padding:5
                         }}>
-                          <FormattedMessage {...messages.forgotPasswordText} />                      
-                        </Typography>
+                          {intl.formatMessage(messages.forgotPasswordText)}
+                       </Typography>
                         <Button 
                           fullWidth 
                           variant="outlined" 
@@ -312,8 +362,8 @@ class Login extends React.Component {
                             fontWeight:'bold',
                             padding:5
                         }}>
-                          <FormattedMessage {...messages.accountNotVerified} />                      
-                        </Typography>
+                          {intl.formatMessage(messages.accountNotVerified)}
+                         </Typography>
                         
                         <Button 
                           onClick={this.handleVerification}
@@ -323,10 +373,13 @@ class Login extends React.Component {
                           style={{ marginTop:0 }}>
                             {intl.formatMessage(messages.verificationButton)}                      
                         </Button>
+
                       </Grid>
                     </Grid>
                     <Snackbar 
-                      anchorOrigin={{ vertical:'top',horizontal:'left'}}
+                      anchorOrigin={{ 
+                        vertical:'top',
+                        horizontal:'left'}}
                       open={false}
                       autoHideDuration={5000}
                       message={'test snackbar bosku'}>
@@ -346,14 +399,15 @@ class Login extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
-  // credential: makeSelectCredential()
+  credential: makeSelectCredential(),
+  isLoading: makeSelectIsLoading()
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    changeEmail: email => dispatch(changeEmailAction(email)),
+  return {    
+    changeNik: nik => dispatch(changeNikAction(nik)),
     changePassword: password => dispatch(changePasswordAction(password)),
-
+    login: () => dispatch(loginAction())
   };
 }
 
@@ -361,8 +415,6 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
-
-
 
 export default compose(
   injectReducer({ key:"login", reducer }),

@@ -29,6 +29,10 @@ export default defineMessages({
     id:`${scope}.resetPasswordButton`,
     defaultMessage:'Reset Password'
   },
+  nik:{
+    id:`${scope}.nik`,
+    defaultMessage:'NIK'
+  },
   email:{
     id:`${scope}.email`,
     defaultMessage:'email'
@@ -44,5 +48,17 @@ export default defineMessages({
   NotVerifiedRoute:{
     id:`${scope}.NotVerifiedRoute`,
     defaultMessage:'/verifikasi'
+  },
+  emptyNik:{
+    id:`${scope}.emptyNik`,
+    defaultMessage:'NIK wajib diisi'
+  },
+  emptyPassword:{
+    id:`${scope}.emptyPassword`,
+    defaultMessage:'Password wajib diisi'
+  },
+  pleaseWaitIsLoading:{
+    id:`${scope}.pleaseWaitIsLoading`,
+    defaultMessage:'mohon tunggu\n'
   }
 });

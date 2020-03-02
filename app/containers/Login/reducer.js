@@ -5,15 +5,24 @@
  */
 import produce from 'immer';
 import { 
-  DEFAULT_ACTION,
+  // DEFAULT_ACTION,
+  CHANGE_NIK,
   CHANGE_EMAIL,
-  CHANGE_PASSWORD
+  CHANGE_PASSWORD,
+  LOGIN_ACTION,
+  LOGIN_SUCCESS_ACTION,
+  LOGIN_ERROR_ACTION
 } from './constants';
 
 export const initialState = {
+  isLoading:false,
   credential:{
     email:"",
+    nik:"",
     password:""
+  },
+  error:{
+    message:null
   }
 };
 
@@ -21,13 +30,28 @@ export const initialState = {
 const loginReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case CHANGE_NIK:
+        draft.credential.nik = action.payload;
+        return draft;
       case CHANGE_EMAIL:
-        draft.email = action.payload;
+        draft.credential.email = action.payload;
         break;
       case CHANGE_PASSWORD:
-        draft.password = action.payload;
+        draft.credential.password = action.payload;
         break;
+      case LOGIN_ACTION:
+        draft.isLoading = true;
+        draft.error.message = null;
+        return draft;
+      case LOGIN_SUCCESS_ACTION:
+        draft.isLoading = false;
+        return draft;
+      case LOGIN_ERROR_ACTION:
+        draft.isLoading = false;
+        draft.error.message = action.payload.error;
+        return draft;
     }
+    return draft;
   });
 
 export default loginReducer;
