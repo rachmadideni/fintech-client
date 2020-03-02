@@ -9,8 +9,8 @@ import { defineMessages } from 'react-intl';
 export const scope = 'app.containers.UserInbox';
 
 export default defineMessages({
-  header: {
-    id: `${scope}.header`,
-    defaultMessage: 'This is the UserInbox container!',
+  inbox: {
+    id: `${scope}.inbox`,
+    defaultMessage: 'inbox',
   },
 });

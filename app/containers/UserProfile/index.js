@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import makeSelectUserProfile from './selectors';
 import messages from './messages';
+
 import { color, typography} from 'styles/constants';
 import waveBackground from '../../images/wave.svg';
 // import demimoore from '../../images/demimoore.jpg';
@@ -131,6 +132,7 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
+
 
 export default compose(
   withConnect,

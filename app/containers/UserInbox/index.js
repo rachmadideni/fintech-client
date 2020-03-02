@@ -11,12 +11,15 @@ import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectUserInbox from './selectors';
+import injectSaga from 'utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+
 import reducer from './reducer';
 import saga from './saga';
+import makeSelectUserInbox from './selectors';
+import { fetchInboxAction } from './actions';
 import messages from './messages';
+
 import { INBOX } from './constants';
 import { color, typography } from 'styles/constants';
 import styled from 'styled-components';
@@ -62,9 +65,16 @@ const CardTile = styled(props=>{
 class UserInbox extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      isLoading:true,
-    }
+    this.loadInbox = this.loadInbox.bind(this); 
+  }
+
+  componentDidMount(){
+    this.loadInbox();
+  }
+
+  loadInbox(){
+    // call saga to fetch inbox data
+    return this.props.fetchInbox();
   }
 
   renderSkeleton = () => {
@@ -83,6 +93,10 @@ class UserInbox extends React.Component {
     return skeleton_list;
   }
   render(){
+    const { 
+      intl,
+      userInbox
+    } = this.props;
     return (
       <Grid 
         container 
@@ -94,9 +108,9 @@ class UserInbox extends React.Component {
           <Grid item>
             <StyledHeader 
               variant="h6">
-              inbox
+              {intl.formatMessage(messages.inbox)}
             </StyledHeader>
-            {this.state.isLoading ? this.renderSkeleton() : 
+            {userInbox.isFetching ? this.renderSkeleton() : 
             <GridList cellHeight={60} style={{ marginTop:20 }}>
               {INBOX.map((item,i)=>(
                 <GridListTile cols={2} rows={0}>
@@ -131,7 +145,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    // dispatch,
+    fetchInbox: () => dispatch(fetchInboxAction())
   };
 }
 
@@ -140,7 +155,13 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
+const withReducer = injectReducer({ key: 'userInbox', reducer });
+const withSaga = injectSaga({ key: 'userInboxSaga', saga });
+
 export default compose(
+  withReducer,
+  withSaga,
   withConnect,
+  injectIntl,
   memo,
 )(UserInbox);
