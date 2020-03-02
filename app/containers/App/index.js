@@ -9,13 +9,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import HomePage from 'containers/HomePage/Loadable';
-import FeaturePage from 'containers/FeaturePage/Loadable';
+import Login from 'containers/Login/Loadable';
+import Verifikasi from 'containers/Verifikasi/Loadable';
+import Dashboard from 'containers/Dashboard/Loadable';
+import ProductSelection from 'containers/ProductSelection/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
 
@@ -23,27 +23,68 @@ const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
   margin: 0 auto;
   display: flex;
-  min-height: 100%;
-  padding: 0 16px;
   flex-direction: column;
+  background-color:#FFFFFF;
+  // min-height: 100%;
+  // height:100vh;
+  // padding: 0 16px;
 `;
 
 export default function App() {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        titleTemplate="%s - Mitra Pembiayaan Syariah"
+        defaultTitle="Mitra Pembiayaan Syariah"
       >
-        <meta name="description" content="A React.js Boilerplate application" />
+        <meta name="description" content="Aplikasi Mitra Pembiayaan Syariah" />
       </Helmet>
-      <Header />
       <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/features" component={FeaturePage} />
+        
+        <Route 
+          exact 
+          path="/" 
+          render={()=> <Redirect to="/login" />} />
+        
+        <Route 
+          path="/login" 
+          component={Login} />
+        
+        <Route 
+          exact 
+          path="/verifikasi" 
+          component={Verifikasi} />
+        
+        <Route 
+          exact          
+          path="/dashboard" 
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} />
+        
+        <Route 
+          path="/application-form/step/customer"
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} />
+
+        <Route
+          path="/application-form/step/customer/section:(installment|personal-details|work-related|documents|summary)"
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} />
+        
+        
+        {/* Disable sementara */}
+        {/* <Route           
+          path="/pinjaman/:section(step|angsuran|pengajuan)" 
+          render={routeProps=>(
+            <Dashboard {...routeProps} />
+          )} /> */}
+                
+
         <Route path="" component={NotFoundPage} />
       </Switch>
-      <Footer />
       <GlobalStyle />
     </AppWrapper>
   );
