@@ -9,42 +9,32 @@
 
 import produce from 'immer';
 import { 
-  LOAD_REPOS_SUCCESS, 
-  LOAD_REPOS, 
-  LOAD_REPOS_ERROR
+  SET_AUTH_TOKEN_ACTION,
+  REMOVE_AUTH_TOKEN_ACTION
  } from './constants';
 
 // The initial state of the App
 export const initialState = {
   loading: false,
-  error: false,
-  currentUser: false,
-  userData: {
-    repositories: false,
-  },
+  auth:{
+    token:null
+  }
 };
 
 /* eslint-disable default-case, no-param-reassign */
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case LOAD_REPOS:
-        draft.loading = true;
-        draft.error = false;
-        draft.userData.repositories = false;
-        break;
-
-      case LOAD_REPOS_SUCCESS:
-        draft.userData.repositories = action.repos;
-        draft.loading = false;
-        draft.currentUser = action.username;
-        break;
-
-      case LOAD_REPOS_ERROR:
-        draft.error = action.error;
-        draft.loading = false;
-        break;
+      case SET_AUTH_TOKEN_ACTION:{
+        draft.auth.token = action.payload;
+        return draft;
+      }
+      case REMOVE_AUTH_TOKEN_ACTION:{
+        draft.auth.token = null;
+        return draft;
+      }
     }
+    return draft;
   });
 
 export default appReducer;

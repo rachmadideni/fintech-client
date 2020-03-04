@@ -15,7 +15,28 @@
  *    }
  */
 
-import { LOAD_REPOS, LOAD_REPOS_SUCCESS, LOAD_REPOS_ERROR } from './constants';
+import { 
+  SET_AUTH_TOKEN_ACTION,
+  REMOVE_AUTH_TOKEN_ACTION,
+  LOAD_REPOS, 
+  LOAD_REPOS_SUCCESS, 
+  LOAD_REPOS_ERROR
+} from './constants';
+
+
+export function setAuthTokenAction(token){
+  return {
+    type:SET_AUTH_TOKEN_ACTION,
+    payload:token
+  }
+}
+
+export function removeAuthTokenAction(){
+  return {
+    type:REMOVE_AUTH_TOKEN_ACTION
+  }
+}
+
 
 /**
  * Load the repositories, this action starts the request saga

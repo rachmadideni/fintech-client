@@ -8,11 +8,17 @@ import React, { memo } from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import injectSaga from 'utils/injectSaga';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import makeSelectUserProfile from './selectors';
 import messages from './messages';
 
+import {
+  removeAuthTokenAction
+} from '../App/actions';
+
+import saga from '../Login/saga';
 import { color, typography} from 'styles/constants';
 import waveBackground from '../../images/wave.svg';
 // import demimoore from '../../images/demimoore.jpg';
@@ -66,7 +72,10 @@ const StyledButton = styled(Button)`
 class UserProfile extends React.Component {
   
   render(){
-    const { intl } = this.props;
+    const { 
+      intl,
+      removeAuthToken
+    } = this.props;
     return (
       <Grid 
         container 
@@ -96,16 +105,17 @@ class UserProfile extends React.Component {
                       <StyledText size={12}>user@gmail.com</StyledText>
                       <StyledText size={12}>085242068765</StyledText>
                     </Grid>
-                  <StyledButton 
-                    variant="outlined"
-                    color="secondary">
-                    {intl.formatMessage(messages.logout)}
-                  </StyledButton>
-                  <StyledButton 
-                    variant="outlined"
-                    color="secondary">
-                    {intl.formatMessage(messages.ubahPassword)}
-                  </StyledButton>
+                    <StyledButton 
+                      variant="outlined"
+                      color="secondary"
+                      onClick={this.props.removeAuthToken}>
+                      {intl.formatMessage(messages.logout)}
+                    </StyledButton>
+                    <StyledButton 
+                      variant="outlined"
+                      color="secondary">
+                      {intl.formatMessage(messages.ubahPassword)}
+                    </StyledButton>
                 </Grid>
             </Grid>            
           </StyledPaper>        
@@ -124,7 +134,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    // dispatch,
+    removeAuthToken: () => dispatch(removeAuthTokenAction())
   };
 }
 
@@ -133,9 +144,10 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-
+const withSaga = injectSaga({ key:"loginSaga", saga });
 export default compose(
   withConnect,
+  withSaga,
   injectIntl,
   memo,
 )(UserProfile);

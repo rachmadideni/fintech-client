@@ -13,11 +13,13 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Login from 'containers/Login/Loadable';
 import Verifikasi from 'containers/Verifikasi/Loadable';
+import VerifyConfirmPage from 'containers/VerifyConfirmPage';
 import Dashboard from 'containers/Dashboard/Loadable';
-// import ProductSelection from 'containers/ProductSelection/Loadable';
-import UserProfile from 'containers/UserProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+// import ProductSelection from 'containers/ProductSelection/Loadable';
 // import UserDashboard from 'containers/UserDashboard/Loadable';
+
+import AuthGuard from 'containers/AuthGuard';
 
 import GlobalStyle from '../../global-styles';
 
@@ -58,34 +60,49 @@ export default function App() {
           component={Verifikasi} />
         
         <Route 
+          exact 
+          path="/verifikasi/confirm" 
+          component={VerifyConfirmPage} />
+        
+        <Route 
           exact          
           path="/dashboard" 
           render={routeProps=>(
-            <Dashboard {...routeProps} />
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
           )} />
         
         <Route 
           path="/application-form/step/customer"
           render={routeProps=>(
-            <Dashboard {...routeProps} />
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
           )} />
 
         <Route
           path="/application-form/step/customer/section:(installment|personal-details|work-related|documents|summary)"
           render={routeProps=>(
-            <Dashboard {...routeProps} />
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
           )} />
         
         <Route 
           path="/profil"
           render={routeProps=>(
-            <Dashboard {...routeProps} />
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
           )} />
         
         <Route 
           path="/inbox"
           render={routeProps=>(
-            <Dashboard {...routeProps} />
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
           )} />
 
         

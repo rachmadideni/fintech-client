@@ -7,6 +7,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
@@ -18,10 +19,15 @@ import {
   makeSelectCredential,
   makeSelectError,
   makeSelectIsLoading } from './selectors';
+
+import {
+  makeSelectAuthToken
+} from '../App/selectors';
+
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { color } from 'styles/constants';
+import { color, typography } from 'styles/constants';
 import {
   changeNikAction, 
   changePasswordAction,
@@ -138,7 +144,6 @@ class Login extends React.Component {
   
   handleSubmit = evt => {
     evt.preventDefault();
-    // const { email, password } = this.state;
     const { credential } = this.props;
     this.setState(state=>({
       ...state,
@@ -147,24 +152,22 @@ class Login extends React.Component {
 
     if(this.validateNik(credential.nik) && this.validatePassword(credential.password)){
       console.log('validated ok. now youre login');
-      // this.setState( state => ({
-      //   ...state,
-      //   isProcessing:true
-      // }))
       return this.props.login();
     }
     return false;
   }
 
-  handleProcessing = () => {
-    this.setState(state=>({
-      ...state,
-      isProcessing:false
-    }))
-  }
+  // handleProcessing = () => {
+  //   this.setState(state => ({
+  //     ...state,
+  //     isProcessing:false
+  //   }))
+  // }
 
   handleClickShowPassword = () => {
-    this.setState(state => ({ showPassword: !state.showPassword }));
+    this.setState(state => ({ 
+      showPassword: !state.showPassword 
+    }));
   };
 
   render(){
@@ -174,8 +177,13 @@ class Login extends React.Component {
       login,
       isLoading,
       changeNik,
-      changePassword 
+      changePassword,
+      token 
     } = this.props;
+
+    if(token){
+      return <Redirect to="/dashboard" />;
+    }
 
     return (
       <Grid 
@@ -400,7 +408,8 @@ class Login extends React.Component {
 const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
   credential: makeSelectCredential(),
-  isLoading: makeSelectIsLoading()
+  isLoading: makeSelectIsLoading(),
+  token: makeSelectAuthToken()
 });
 
 function mapDispatchToProps(dispatch) {
