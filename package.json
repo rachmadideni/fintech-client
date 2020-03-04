@@ -82,6 +82,7 @@
     "intl": "1.2.5",
     "invariant": "2.2.4",
     "ip": "1.1.5",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
     "minimist": "1.2.0",
     "numeral": "^2.0.6",
@@ -99,6 +100,7 @@
     "redux-saga": "1.0.2",
     "reselect": "4.0.0",
     "sanitize.css": "8.0.0",
+    "store": "^2.0.12",
     "styled-components": "4.2.0",
     "validate.js": "^0.13.1",
     "validator": "^10.11.0"
