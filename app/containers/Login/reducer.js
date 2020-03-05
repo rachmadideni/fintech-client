@@ -11,7 +11,8 @@ import {
   CHANGE_PASSWORD,
   LOGIN_ACTION,
   LOGIN_SUCCESS_ACTION,
-  LOGIN_ERROR_ACTION
+  LOGIN_ERROR_ACTION,
+  RESET_INPUT_ACTION
 } from './constants';
 
 export const initialState = {
@@ -30,6 +31,11 @@ export const initialState = {
 const loginReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case RESET_INPUT_ACTION:{
+        draft.credential.nik = "";
+        draft.credential.password = "";
+        return draft;
+      }
       case CHANGE_NIK:
         draft.credential.nik = action.payload;
         return draft;
@@ -46,9 +52,9 @@ const loginReducer = (state = initialState, action) =>
       case LOGIN_SUCCESS_ACTION:
         draft.isLoading = false;
         return draft;
-      case LOGIN_ERROR_ACTION:
+      case LOGIN_ERROR_ACTION:        
         draft.isLoading = false;
-        draft.error.message = action.payload.error;
+        draft.error.message = action.payload;
         return draft;
     }
     return draft;

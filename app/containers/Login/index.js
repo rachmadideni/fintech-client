@@ -29,35 +29,32 @@ import saga from './saga';
 import messages from './messages';
 import { color, typography } from 'styles/constants';
 import {
+  resetInputAction,
   changeNikAction, 
   changePasswordAction,
-  loginAction
+  loginAction,
+  loginErrorAction
 } from './actions';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
 
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import isEmpty from 'validator/lib/isEmpty';
-// import isEmail from 'validator/lib/isEmail';
+import NotificationSnackbar from 'components/NotificationSnackbar';
 
 class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      backdropOpen:false,
-      email:"",
-      password:"",
+      backdropOpen:false,      
       error:{
         nik:null,
         email:null,
@@ -65,33 +62,28 @@ class Login extends React.Component {
       },
       isSubmitTriggered:false,
       isProcessing:false,
-      showPassword:false
+      showPassword:false,
+      isNotificationOpen:false
     }
   }
 
-  toggleBackdrop = () => {
-    this.setState((prevState,props)=>{
-      console.log(prevState);
-      return {
-        ...prevState,        
-        backdropOpen:!prevState.backdropOpen  
-      }      
-    })
+  componentDidMount(){
+    this.props.resetInput();
   }
-  
-  // changeEmail = email => {
-  //   this.setState(state=>({
-  //     ...state,
-  //     email
-  //   }))
-  // }
-  
-  // changePassword = password => {
-  //   this.setState(state=>({
-  //     ...state,
-  //     password
-  //   }))
-  // }
+
+  componentDidUpdate(prevProps){
+    if(!!this.props.errorMessage && prevProps.errorMessage === null){
+      this.setState(state=>({
+        ...state,
+        isNotificationOpen:true
+      }));
+    } else if(!!prevProps.errorMessage && this.props.errorMessage === null){
+      this.setState(state=>({
+        ...state,
+        isNotificationOpen:false
+      }));
+    }
+  }  
   
   validateNik = nik => {
     const { intl } = this.props;
@@ -157,13 +149,6 @@ class Login extends React.Component {
     return false;
   }
 
-  // handleProcessing = () => {
-  //   this.setState(state => ({
-  //     ...state,
-  //     isProcessing:false
-  //   }))
-  // }
-
   handleClickShowPassword = () => {
     this.setState(state => ({ 
       showPassword: !state.showPassword 
@@ -173,9 +158,7 @@ class Login extends React.Component {
   render(){
     const { 
       intl, 
-      credential,
-      login,
-      isLoading,
+      credential,      
       changeNik,
       changePassword,
       token 
@@ -193,43 +176,11 @@ class Login extends React.Component {
         style={{
           justifyContent:'center',
           alignItems:'center',
-          paddingLeft:40,
-          paddingRight:40
+          paddingLeft:45,
+          paddingRight:45
         }}>
           
-          <Grid item xs>            
-            <Backdrop 
-              open={isLoading} 
-              onClick={this.handlePro}
-              style={{
-                zIndex:1000,
-                color:'#FFFFFF'
-              }}>
-                <Grid 
-                  container 
-                  wrap="nowrap" 
-                  direction="column"
-                  justify="center"
-                  alignItems="center"
-                  style={{
-                    width:150,                    
-                  }}>
-                  <Typography 
-                    variant="body2"
-                    align="center"
-                    gutterBottom
-                    style={{
-                      fontFamily:typography.fontFamily,
-                      marginBottom:20
-                    }}>
-                    {intl.formatMessage(messages.pleaseWaitIsLoading)}
-                  </Typography>
-                  <CircularProgress 
-                    color="inherit" />
-              </Grid>
-            </Backdrop>
-          </Grid>
-
+          
           <Grid 
             item xs>
               <Grid 
@@ -266,90 +217,95 @@ class Login extends React.Component {
                           variant="h5"
                           color="primary"
                           align="center"
-                          gutterBottom>
+                          gutterBottom
+                          style={{
+                            fontFamily:typography.fontFamily
+                          }}>
                             {intl.formatMessage(messages.header)}                    
                         </Typography>
                       
-                      <FormControl 
-                        margin="normal" 
-                        fullWidth>
-                        <TextField 
-                          id="nik" 
-                          name="nik"
-                          value={credential.nik} 
-                          label={intl.formatMessage(messages.nik)}
-                          style={{ textTransform:'capitalize' }}
-                          type="text"
-                          fullWidth
-                          onChange={evt=>{
-                            if(this.state.isSubmitTriggered){
-                              this.validateNik(evt.target.value);
-                            }
-                            return changeNik(evt.target.value)
-                          }}
-                          error={!!this.state.error.nik}
-                          helperText={this.state.error.nik} />
-                      </FormControl>
-                      <FormControl margin="normal" fullWidth>
-                        <TextField 
-                          id="password" 
-                          name="password" 
-                          value={credential.password}
-                          label={intl.formatMessage(messages.password)}
-                          style={{ textTransform:'capitalize' }}
-                          onChange={evt=>{
-                            if(this.state.isSubmitTriggered){
-                              this.validatePassword(evt.target.value);
-                            }
-                            return changePassword(evt.target.value);
-                          }}                 
-                          type={this.state.showPassword ? 'text' : 'password'} 
-                          fullWidth
-                          InputProps={{
-                            endAdornment:(
-                              <InputAdornment position="end">
-                                <IconButton 
-                                  color="inherit"
-                                  onClick={this.handleClickShowPassword}>
-                                  {
-                                    this.state.showPassword ? (
-                                      <Visibility style={{ color:color.black }} />
-                                    ) : (
-                                      <VisibilityOff style={{ color:color.grey }} />
-                                    )
-                                  }
-                                </IconButton>
-                              </InputAdornment>
-                            )
-                          }}
-                          error={!!this.state.error.password}
-                          helperText={this.state.error.password} />
-                      </FormControl>
-                      <Button 
-                        fullWidth 
-                        variant="contained" 
-                        color="primary"
-                        onClick={this.handleSubmit}
-                        style={{ 
-                          marginTop:10,
-                          boxShadow:'none'
-                          }}>
-                          {intl.formatMessage(messages.loginButton)}
-                      </Button>
-                      </Grid>
-                      <Grid 
-                        item 
-                        style={{ 
-                          flex:1,
-                          marginTop:50,
-                          backgroundColor:'transparent'
-                        }}>
+                        <FormControl 
+                          margin="normal" 
+                          fullWidth>
+                          <TextField 
+                            id="nik" 
+                            name="nik"
+                            value={credential.nik} 
+                            label={intl.formatMessage(messages.nik)}
+                            style={{ 
+                              fontFamily:typography.fontFamily,
+                              textTransform:'capitalize' }}
+                            type="text"
+                            fullWidth
+                            onChange={evt=>{
+                              if(this.state.isSubmitTriggered){
+                                this.validateNik(evt.target.value);
+                              }
+                              return changeNik(evt.target.value)
+                            }}
+                            error={!!this.state.error.nik}
+                            helperText={this.state.error.nik} />
+                        </FormControl>
+                        <FormControl margin="normal" fullWidth>
+                          <TextField 
+                            id="password" 
+                            name="password" 
+                            value={credential.password}
+                            label={intl.formatMessage(messages.password)}
+                            style={{ 
+                              fontFamily:typography.fontFamily,
+                              textTransform:'capitalize' }}
+                            onChange={evt=>{
+                              if(this.state.isSubmitTriggered){
+                                this.validatePassword(evt.target.value);
+                              }
+                              return changePassword(evt.target.value);
+                            }}                 
+                            type={this.state.showPassword ? 'text' : 'password'} 
+                            fullWidth
+                            InputProps={{
+                              endAdornment:(
+                                <InputAdornment position="end">
+                                  <IconButton 
+                                    color="inherit"
+                                    onClick={this.handleClickShowPassword}>
+                                    {
+                                      this.state.showPassword ? (
+                                        <Visibility style={{ color:color.black }} />
+                                      ) : (
+                                        <VisibilityOff style={{ color:color.grey }} />
+                                      )
+                                    }
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }}
+                            error={!!this.state.error.password}
+                            helperText={this.state.error.password} />
+                        </FormControl>
+                        <Button 
+                          fullWidth 
+                          variant="contained" 
+                          color="primary"
+                          disabled={!!this.props.errorMessage}
+                          onClick={this.handleSubmit}
+                          style={{
+                            fontFamily:typography.fontFamily, 
+                            marginTop:10,
+                            boxShadow:'none'
+                            }}>
+                            {intl.formatMessage(messages.loginButton)}
+                        </Button>
+                        <div style={{ flexGrow:1, marginTop:20 }} />
+                        
                         <Typography 
                           align="center"
                           gutterBottom 
                           style={{
+                            fontFamily:typography.fontFamily,
                             fontSize:12,
                             fontWeight:'bold',
+                            textTransform:'capitalize',
                             padding:5
                         }}>
                           {intl.formatMessage(messages.forgotPasswordText)}
@@ -358,14 +314,18 @@ class Login extends React.Component {
                           fullWidth 
                           variant="outlined" 
                           color="primary"
-                          style={{ marginTop:0 }}>
+                          style={{ 
+                            fontFamily:typography.fontFamily,
+                            textTransform:'capitalize',
+                            marginTop:0 }}>
                             {intl.formatMessage(messages.resetPasswordButton)}                      
                         </Button>
-
+                        <div style={{ flexGrow:1, marginTop:10 }} />
                         <Typography 
                           align="center"
                           gutterBottom 
                           style={{
+                            fontFamily:typography.fontFamily,
                             fontSize:12,
                             fontWeight:'bold',
                             padding:5
@@ -378,20 +338,19 @@ class Login extends React.Component {
                           fullWidth 
                           variant="outlined" 
                           color="primary"
-                          style={{ marginTop:0 }}>
+                          style={{ 
+                            fontFamily:typography.fontFamily,
+                            textTransform:'capitalize',
+                            marginTop:0 }}>
                             {intl.formatMessage(messages.verificationButton)}                      
                         </Button>
-
-                      </Grid>
-                    </Grid>
-                    <Snackbar 
-                      anchorOrigin={{ 
-                        vertical:'top',
-                        horizontal:'left'}}
-                      open={false}
-                      autoHideDuration={5000}
-                      message={'test snackbar bosku'}>
-                    </Snackbar>
+                      </Grid>                      
+                    </Grid>                    
+                    <NotificationSnackbar 
+                      open={this.state.isNotificationOpen}
+                      onClose={()=>this.props.logError(null)}
+                      hideDuration={3000}
+                      message={this.props.errorMessage} />
                   </form>
                 </Grid>
               </Grid>
@@ -409,14 +368,17 @@ const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
   credential: makeSelectCredential(),
   isLoading: makeSelectIsLoading(),
-  token: makeSelectAuthToken()
+  token: makeSelectAuthToken(),
+  errorMessage: makeSelectError()
 });
 
 function mapDispatchToProps(dispatch) {
   return {    
     changeNik: nik => dispatch(changeNikAction(nik)),
     changePassword: password => dispatch(changePasswordAction(password)),
-    login: () => dispatch(loginAction())
+    login: () => dispatch(loginAction()),
+    resetInput: () => dispatch(resetInputAction()),
+    logError: (error) =>dispatch(loginErrorAction(error))
   };
 }
 

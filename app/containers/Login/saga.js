@@ -22,6 +22,8 @@ import {
   removeTokenInStorage
 } from './helpers';
 
+import messages from './messages'
+
 export function* login(){
   try {
     const { nik, password } = yield select(makeSelectCredential());
@@ -53,10 +55,14 @@ export function* login(){
       yield call(setTokenInStorage, TEST_TOKEN_LOGIN);// store token di local storage
       yield put(setAuthTokenAction(TEST_TOKEN_LOGIN));// store token di state
       yield put(loginSuccessAction()); // beritahu store 
+    } else {
+      let errorMsg = messages.userLoginFailed.defaultMessage;
+      yield put(loginErrorAction(errorMsg));
     }
   } catch(err){
-    console.log(err);
-    yield put(loginErrorAction(err));
+    // console.log(err);
+    let errorMsg = messages.userLoginFailed.defaultMessage;
+    yield put(loginErrorAction(errorMsg));
   }
 }
 

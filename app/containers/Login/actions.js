@@ -10,8 +10,15 @@ import {
   CHANGE_PASSWORD,
   LOGIN_ACTION,
   LOGIN_SUCCESS_ACTION,
-  LOGIN_ERROR_ACTION 
+  LOGIN_ERROR_ACTION,
+  RESET_INPUT_ACTION 
 } from './constants';
+
+export function resetInputAction(){
+  return {
+    type:RESET_INPUT_ACTION
+  }
+}
 
 export function changeNikAction(nik){
   return {

@@ -60,5 +60,9 @@ export default defineMessages({
   pleaseWaitIsLoading:{
     id:`${scope}.pleaseWaitIsLoading`,
     defaultMessage:'mohon tunggu\n'
+  },
+  userLoginFailed:{
+    id:`${scope}.userLoginFailed`,
+    defaultMessage:'anda tidak berhasil login. cek ulang data login'
   }
 });
