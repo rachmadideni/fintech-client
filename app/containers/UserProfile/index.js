@@ -71,9 +71,14 @@ const StyledButton = styled(Button)`
 
 class UserProfile extends React.Component {
   
+  goToChangePasswordPage = () => {
+    return this.props.history.replace('/changePassword');
+  }
+
   render(){
     const { 
       intl,
+      history,
       removeAuthToken
     } = this.props;
     return (
@@ -113,7 +118,8 @@ class UserProfile extends React.Component {
                     </StyledButton>
                     <StyledButton 
                       variant="outlined"
-                      color="secondary">
+                      color="secondary"
+                      onClick={this.goToChangePasswordPage}>
                       {intl.formatMessage(messages.ubahPassword)}
                     </StyledButton>
                 </Grid>

@@ -16,11 +16,29 @@ const selectChangePasswordPageDomain = state =>
  * Default selector used by ChangePasswordPage
  */
 
-const makeSelectChangePasswordPage = () =>
-  createSelector(
-    selectChangePasswordPageDomain,
-    substate => substate,
-  );
+const makeSelectIsLoading = () => createSelector(
+  selectChangePasswordPageDomain, ss => ss.isLoading);
 
-export default makeSelectChangePasswordPage;
-export { selectChangePasswordPageDomain };
+const makeSelectOldPassword = () => createSelector(
+    selectChangePasswordPageDomain, ss => ss.password.oldPassword);
+
+const makeSelectNewPassword = () => createSelector(
+    selectChangePasswordPageDomain, ss => ss.password.newPassword);
+
+const makeSelectConfirmNewPassword = () => createSelector(
+    selectChangePasswordPageDomain, ss => ss.password.confirmNewPassword);
+
+const makeSelectIsNewPasswordConfirmed = () => createSelector(
+    selectChangePasswordPageDomain, ss => ss.isNewPasswordConfirmed);
+
+const makeSelectIsChangedPasswordSuccess = () => createSelector(
+    selectChangePasswordPageDomain, ss => ss.isChangedPasswordSuccess);
+
+export {   
+  makeSelectIsLoading,
+  makeSelectOldPassword,
+  makeSelectNewPassword,
+  makeSelectConfirmNewPassword,
+  makeSelectIsNewPasswordConfirmed,
+  makeSelectIsChangedPasswordSuccess
+};

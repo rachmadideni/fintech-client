@@ -104,6 +104,14 @@ export default function App() {
               <Dashboard {...routeProps} />
             </AuthGuard>
           )} />
+        
+        <Route 
+          path="/changePassword"
+          render={routeProps=>(
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
+          )} />
 
         
         

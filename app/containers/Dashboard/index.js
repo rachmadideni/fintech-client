@@ -40,6 +40,7 @@ import UserDashboard from 'containers/UserDashboard/Loadable';
 import FormSubmissionStep from 'containers/FormSubmissionStep';
 import UserProfile from 'containers/UserProfile/Loadable';
 import UserInbox from 'containers/UserInbox/Loadable';
+import ChangePasswordPage from 'containers/ChangePasswordPage/Loadable';
 // import ProductSelection from 'containers/ProductSelection/Loadable';
 // import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
@@ -62,7 +63,8 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount(){
-    console.log(window.navigator.appVersion);
+    // console.log(this.props);
+    // console.log(window.navigator.appVersion);
   //   if(/Android [4-6]/.test(window.navigator.appVersion)) {
   //     window.addEventListener("resize", function() {
   //       console.log('eventListener Added');
@@ -74,6 +76,11 @@ class Dashboard extends React.Component {
   //        }
   //     })
   //  }
+  }
+
+  componentDidUpdate(prevProps){
+    // console.log(prevProps);
+    // console.log(this.props);
   }
 
   handleBottomTabChange = (e, value) => {    
@@ -178,6 +185,12 @@ class Dashboard extends React.Component {
                       path="/inbox"
                       render={routeProps=>(
                         <UserInbox history={history} {...routeProps} />
+                      )} />
+                    
+                    <Route 
+                      path="/changePassword"
+                      render={routeProps=>(
+                        <ChangePasswordPage history={history} {...routeProps} />
                       )} />
                     
 
