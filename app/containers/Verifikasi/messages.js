@@ -23,7 +23,7 @@ export default defineMessages({
   },
   nomorTelpon:{
     id:`${scope}.nomorTelpon`,
-    defaultMessage:'nomor telpon'
+    defaultMessage:'nomor handphone'
   },
   btnVerifikasi:{
     id:`${scope}.btnVerifikasi`,

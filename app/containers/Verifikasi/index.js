@@ -36,6 +36,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton'; 
+import Paper from '@material-ui/core/Paper'; 
 
 import { color, typography } from '../../styles/constants';
 
@@ -43,21 +45,70 @@ import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 // import isMobilePhone from 'validator/lib/isMobilePhone';
 
+import styled from 'styled-components';
+import bggreen01 from '../../images/bg_green_1.png';
+//import demimoore from '../../images/demimoore.jpg';
+
+import {
+  AppBar,
+  Toolbar
+} from '@material-ui/core';
+
+import {
+  ArrowBack,
+  ArrowForward
+} from '@material-ui/icons';
+
+import { TweenLite } from 'gsap';
+
+const Wrapper = styled(Grid)`
+&& {
+  flex:1;
+  padding-top:100px;
+  position: relative;
+  background-image: url(${bggreen01});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  justify-content:center;
+  align-items:center;
+  padding-left:25px;
+  padding-right:25px;
+  opacity: 0.9;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    // background-color:${color.lightGrey};
+    // background-image: linear-gradient(to right, ${color.lightGrey} 100%, ${color.lightGrey} 40%);
+    opacity: 1;
+  }  
+}
+`
+
 class Verifikasi extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      // nik:"",
-      // email:"",
-      // nomorTelpon:"",
       error:{
         nik:null,
         email:null,
         nomorTelpon:null
       },
       isSubmitTriggered:false,
-      // isProcessing:false
     }
+    // reference to the DOM node
+    this.paperElement = null;
+    // reference to the animation
+    this.myPaperTween = null;
+  }
+
+  componentDidMount(){
+    this.myPaperTween = TweenLite.to(this.paperElement, 0.3, { y:25 })
   }
 
   validateNik = nik => {
@@ -156,7 +207,7 @@ class Verifikasi extends React.Component {
 
   handleBack = () => {
     const { history } = this.props;
-    return history.goBack();
+    return history.replace('/login');
   }
 
   render(){
@@ -169,17 +220,43 @@ class Verifikasi extends React.Component {
       isLoading
     } = this.props
     return (
-      <Grid 
+      <Wrapper 
         container
         wrap="nowrap"
         direction="column"
         style={{
           // height:'100%',
-          justifyContent:'center',
-          alignItems:'center',
-          paddingLeft:40,
-          paddingRight:40
+          // justifyContent:'center',
+          // alignItems:'center',
+          // paddingLeft:40,
+          // paddingRight:40,
+          // backgroundSize:'cover'
         }}>
+          <AppBar style={{
+            backgroundColor:'transparent',
+            boxShadow:'none'
+          }}>
+            <Toolbar>
+              <IconButton 
+                onClick={this.handleBack}
+                style={{ color:color.white }}>
+                <ArrowBack />
+              </IconButton>
+              <div style={{ flexGrow:1 }} />
+              <Typography                  
+                gutterBottom
+                style={{
+                  fontFamily:typography.fontFamily,
+                  fontSize:16,
+                  fontWeight:'bold',
+                  color:color.white,
+                  paddingRight:10
+                }}>
+                Login
+              </Typography>
+            </Toolbar>
+          </AppBar>          
+          {/* 
           <Grid item xs>
             <Backdrop 
               open={isLoading} 
@@ -195,7 +272,10 @@ class Verifikasi extends React.Component {
                   justify="center"
                   alignItems="center"
                   style={{
-                    width:150,                    
+                    justifyContent:'flex-start',
+                    alignItems:'flex-start',
+                    width:150,
+                    backgroundColor:'purple'                    
                   }}>
                   <Typography 
                     variant="body2"
@@ -205,58 +285,91 @@ class Verifikasi extends React.Component {
                       fontFamily:typography.fontFamily,
                       marginBottom:20
                     }}>
-                      <FormattedMessage {...messages.pleaseWaitIsLoading} />
-                      {/* {intl.formatMessage(messages.pleaseWaitIsLoading)} */}
-                      
+                      <FormattedMessage {...messages.pleaseWaitIsLoading} />                                           
                   </Typography>
                   <CircularProgress 
                     color="inherit" />
                 </Grid>
             </Backdrop>
-          </Grid>
+          </Grid> */}
           <Grid
             item xs>
               <Grid 
                 container
                 wrap="nowrap"
-                direction="column">
+                direction="column"
+                justify="flex-start"
+                style={{
+                  justifyContent:'flex-start',
+                  alignItems:'flex-start'
+                }}>
+                  <Paper
+                    ref={ paper => this.paperElement = paper}
+                    elevation={0} 
+                    style={{
+                      borderRadius:12,
+                      paddingTop:15, 
+                      paddingLeft:20, 
+                      paddingRight:20,
+                      paddingBottom:20,
+                       }}>
                   <Grid 
-                    item xs
+                    item
                     style={{
                       justifyContent:'center',
                       alignItems:'center'
                     }}>
-
+                      
                     <form 
-                      autoComplete="off">
+                      autoComplete="off"
+                     >
                         <Grid 
                           container 
                           wrap="nowrap"
                           direction="column">
                             <Grid item style={{
-                              marginTop:100
+                              // marginTop:100
                             }}>
                               <Typography 
                                 variant="h6"
                                 color="primary"
-                                align="center"
-                                gutterBottom
+                                align="left"                                
                                 style={{
-                                  fontWeight:'bold'
+                                  fontFamily:typography.fontFamily,
+                                  fontWeight:'bold',
+                                  color:color.subtleBlack,
+                                  // paddingLeft:10
                                 }}>
                                 {intl.formatMessage(messages.verifikasi)}  
                                 </Typography>
+                              <Typography                                 
+                                color="inherit"
+                                align="left"                                
+                                style={{
+                                  fontFamily:typography.fontFamily,
+                                  fontSize:12,
+                                  fontWeight:'normal',
+                                  color:color.subtleBlack,
+                                  // paddingLeft:10
+                                }}>
+                                proses verifikasi user  
+                                </Typography>
+
+                                <div style={{ marginTop:20 }} />
 
                                 <FormControl 
-                                  margin="normal" 
+                                  margin="dense" 
                                   fullWidth>
                                     <TextField 
                                       id="nik" 
                                       name="nik"                               
                                       label={intl.formatMessage(messages.nik)}
+                                      placeholder={'nomor induk karyawan'}
                                       value={user.nik}
                                       type="text" 
                                       fullWidth
+                                      variant="outlined"
+                                      margin="dense"
                                       onChange={ evt => {
                                         if(this.state.isSubmitTriggered){
                                           this.validateNik(evt.target.value);
@@ -266,19 +379,26 @@ class Verifikasi extends React.Component {
                                       error={!!this.state.error.nik}
                                       helperText={this.state.error.nik}
                                       style={{
-                                        fontFamily:typography.fontFamily                                        
+                                        fontFamily:typography.fontFamily,
+                                        fontSize:12,
+                                        backgroundColor:color.white,
+                                        borderRadius:4,
+                                        textTransform:'capitalize'                                        
                                       }} />
                                 </FormControl>
                                 <FormControl 
-                                  margin="normal" 
+                                  margin="dense" 
                                   fullWidth>
                                     <TextField 
                                       id="email" 
                                       name="email"                               
                                       label={intl.formatMessage(messages.email)}
+                                      placeholder={'valid email'}
                                       value={user.email}
                                       type="email" 
                                       fullWidth
+                                      variant="outlined"
+                                      margin="dense"
                                       onChange={ evt => {
                                         if(this.state.isSubmitTriggered){
                                           this.validateEmail(evt.target.value);
@@ -288,19 +408,23 @@ class Verifikasi extends React.Component {
                                       error={!!this.state.error.email}
                                       helperText={this.state.error.email}
                                       style={{
-                                        fontFamily:typography.fontFamily
+                                        fontFamily:typography.fontFamily,
+                                        textTransform:'capitalize'
                                       }} />
                                   </FormControl>
                                   <FormControl 
-                                    margin="normal" 
+                                    margin="dense" 
                                     fullWidth>
                                       <TextField 
                                         id="nomtel" 
                                         name="nomtel"                               
                                         label={intl.formatMessage(messages.nomorTelpon)}
+                                        placeholder={'nomor handphone aktif'}
                                         value={user.nomtel}
                                         type="number" 
                                         fullWidth
+                                        variant="outlined"
+                                        margin="dense"
                                         onChange={ evt => {
                                           if(this.state.isSubmitTriggered){
                                             this.validateTelpon(evt.target.value);
@@ -310,7 +434,8 @@ class Verifikasi extends React.Component {
                                         error={!!this.state.error.nomorTelpon}
                                         helperText={this.state.error.nomorTelpon}
                                         style={{
-                                          fontFamily:typography.fontFamily
+                                          fontFamily:typography.fontFamily,
+                                          textTransform:'capitalize'
                                         }} />
                                   </FormControl>
                                   <Button
@@ -320,14 +445,16 @@ class Verifikasi extends React.Component {
                                     disabled={!!this.state.error.email || !!this.state.error.nik || !!this.state.error.nomorTelpon}
                                     onClick={this.handleSubmit}
                                     disableElevation
+                                    startIcon={<ArrowForward />}
                                     style={{
                                       marginTop:10,
                                       fontFamily:typography.fontFamily,
+                                      fontWeight:'bold',
                                       textTransform:'capitalize'
                                     }}>
                                       {intl.formatMessage(messages.btnVerifikasi)}
                                   </Button>
-                                  <Button
+                                  {/* <Button
                                     fullWidth
                                     variant="outlined"
                                     color="primary"                                    
@@ -338,14 +465,15 @@ class Verifikasi extends React.Component {
                                       textTransform:'capitalize'
                                     }}>
                                       {intl.formatMessage(messages.btnCancel)}
-                                  </Button>
+                                  </Button> */}
                             </Grid>
                         </Grid>                        
                     </form>
                   </Grid>
+                  </Paper>
                 </Grid>
             </Grid>
-        </Grid>
+        </Wrapper>
     )
   }
 }

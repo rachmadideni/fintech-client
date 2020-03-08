@@ -1,5 +1,6 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import request from 'utils/request';
+import { replace } from 'connected-react-router';
 // todo :
 // import { api, apps } from environments;
 import {
@@ -31,7 +32,7 @@ export function* requestVerifikasi(){
     method:'POST',
     headers:{
       'Content-Type':'application/json',
-      'APPLICATION-ID':apps['mps_pwa'].id
+      // 'APPLICATION-ID':apps['mps_pwa'].id
     },
     body: JSON.stringify({
       nik,
@@ -48,7 +49,10 @@ export function* requestVerifikasi(){
     if(nik == "01540110"){
       // TODO : buat short limit token untuk verifikasi 
       // yield put(setVerifyUserToken(response.data));
-      yield put(verifikasiSuccessAction()); 
+      yield put(verifikasiSuccessAction());
+      yield put(replace('/verifikasi/confirm'));// jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode 
+    } else {
+      yield put(verifikasiErrorAction(err))
     }
   } catch(err){
     // TODO : buat error message
