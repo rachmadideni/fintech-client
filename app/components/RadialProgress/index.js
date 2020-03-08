@@ -29,23 +29,36 @@ const StyledCircular = styled(props=>(
   }
 `
 
-const StyledGrid = styled(Grid)`
+const StyledGrid = styled(props => {
+  return (
+    <Grid classes={{
+      root:'root'
+    }}>
+      {props.children}
+    </Grid>
+  )
+})`
 && {
-  display:flex;
-  background-color:transparent;
-  justify-content:center;
-  align-items:center;
-  position:absolute;  
-  left:-31;
-}`;
+  &.root {
+    // display:inline-flex;
+    background-color:transparent;
+    justify-content:center;
+    align-items:center;
+    position:absolute;  
+    left:-31;
+  }
+}
+`;
 
 const StyledTypography = styled(Typography)`
   && {
+    position:relative;
+    left:-25px;
     font-size:11px;
     font-weight:bold;
     color:${color.black};
   }
-`
+`;
 
 function RadialProgress(props) {
   
@@ -61,8 +74,7 @@ function RadialProgress(props) {
           <StyledTypography>
             {`${currentstep}/${totalstep}`}
           </StyledTypography>
-        </StyledGrid>
-        {/*props.children*/}      
+        </StyledGrid>  
     </>
   );
 }
