@@ -21,6 +21,10 @@ export default defineMessages({
     id: `${scope}.emptyCode`,
     defaultMessage: 'Kode Aktifasi wajib diisi',
   },
+  codeNotMatch:{
+    id: `${scope}.codeNotMatch`,
+    defaultMessage: 'kode aktifasi tidak cocok',
+  },
   btnConfirm: {
     id: `${scope}.btnConfirm`,
     defaultMessage: 'Konfirmasi kode',
