@@ -46,6 +46,9 @@ const makeSelectWorkData = () => createSelector(selectFormSubmissionStepDomain,
 const makeSelectDocuments = () => createSelector(selectFormSubmissionStepDomain, 
   substate => substate.data.documents);
 
+const makeSelectPengajuan = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.data.pengajuan);
+
 export { 
   makeSelectCompletedStep,
   makeSelectActiveStep,
@@ -69,5 +72,6 @@ export {
   makeSelectTriggered,
   makeSelectNasabah,
   makeSelectWorkData,
-  makeSelectDocuments
+  makeSelectDocuments,
+  makeSelectPengajuan
 };

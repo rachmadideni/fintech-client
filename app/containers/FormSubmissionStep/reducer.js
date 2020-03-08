@@ -85,14 +85,14 @@ export const initialState = {
       stepValue:0,
       validated:false,
     },
-    // {
-    //   number:5,
-    //   title:messages.step4Title,
-    //   subtitle:messages.step4Subtitle,
-    //   isActive:false,
-    //   stepValue:0,
-    //   validated:false,
-    // }
+    {
+      number:5,
+      title:messages.step5Title,
+      subtitle:messages.step5Subtitle,
+      isActive:false,
+      stepValue:0,
+      validated:false,
+    }
   ],
   data:{    
     angsuran:{
@@ -127,6 +127,10 @@ export const initialState = {
       imageIdCard:null,
       ktp:null,
       idcard:null
+    },
+    pengajuan:{
+      jenis:null,
+      tujuan:null
     }
   }
 };

@@ -45,4 +45,12 @@ export default defineMessages({
     id:`${scope}.step4Subtitle`,
     defaultMessage:'ini upload dokumen ta'
   },
+  step5Title:{
+    id:`${scope}.step5Title`,
+    defaultMessage:'jenis pengajuan'
+  },
+  step5Subtitle:{
+    id:`${scope}.step5Title`,
+    defaultMessage:'ini form jenis pengajuan'
+  }
 });
