@@ -27,7 +27,7 @@ import {
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { color, typography } from 'styles/constants';
+
 import {
   resetInputAction,
   changeNikAction, 
@@ -43,12 +43,48 @@ import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
 
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import isEmpty from 'validator/lib/isEmpty';
 import NotificationSnackbar from 'components/NotificationSnackbar';
+
+import styled from 'styled-components';
+import { color, typography } from 'styles/constants';
+import bggreen01 from '../../images/bg_green_1.png';
+
+const Wrapper = styled(Grid)`
+&& {
+  flex:1;
+  padding-top:100px;
+  position: relative;
+  background-image: url(${bggreen01});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  justify-content:center;
+  align-items:center;
+  padding-left:25px;
+  padding-right:25px;
+  opacity: 0.9;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    // background-color:${color.lightGrey};
+    // background-image: linear-gradient(to right, ${color.lightGrey} 100%, ${color.lightGrey} 40%);
+    opacity: 1;
+  }  
+}
+`
 
 class Login extends React.Component {
   constructor(props){
@@ -169,16 +205,31 @@ class Login extends React.Component {
     }
 
     return (
-      <Grid 
+      <Wrapper 
         container 
         wrap="nowrap"
-        direction="column"      
-        style={{
-          justifyContent:'center',
-          alignItems:'center',
-          paddingLeft:45,
-          paddingRight:45
-        }}>
+        direction="column">
+          <AppBar 
+            style={{
+              backgroundColor:'transparent',
+              boxShadow:'none'
+          }}>
+            <Toolbar>
+              <div style={{ flexGrow:1 }} />
+              <Typography                  
+                  gutterBottom
+                  style={{
+                    fontFamily:typography.fontFamily,
+                    fontSize:16,
+                    fontWeight:'bold',
+                    color:color.white,
+                    textTransform:'capitalize'
+                  }}>
+                  Amanah Finance
+              </Typography>
+              <div style={{ flexGrow:1 }} />
+            </Toolbar>
+          </AppBar>
           
           
           <Grid 
@@ -186,176 +237,226 @@ class Login extends React.Component {
               <Grid 
                 container 
                 wrap="nowrap"
-                direction="column">              
-                <Grid 
-                  item 
-                  xs 
-                  style={{ 
-                    justifyContent:'center',
-                    alignItems:'center'
-                  }}>
-
-                  <form 
-                    autoComplete="off">
-
+                direction="column"
+                justify="flex-start"
+                style={{
+                  justifyContent:'flex-start',
+                  alignItems:'flex-start'
+                }}>
+                  <Paper
+                    ref={ paper => this.paperElement = paper}
+                    elevation={0} 
+                    style={{
+                      borderRadius:12,
+                      paddingTop:15, 
+                      paddingLeft:20, 
+                      paddingRight:20,
+                      paddingBottom:20,
+                       }}>              
                     <Grid 
-                      container 
-                      wrap="nowrap" 
-                      direction="column"
-                      justify="center"
-                      alignItems="center">
-                      
-                      <Grid 
-                        item 
-                        style={{ 
-                          // flex:1,
-                          marginTop:100,
-                          backgroundColor:'transparent'
-                        }}>
+                      item 
+                      xs 
+                      style={{ 
+                        justifyContent:'center',
+                        alignItems:'center'
+                      }}>
 
-                        <Typography 
-                          variant="h5"
-                          color="primary"
-                          align="center"
-                          gutterBottom
-                          style={{
-                            fontFamily:typography.fontFamily
-                          }}>
-                            {intl.formatMessage(messages.header)}                    
-                        </Typography>
-                      
-                        <FormControl 
-                          margin="normal" 
-                          fullWidth>
-                          <TextField 
-                            id="nik" 
-                            name="nik"
-                            value={credential.nik} 
-                            label={intl.formatMessage(messages.nik)}
+                      <form 
+                        autoComplete="off">
+
+                        <Grid 
+                          container 
+                          wrap="nowrap" 
+                          direction="column"
+                          justify="center"
+                          alignItems="center">
+                          
+                          <Grid 
+                            item 
                             style={{ 
-                              fontFamily:typography.fontFamily,
-                              textTransform:'capitalize' }}
-                            type="text"
-                            fullWidth
-                            onChange={evt=>{
-                              if(this.state.isSubmitTriggered){
-                                this.validateNik(evt.target.value);
-                              }
-                              return changeNik(evt.target.value)
-                            }}
-                            error={!!this.state.error.nik}
-                            helperText={this.state.error.nik} />
-                        </FormControl>
-                        <FormControl margin="normal" fullWidth>
-                          <TextField 
-                            id="password" 
-                            name="password" 
-                            value={credential.password}
-                            label={intl.formatMessage(messages.password)}
-                            style={{ 
-                              fontFamily:typography.fontFamily,
-                              textTransform:'capitalize' }}
-                            onChange={evt=>{
-                              if(this.state.isSubmitTriggered){
-                                this.validatePassword(evt.target.value);
-                              }
-                              return changePassword(evt.target.value);
-                            }}                 
-                            type={this.state.showPassword ? 'text' : 'password'} 
-                            fullWidth
-                            InputProps={{
-                              endAdornment:(
-                                <InputAdornment position="end">
-                                  <IconButton 
-                                    color="inherit"
-                                    onClick={this.handleClickShowPassword}>
-                                    {
-                                      this.state.showPassword ? (
-                                        <Visibility style={{ color:color.black }} />
-                                      ) : (
-                                        <VisibilityOff style={{ color:color.grey }} />
-                                      )
-                                    }
-                                  </IconButton>
-                                </InputAdornment>
-                              )
-                            }}
-                            error={!!this.state.error.password}
-                            helperText={this.state.error.password} />
-                        </FormControl>
-                        <Button 
-                          fullWidth 
-                          variant="contained" 
-                          color="primary"
-                          disabled={!!this.props.errorMessage}
-                          onClick={this.handleSubmit}
-                          style={{
-                            fontFamily:typography.fontFamily, 
-                            marginTop:10,
-                            boxShadow:'none'
+                              // flex:1,
+                              // marginTop:100,
+                              // backgroundColor:'transparent'
                             }}>
-                            {intl.formatMessage(messages.loginButton)}
-                        </Button>
-                        <div style={{ flexGrow:1, marginTop:20 }} />
-                        
-                        <Typography 
-                          align="center"
-                          gutterBottom 
-                          style={{
-                            fontFamily:typography.fontFamily,
-                            fontSize:12,
-                            fontWeight:'bold',
-                            textTransform:'capitalize',
-                            padding:5
-                        }}>
-                          {intl.formatMessage(messages.forgotPasswordText)}
-                       </Typography>
-                        <Button 
-                          fullWidth 
-                          variant="outlined" 
-                          color="primary"
-                          style={{ 
-                            fontFamily:typography.fontFamily,
-                            textTransform:'capitalize',
-                            marginTop:0 }}>
-                            {intl.formatMessage(messages.resetPasswordButton)}                      
-                        </Button>
-                        <div style={{ flexGrow:1, marginTop:10 }} />
-                        <Typography 
-                          align="center"
-                          gutterBottom 
-                          style={{
-                            fontFamily:typography.fontFamily,
-                            fontSize:12,
-                            fontWeight:'bold',
-                            padding:5
-                        }}>
-                          {intl.formatMessage(messages.accountNotVerified)}
-                         </Typography>
-                        
-                        <Button 
-                          onClick={this.handleVerification}
-                          fullWidth 
-                          variant="outlined" 
-                          color="primary"
-                          style={{ 
-                            fontFamily:typography.fontFamily,
-                            textTransform:'capitalize',
-                            marginTop:0 }}>
-                            {intl.formatMessage(messages.verificationButton)}                      
-                        </Button>
-                      </Grid>                      
-                    </Grid>                    
-                    <NotificationSnackbar 
-                      open={this.state.isNotificationOpen}
-                      onClose={()=>this.props.logError(null)}
-                      hideDuration={3000}
-                      message={this.props.errorMessage} />
-                  </form>
-                </Grid>
+
+                            <Typography 
+                              variant="h6"
+                              color="primary"
+                              align="left"                              
+                              style={{
+                                fontFamily:typography.fontFamily,
+                                fontWeight:'bold',
+                                color:color.subtleBlack,
+                              }}>
+                                {intl.formatMessage(messages.header)}                    
+                            </Typography>
+                            <Typography                                 
+                                color="inherit"
+                                align="left"                                
+                                style={{
+                                  fontFamily:typography.fontFamily,
+                                  fontSize:11,
+                                  fontWeight:'normal',
+                                  color:color.subtleBlack                                  
+                                }}>
+                                pastikan akun anda sudah terverifikasi sebelumnya  
+                            </Typography>
+
+                            <div style={{ marginTop:20 }} />
+                          
+                            <FormControl 
+                              margin="dense" 
+                              fullWidth>
+                              <TextField 
+                                id="nik" 
+                                name="nik"
+                                value={credential.nik} 
+                                label={intl.formatMessage(messages.nik)}
+                                style={{ 
+                                  fontFamily:typography.fontFamily,
+                                  textTransform:'capitalize' }}
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                margin="dense"
+                                onChange={evt=>{
+                                  if(this.state.isSubmitTriggered){
+                                    this.validateNik(evt.target.value);
+                                  }
+                                  return changeNik(evt.target.value)
+                                }}
+                                error={!!this.state.error.nik}
+                                helperText={this.state.error.nik}
+                                style={{
+                                  fontFamily:typography.fontFamily,
+                                  fontSize:12,
+                                  backgroundColor:color.white,
+                                  borderRadius:4,
+                                  textTransform:'capitalize'                                        
+                                }} />
+                            </FormControl>
+                            <FormControl 
+                              margin="dense" 
+                              fullWidth>
+                              <TextField 
+                                id="password" 
+                                name="password" 
+                                value={credential.password}
+                                label={intl.formatMessage(messages.password)}
+                                style={{
+                                  fontFamily:typography.fontFamily,
+                                  fontSize:12,
+                                  backgroundColor:color.white,
+                                  borderRadius:4,
+                                  textTransform:'capitalize'                                        
+                                }}
+                                onChange={evt=>{
+                                  if(this.state.isSubmitTriggered){
+                                    this.validatePassword(evt.target.value);
+                                  }
+                                  return changePassword(evt.target.value);
+                                }}                 
+                                type={this.state.showPassword ? 'text' : 'password'} 
+                                fullWidth
+                                variant="outlined"
+                                margin="dense"
+                                InputProps={{
+                                  endAdornment:(
+                                    <InputAdornment position="end">
+                                      <IconButton 
+                                        color="inherit"
+                                        onClick={this.handleClickShowPassword}>
+                                        {
+                                          this.state.showPassword ? (
+                                            <Visibility style={{ color:color.black }} />
+                                          ) : (
+                                            <VisibilityOff style={{ color:color.grey }} />
+                                          )
+                                        }
+                                      </IconButton>
+                                    </InputAdornment>
+                                  )
+                                }}
+                                error={!!this.state.error.password}
+                                helperText={this.state.error.password} />
+                            </FormControl>
+                            <Button 
+                              fullWidth 
+                              variant="contained" 
+                              color="primary"
+                              disabled={!!this.props.errorMessage}
+                              onClick={this.handleSubmit}
+                              style={{
+                                marginTop:10,
+                                fontFamily:typography.fontFamily, 
+                                fontWeight:'bold',
+                                textTransform:'capitalize',
+                                boxShadow:'none'
+                              }}>
+                              {intl.formatMessage(messages.loginButton)}
+                            </Button>
+                            <div style={{ flexGrow:1, marginTop:20 }} />
+                            
+                            <Typography 
+                              align="center"
+                              gutterBottom 
+                              style={{
+                                fontFamily:typography.fontFamily,
+                                fontSize:12,
+                                fontWeight:'bold',
+                                textTransform:'capitalize',
+                                padding:5
+                            }}>
+                              {intl.formatMessage(messages.forgotPasswordText)}
+                          </Typography>
+                            <Button 
+                              fullWidth 
+                              variant="outlined" 
+                              color="primary"
+                              style={{ 
+                                fontFamily:typography.fontFamily,
+                                textTransform:'capitalize',
+                                marginTop:0 }}>
+                                {intl.formatMessage(messages.resetPasswordButton)}                      
+                            </Button>
+                            <div style={{ flexGrow:1, marginTop:10 }} />
+                            {/* <Typography 
+                              align="center"
+                              gutterBottom 
+                              style={{
+                                fontFamily:typography.fontFamily,
+                                fontSize:12,
+                                fontWeight:'bold',
+                                padding:5
+                            }}>
+                              {intl.formatMessage(messages.accountNotVerified)}
+                            </Typography> */}
+                            
+                            <Button 
+                              onClick={this.handleVerification}
+                              fullWidth 
+                              variant="outlined" 
+                              color="primary"
+                              style={{ 
+                                fontFamily:typography.fontFamily,
+                                fontWeight:'bold',
+                                textTransform:'capitalize',
+                                marginTop:0 }}>
+                                {intl.formatMessage(messages.verificationButton)}                      
+                            </Button>
+                          </Grid>                      
+                        </Grid>                    
+                        <NotificationSnackbar 
+                          open={this.state.isNotificationOpen}
+                          onClose={()=>this.props.logError(null)}
+                          hideDuration={3000}
+                          message={this.props.errorMessage} />
+                      </form>
+                    </Grid>
+                  </Paper>
               </Grid>
           </Grid>
-      </Grid>
+      </Wrapper>
     );
   }
 }
