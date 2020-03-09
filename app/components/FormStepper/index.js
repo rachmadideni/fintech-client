@@ -54,7 +54,7 @@ function FormStepper(props) {
   }
   
   const check_document_form = documents => {
-    if(documents.ktp && documents.idcard){
+    if(documents.ktp && documents.idcard && documents.npwp){
       return false;
     }
     return true;

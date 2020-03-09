@@ -17,4 +17,8 @@ export default defineMessages({
     id: `${scope}.uploadIdCard`,
     defaultMessage: 'upload ID Card',
   },
+  uploadNPWP: {
+    id: `${scope}.uploadNPWP`,
+    defaultMessage: 'upload NPWP',
+  }
 });

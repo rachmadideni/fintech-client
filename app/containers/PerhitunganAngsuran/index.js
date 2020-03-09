@@ -53,7 +53,6 @@ class PerhitunganAngsuran extends React.Component {
 
   componentDidUpdate(prevProps){
     if(prevProps.plafon !== this.props.plafon || prevProps.tenor !== this.props.tenor){
-      // console.log('update angsuran dong');
       this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
     }
   }
@@ -62,19 +61,6 @@ class PerhitunganAngsuran extends React.Component {
     let angsuran = calc_installment(plafon,margin,tenor);
     return this.props.changeAngsuran(angsuran);
   }  
-
-  // handleChangePlafon = (val) => {
-  //   console.log('plafon:',val);
-  //   this.setState({
-  //     plafon:val
-  //   })
-  // }
-  
-  // handleChangeTenor = (ev,val) => {
-  //   this.setState({
-  //     tenor:val
-  //   })
-  // }
 
   // handleChangeGaji = (gaji) => {
 

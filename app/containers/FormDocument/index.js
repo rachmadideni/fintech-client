@@ -202,6 +202,28 @@ class FormDocument extends React.Component{
                     style={{ display:'none' }} />
                 </Button>
               </FormControl>
+              
+              <FormControl 
+                margin="dense" 
+                fullWidth>
+                <Button 
+                  color="primary"
+                  fullWidth
+                  variant="outlined" 
+                  component="label"                
+                  onChange={
+                    // evt=>this.onSingleUpload(evt,'imageIdCardName','imageIdCard')
+                    evt => this.handleFileUpload(evt,'npwp')
+                  }>
+                  {intl.formatMessage(messages.uploadNPWP)}
+                  <input 
+                    id="npwp" 
+                    name="npwp" 
+                    type="file" 
+                    accept="image/x-png,image/jpeg" 
+                    style={{ display:'none' }} />
+                </Button>
+              </FormControl>
 
               <Grid 
                 container 
@@ -216,7 +238,7 @@ class FormDocument extends React.Component{
                       <CardActionArea disableRipple>
                         <CardMediaStyled 
                           image={`${this.props.documents.ktp}`} />                    
-                          <div 
+                          {/* <div 
                             style={{ 
                               display:'flex',
                               width:'100%',
@@ -236,54 +258,88 @@ class FormDocument extends React.Component{
                               }}>                            
                                 <CloseRoundedIcon/>
                               </IconButton>
-                          </div>                    
+                          </div>                     */}
                       </CardActionArea>
                     </Card>
                     </Grid>              
                   }
                   </Grid>
                   <Grid item>
-                  {this.props.documents.idcard &&
-                  <Grid style={{ marginTop:12, width:'130px',height:'120px' }}> 
-                    <Card raised={false}>
-                      <CardActionArea disableRipple>
-                        <CardMediaStyled 
-                          image={`${this.props.documents.idcard}`} />                    
-                          <div 
-                            style={{ 
-                              display:'flex',
-                              width:'100%',
-                              backgroundColor:'#000000',
-                              position:'absolute',
-                              opacity:0.7,
-                              zIndex:40000,
-                              right:0,
-                              bottom:0,
-                            }}>
-                            <IconButton size="small" color="primary"
-                              style={{                            
-                                color:'red'
-                              }}>                            
-                                <CloseRoundedIcon/>
-                              </IconButton>
-                          </div>                    
-                      </CardActionArea>
-                    </Card>
+                  {
+                    this.props.documents.idcard &&
+                    <Grid style={{ marginTop:12, width:'130px',height:'120px' }}> 
+                      <Card raised={false}>
+                        <CardActionArea disableRipple>
+                          <CardMediaStyled 
+                            image={`${this.props.documents.idcard}`} />                    
+                            {/* <div 
+                              style={{ 
+                                display:'flex',
+                                width:'100%',
+                                backgroundColor:'#000000',
+                                position:'absolute',
+                                opacity:0.7,
+                                zIndex:40000,
+                                right:0,
+                                bottom:0,
+                              }}>
+                              <IconButton size="small" color="primary"
+                                style={{                            
+                                  color:'red'
+                                }}>                            
+                                  <CloseRoundedIcon/>
+                                </IconButton>
+                            </div>                     */}
+                        </CardActionArea>
+                      </Card>
+                      </Grid>
+                  }
+                </Grid>                  
+                
+                <Grid item>
+                  {
+                    this.props.documents.npwp &&
+                    <Grid style={{ marginTop:0, width:'130px',height:'120px' }}> 
+                      <Card raised={false}>
+                        <CardActionArea disableRipple>
+                          <CardMediaStyled 
+                            image={`${this.props.documents.npwp}`} />                    
+                            {/* <div 
+                              style={{ 
+                                display:'flex',
+                                width:'100%',
+                                backgroundColor:'#000000',
+                                position:'absolute',
+                                opacity:0.7,
+                                zIndex:40000,
+                                right:0,
+                                bottom:0,
+                              }}>
+                              <IconButton size="small" color="primary"
+                                style={{                            
+                                  color:'red'
+                                }}>                            
+                                  <CloseRoundedIcon/>
+                                </IconButton>
+                            </div>                     */}
+                        </CardActionArea>
+                      </Card>
                     </Grid>              
                   }
                 </Grid>                  
               </Grid>
-              <Grid>
+              {/* <Grid>
               <Button 
                 variant="contained" 
                 color="primary"
                 fullWidth
-                disabled={(!this.props.documents.ktp || !this.props.documents.idcard) ? true : false }>
+                disabled={(!this.props.documents.ktp || !this.props.documents.idcard || !this.props.documents.npwp) ? true : false }>
                   submit
               </Button>
-              </Grid>                          
+              </Grid>                           */}
               
-              {/* <Button 
+              {/* 
+              <Button 
                 variant="outlined"
                 color="primary"
                 fullWidth

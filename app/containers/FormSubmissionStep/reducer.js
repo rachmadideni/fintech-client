@@ -131,7 +131,8 @@ export const initialState = {
       imageKTP:null,
       imageIdCard:null,
       ktp:null,
-      idcard:null
+      idcard:null,
+      npwp:null
     },
     pengajuan:{
       jenis:"1",
