@@ -15,6 +15,9 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import makeSelectFormPengajuan from './selectors';
+import {
+  makeSelectPengajuan
+} from '../FormSubmissionStep/selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
@@ -33,6 +36,11 @@ import {
   SUB_PENGAJUAN
 } from './constants'
 
+import {
+  changeJenisPengajuanAction,
+  changeSubPengajuanAction
+} from './actions';
+
 const Wrapper = styled(props=>{
   return (
     <Grid {...props} />
@@ -45,14 +53,59 @@ const Wrapper = styled(props=>{
 }`;
 
 class FormPengajuan extends React.Component {
+  constructor(props){
+    super(props);
+    this.renderTujuanPengajuan = this.renderTujuanPengajuan.bind(this);
+  }
+  
+  renderTujuanPengajuan(){
+    const { jenis } = this.props.pengajuan;
+    
+    // let filteredSub;
+    // switch(jenis){
+    //   case '1':{
+    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 1 );
+    //     return filteredSub;        
+    //   }
+    //   case '2':{
+    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 2 );
+    //     return filteredSub;        
+    //   }
+    //   default:
+    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 1 );
+    //     return filteredSub;
+    // }
+
+    // console.log(filteredSub);
+    let filteredSub = jenis === 1 ? SUB_PENGAJUAN.filter(item=>item.jenis === 1) : SUB_PENGAJUAN.filter(item=>item.jenis === 2);
+    const menuItem = filteredSub.map( (item,i) => {
+      return (
+        <MenuItem 
+          key={`item-${i}`}
+          value={item.value} 
+          style={{ fontSize:12 }}>
+          {item.text}
+        </MenuItem>);
+    });    
+    return menuItem;
+  }
+
   render(){
+    const {
+      pengajuan,
+      changeJenisPengajuan,
+      changeSubPengajuan
+    } = this.props;
+
     return (
       <Wrapper 
         container 
         wrap="nowrap"
         direction="column"
         alignItems="center">
-          <Grid item style={{ width:'100%' }}>
+          <Grid 
+            item 
+            style={{ width:'100%' }}>
             <form 
               autoComplete="off">
 
@@ -60,8 +113,7 @@ class FormPengajuan extends React.Component {
               renderTrackVertical={props=><div {...props} className="track-vertical" />}
               renderThumbVertical={props=> <div {...props} className="thumb-vertical" />}
               style={{ width:'80vw',height:'61vh'}}> */}
-                        
-            
+                                    
             <FormControl 
               variant="outlined" 
               margin="dense" 
@@ -71,6 +123,7 @@ class FormPengajuan extends React.Component {
                 shrink>
                   Jenis pengajuan
               </InputLabel>
+              
               <Select 
                 id="jenpeng" 
                 name="jenpeng"
@@ -81,9 +134,15 @@ class FormPengajuan extends React.Component {
                 style={{ 
                   fontFamily:typography.fontFamily,
                   fontSize:12,
+                }}
+                value={pengajuan.jenis}
+                onChange={evt=>{
+                  return changeJenisPengajuan(evt.target.value);
                 }}>
-                  {/* <MenuItem value="PB" style={{ fontSize:14 }}>Pembelian Barang</MenuItem>                  
-                  <MenuItem value="PJ" style={{ fontSize:14 }}>Pemanfaatan Jasa</MenuItem> */}
+                  {/* 
+                  <MenuItem value="PB" style={{ fontSize:14 }}>Pembelian Barang</MenuItem>                  
+                  <MenuItem value="PJ" style={{ fontSize:14 }}>Pemanfaatan Jasa</MenuItem>
+                  */}
                   {
                     JENIS_PENGAJUAN.map((item,i)=>(
                       <MenuItem 
@@ -115,12 +174,18 @@ class FormPengajuan extends React.Component {
                 style={{ 
                   fontFamily:typography.fontFamily,
                   fontSize:12
+                }}
+                value={pengajuan.tujuan}
+                onChange={evt=>{
+                  return changeSubPengajuan(evt.target.value)
                 }}>
-                  {/* <MenuItem value="PB1" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (sepeda)</MenuItem>                  
+                  {/*
+                  <MenuItem value="PB1" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (sepeda)</MenuItem>                  
                   <MenuItem value="PB2" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (motor)</MenuItem>                  
                   <MenuItem value="PB3" style={{ fontSize:14 }}>Pembelian Kendaraan Roda Empat (mobil)</MenuItem>                  
-                  <MenuItem value="PB4" style={{ fontSize:14 }}>Pembelian Barang Elektronik (HP)</MenuItem> */}
-                  {
+                  <MenuItem value="PB4" style={{ fontSize:14 }}>Pembelian Barang Elektronik (HP)</MenuItem>
+                  */}
+                  {/*
                     SUB_PENGAJUAN.map((item,i)=>(
                       <MenuItem 
                         value={item.value} 
@@ -128,7 +193,8 @@ class FormPengajuan extends React.Component {
                         {item.text}
                       </MenuItem>
                     ))
-                  }
+                  */}
+                  {this.renderTujuanPengajuan()}
               </Select>
             </FormControl>            
                                   
@@ -155,12 +221,15 @@ class FormPengajuan extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  formPengajuan: makeSelectFormPengajuan(),
+  // formPengajuan: makeSelectFormPengajuan(),
+  pengajuan: makeSelectPengajuan()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    // dispatch,
+    changeJenisPengajuan: (jenisPengajuan) => dispatch(changeJenisPengajuanAction(jenisPengajuan)),
+    changeSubPengajuan: (tujuanPengajuan) => dispatch(changeSubPengajuanAction(tujuanPengajuan))
   };
 }
 

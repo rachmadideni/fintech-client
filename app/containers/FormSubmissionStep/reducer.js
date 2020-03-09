@@ -45,7 +45,12 @@ import {
   CHANGE_DOKUMEN_IDCARD_ACTION,
   UPLOAD_DOKUMEN_ACTION,
   ADD_DOKUMEN_ACTION
-} from '../FormDocument/constants'
+} from '../FormDocument/constants';
+
+import {
+  CHANGE_JENIS_PENGAJUAN_ACTION,
+  CHANGE_SUB_PENGAJUAN_ACTION
+} from '../FormPengajuan/constants';
 
 import messages from './messages';
 
@@ -129,9 +134,17 @@ export const initialState = {
       idcard:null
     },
     pengajuan:{
-      jenis:null,
-      tujuan:null
+      jenis:"1",
+      tujuan:""
     }
+  },
+  opsi:{
+    plafon:[],
+    tenor:[],
+    jenis_kelamin:[],
+    sbu:[],
+    sub_pengajuan:[],
+    dokumen:[]
   }
 };
 
@@ -267,6 +280,16 @@ const formSubmissionStepReducer = (state = initialState, action) =>
         draft.data.documents[action.payload.key] = action.payload.file;
         return draft;
       }
+
+      case CHANGE_JENIS_PENGAJUAN_ACTION:{
+        draft.data.pengajuan.jenis = action.payload;
+        return draft;
+      }
+      
+      case CHANGE_SUB_PENGAJUAN_ACTION:{
+        draft.data.pengajuan.tujuan = action.payload;
+        return draft;
+      } 
 
     }
     return draft;
