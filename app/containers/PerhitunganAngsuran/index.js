@@ -46,6 +46,10 @@ class PerhitunganAngsuran extends React.Component {
   constructor(props){
     super(props);    
   }
+  
+  componentDidMount(){
+    this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
+  }
 
   componentDidUpdate(prevProps){
     if(prevProps.plafon !== this.props.plafon || prevProps.tenor !== this.props.tenor){
@@ -57,7 +61,7 @@ class PerhitunganAngsuran extends React.Component {
   hitungAngsuran = (plafon,margin,tenor) => {
     let angsuran = calc_installment(plafon,margin,tenor);
     return this.props.changeAngsuran(angsuran);
-  }
+  }  
 
   // handleChangePlafon = (val) => {
   //   console.log('plafon:',val);
@@ -143,8 +147,8 @@ class PerhitunganAngsuran extends React.Component {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                onChange={ value => {                   
-                  this.props.changeGaji(parseInt(value))
+                onChange={ value => {
+                  this.props.changeGaji(parseInt(value));
                 }} />
           </Grid>
 
