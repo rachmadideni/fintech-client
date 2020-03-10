@@ -13,4 +13,8 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'This is the FormPengajuan container!',
   },
+  lainnya:{
+    id: `${scope}.lainnya`,
+    defaultMessage: 'pemanfaatan barang/jasa lainnya',
+  }
 });

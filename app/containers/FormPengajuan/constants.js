@@ -8,6 +8,7 @@ export const DEFAULT_ACTION = 'app/FormPengajuan/DEFAULT_ACTION';
 
 export const CHANGE_JENIS_PENGAJUAN_ACTION = 'app/FormPengajuan/CHANGE_JENIS_PENGAJUAN_ACTION';
 export const CHANGE_SUB_PENGAJUAN_ACTION = 'app/FormPengajuan/CHANGE_SUB_PENGAJUAN_ACTION';
+export const CHANGE_PEMANFAATAN_LAIN_ACTION = 'app/FormPengajuan/CHANGE_PEMANFAATAN_LAIN_ACTION';
 
 export const JENIS_PENGAJUAN = [{    
     value:1,

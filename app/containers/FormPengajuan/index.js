@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
@@ -24,6 +24,7 @@ import messages from './messages';
 
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -38,7 +39,8 @@ import {
 
 import {
   changeJenisPengajuanAction,
-  changeSubPengajuanAction
+  changeSubPengajuanAction,
+  changePemanfaatanLainAction
 } from './actions';
 
 const Wrapper = styled(props=>{
@@ -55,6 +57,9 @@ const Wrapper = styled(props=>{
 class FormPengajuan extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      pemanfaatanLainnyaIsActive:false
+    }
     this.renderTujuanPengajuan = this.renderTujuanPengajuan.bind(this);
   }
   
@@ -90,11 +95,40 @@ class FormPengajuan extends React.Component {
     return menuItem;
   }
 
+  handlePemanfaatanLainnya = (value) => {
+    console.log(value);
+    this.props.changeSubPengajuan(value);
+    // cari value di SUB_PENGAJUAN & output label/text
+    let selected = SUB_PENGAJUAN.filter(item => item.value === value);
+    // jika array length > 0
+    if(selected.length > 0){
+      let text = selected[0].text;
+      if(text.includes('lainnya')){
+        console.log('ada teks "lainnya" di text');
+        this.setState(state=>({
+          ...state,
+          pemanfaatanLainnyaIsActive:true
+        }));
+      } else {
+        this.setState(state=>({
+          ...state,
+          pemanfaatanLainnyaIsActive:false
+        }))
+      }
+    }
+   
+    console.log(selected);    
+    // jika di text ada kata lainnya 
+    // aktifkan input pemanfaatan barang/jasa lainnya 
+  }
+
   render(){
     const {
+      intl,
       pengajuan,
       changeJenisPengajuan,
-      changeSubPengajuan
+      changeSubPengajuan,
+      changePemanfaatanLain
     } = this.props;
 
     return (
@@ -177,7 +211,9 @@ class FormPengajuan extends React.Component {
                 }}
                 value={pengajuan.tujuan}
                 onChange={evt=>{
-                  return changeSubPengajuan(evt.target.value)
+                  console.log(evt.target);
+                  this.handlePemanfaatanLainnya(evt.target.value);
+                  // return changeSubPengajuan(evt.target.value)
                 }}>
                   {/*
                   <MenuItem value="PB1" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (sepeda)</MenuItem>                  
@@ -196,23 +232,54 @@ class FormPengajuan extends React.Component {
                   */}
                   {this.renderTujuanPengajuan()}
               </Select>
+            </FormControl>
+
+            <FormControl 
+              margin="dense" 
+              fullWidth>
+                <TextField 
+                  id="lainnya" 
+                  name="lainnya"
+                  color="secondary" 
+                  fullWidth
+                  InputLabelProps={{ shrink: true }} 
+                  variant="outlined"
+                  label={intl.formatMessage(messages.lainnya)}               
+                  margin="dense"
+                  disabled={!!this.state.pemanfaatanLainnyaIsActive ? false : true}
+                  value={pengajuan.pemanfaatan_lain}
+                  onChange={evt=>{
+                      // if(isTriggered){
+                        //this.validateInput(evt.target.value,'fullname');
+                        // this.props.validateInput('fullname', this.props.fullname);
+                      // }
+                      // return this.onInputChange(evt.target.value,'fullname');
+                      return changePemanfaatanLain(evt.target.value);
+                  }} 
+                  style={{ 
+                    fontFamily:typography.fontFamily,
+                    fontSize:12
+                  }} />
             </FormControl>            
                                   
             {/* </Scrollbars> */}
-            <Grid item xs style={{ paddingTop:20, justifyContent:'center', alignItems:'center'}}>
-            <Button 
-              color="secondary" 
-              variant="contained" 
-              fullWidth 
-              disabled={true}
-              style={{ 
-                textTransform:'capitalize',
-                fontWeight:'bold',
-                 
-              }}>
-              next step
-            </Button>
-            </Grid>      
+            {/* <Grid 
+              item 
+              xs 
+              style={{ paddingTop:20, justifyContent:'center', alignItems:'center'}}>
+              <Button 
+                color="secondary" 
+                variant="contained" 
+                fullWidth 
+                disabled={true}
+                style={{ 
+                  textTransform:'capitalize',
+                  fontWeight:'bold',
+                  
+                }}>
+                next step
+              </Button>
+            </Grid>       */}
             </form>
           </Grid>
       </Wrapper>
@@ -229,7 +296,8 @@ function mapDispatchToProps(dispatch) {
   return {
     // dispatch,
     changeJenisPengajuan: (jenisPengajuan) => dispatch(changeJenisPengajuanAction(jenisPengajuan)),
-    changeSubPengajuan: (tujuanPengajuan) => dispatch(changeSubPengajuanAction(tujuanPengajuan))
+    changeSubPengajuan: (tujuanPengajuan) => dispatch(changeSubPengajuanAction(tujuanPengajuan)),
+    changePemanfaatanLain: (pemanfaatan) => dispatch(changePemanfaatanLainAction(pemanfaatan))
   };
 }
 
@@ -238,4 +306,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(FormPengajuan);
+export default compose(
+  injectIntl,
+  withConnect
+)(FormPengajuan);

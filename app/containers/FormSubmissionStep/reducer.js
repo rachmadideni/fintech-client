@@ -49,7 +49,8 @@ import {
 
 import {
   CHANGE_JENIS_PENGAJUAN_ACTION,
-  CHANGE_SUB_PENGAJUAN_ACTION
+  CHANGE_SUB_PENGAJUAN_ACTION,
+  CHANGE_PEMANFAATAN_LAIN_ACTION
 } from '../FormPengajuan/constants';
 
 import messages from './messages';
@@ -136,7 +137,8 @@ export const initialState = {
     },
     pengajuan:{
       jenis:"1",
-      tujuan:""
+      tujuan:"",
+      pemanfaatan_lain:""
     }
   },
   opsi:{
@@ -290,7 +292,12 @@ const formSubmissionStepReducer = (state = initialState, action) =>
       case CHANGE_SUB_PENGAJUAN_ACTION:{
         draft.data.pengajuan.tujuan = action.payload;
         return draft;
-      } 
+      }
+      
+      case CHANGE_PEMANFAATAN_LAIN_ACTION:{
+        draft.data.pengajuan.pemanfaatan_lain = action.payload;
+        return draft;
+      }
 
     }
     return draft;
