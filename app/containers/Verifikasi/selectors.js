@@ -33,10 +33,15 @@ const makeSelectUser = () => createSelector(
 const makeSelectErrorMessage = () => createSelector(
   selectVerifikasiDomain, substate => substate.error.message);
 
+const makeSelectTokenVerifikasi = () => createSelector(selectVerifikasiDomain, substate => substate.user.token_verifikasi);
+const makeSelectKodeVerifikasi = () => createSelector(selectVerifikasiDomain, substate => substate.user.kode_verifikasi);
+
 export default makeSelectVerifikasi;
 export { 
   selectVerifikasiDomain,
   makeSelectIsLoading,
   makeSelectUser,
-  makeSelectErrorMessage
+  makeSelectErrorMessage,
+  makeSelectTokenVerifikasi,
+  makeSelectKodeVerifikasi
 };

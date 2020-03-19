@@ -23,3 +23,11 @@ export const CHANGE_PLAFON_ACTION = 'app/PerhitunganAngsuran/CHANGE_PLAFON_ACTIO
 export const CHANGE_TENOR_ACTION = 'app/PerhitunganAngsuran/CHANGE_TENOR_ACTION';
 export const CHANGE_ANGSURAN_ACTION = 'app/PerhitunganAngsuran/CHANGE_ANGSURAN_ACTION';
 export const SET_LIMIT_ANGSURAN_ACTION = 'app/PerhitunganAngsuran/SET_LIMIT_ANGSURAN_ACTION';
+export const GET_PARAM_ACTION = 'app/PerhitunganAngsuran/GET_PARAM_ACTION';
+export const GET_PARAM_SUCCESS_ACTION = 'app/PerhitunganAngsuran/GET_PARAM_SUCCESS_ACTION';
+
+
+export const TOUR_STEPS = [{
+    selector:'.satu',
+    content:'tour pertama'
+}]

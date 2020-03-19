@@ -13,13 +13,21 @@ import {
   REQUEST_KODE_ACTION,
   REQUEST_KODE_SUCCESS_ACTION,
   REQUEST_KODE_ERROR_ACTION,
-  LOG_ERROR_ACTION
+  LOG_ERROR_ACTION,
+  LOG_SUCCESS_ACTION
 } from './constants';
 
 export function logErrorAction(error){
   return {
     type:LOG_ERROR_ACTION,
     payload:error
+  }
+}
+
+export function logSuccessAction(msg){
+  return {
+    type:LOG_SUCCESS_ACTION,
+    payload:msg
   }
 }
 

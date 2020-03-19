@@ -40,9 +40,14 @@ export function verifikasiAction() {
   };
 }
 
-export function verifikasiSuccessAction() {
+export function verifikasiSuccessAction(token, kode, isLoading) {
   return {
     type: VERIFIKASI_SUCCESS_ACTION,
+    payload:{
+      token,
+      kode,
+      isLoading
+    }
   };
 }
 

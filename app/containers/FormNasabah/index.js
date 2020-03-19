@@ -10,9 +10,6 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
 import makeSelectFormNasabah from './selectors';
 import {
   makeSelectFullname,
@@ -25,10 +22,11 @@ import {
   makeSelectErrorBirthdate,
   makeSelectErrorAddress,
   makeSelectErrorGender,
-  makeSelectTriggered
+  makeSelectErrorMotherMaidenName,
+  makeSelectTriggered,
+  makeSelectJenkel,
+  makeSelectMotherMaidenName
 } from '../FormSubmissionStep/selectors'
-import reducer from './reducer';
-import saga from './saga';
 import messages from './messages';
 
 import { setNasabahAction } from 'containers/FormSubmissionStep/actions';
@@ -39,8 +37,12 @@ import {
   changeAddressAction,
   changeGenderAction,
   validateInputAction,
-  changeTriggeredAction
+  changeTriggeredAction,
+  getOpsiJenkelAction,
+  changeMotherMaidenNameAction
 } from 'containers/FormNasabah/actions';
+
+import { JENKEL } from './constants';
 
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
@@ -50,7 +52,7 @@ import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 
 import validate from 'validate.js';
 
@@ -70,11 +72,11 @@ class FormNasabah extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      fullname:'',
-      birthplace:'',
-      birthdate:'',
-      address:'',
-      gender:'',
+      // fullname:'',
+      // birthplace:'',
+      // birthdate:'',
+      // address:'',
+      // gender:'',
       error:{
         fullname:null,
         birthplace:null,
@@ -85,6 +87,10 @@ class FormNasabah extends React.Component {
       isSubmitTriggered:false
     }
     this.onInputChange = this.onInputChange.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.getOpsiJenkel();
   }
 
   onInputChange(inputValue,inputName){
@@ -119,10 +125,7 @@ class FormNasabah extends React.Component {
             break;
         default:
             errorMessage = null;
-      }
-      console.log(isError);
-      console.log('errorMessage:',errorMessage);
-      console.log(inputValue);
+      }      
     }
     
     this.setState(state=>({
@@ -158,7 +161,7 @@ class FormNasabah extends React.Component {
       this.validateInput(gender,'gender')
     ){
       // TODO: CALL API TO SAVE DATA
-      console.log('the form is clean and is submitted to the server!');
+      // console.log('the form is clean and is submitted to the server!');
       return this.props.setNasabah({ 
         fullname,
         birthplace,
@@ -186,7 +189,17 @@ class FormNasabah extends React.Component {
     }
 
     return false;
+  }
 
+  renderOpsiJenkel = () => {
+    const { opsi_jenkel } = this.props;
+    const raw_opsi = opsi_jenkel.length > 0 ? opsi_jenkel : JENKEL;  
+    const opsi = raw_opsi.map((item,i) => {
+      return <MenuItem key={`item-jenkel-${i}`} value={item.ID} style={{                          
+        textTransform:'lowercase'
+      }}>{item.NAMKEL}</MenuItem>;      
+    });
+    return opsi;
   }
 
   render(){
@@ -197,16 +210,10 @@ class FormNasabah extends React.Component {
       changeBirthdate,
       changeAddress,
       changeGender,
+      changeMotherMaidenName,
       isTriggered      
     } = this.props;
-    // const { 
-    //   fullname,
-    //   birthplace,
-    //   birthdate,
-    //   address,
-    //   gender,
-    //   isSubmitTriggered
-    // } = this.state;
+    
     return (
       <Wrapper 
         container 
@@ -341,16 +348,43 @@ class FormNasabah extends React.Component {
                            if(isTriggered){
                              this.props.validateInput('gender', evt.target.value)
                            }
-                          //  return this.onInputChange(evt.target.value,'gender') 
                            return changeGender(evt.target.value); 
                           }}  
                         error={!!this.props.errorGender}
-                        helpertext={this.props.errorGender}>
-                          <MenuItem value="L">Laki Laki</MenuItem>
-                          <MenuItem value="P">Perempuan</MenuItem>
+                        helpertext={this.props.errorGender}
+                        style={{                          
+                          textTransform:'lowercase'
+                        }}>
+                          {this.renderOpsiJenkel()}                          
                       </Select>
                       <FormHelperText>{this.props.errorGender}</FormHelperText>
                     </FormControl>
+                                    
+                    <FormControl 
+                      variant="outlined" 
+                      fullWidth>
+                      <TextField 
+                        id="mother_maiden_name" 
+                        name="mother_maiden_name" 
+                        fullWidth
+                        color="secondary"
+                        InputLabelProps={{ shrink: true }}
+                        variant="outlined"
+                        label={intl.formatMessage(messages.motherMaidenName)}                                              
+                        margin="dense"
+                        value={this.props.motherMaidenName}                      
+                        onChange={
+                          evt=>{
+                          if(isTriggered){
+                            this.props.validateInput('mother_maiden_name', this.props.motherMaidenName)
+                          }
+                          return changeMotherMaidenName(evt.target.value); 
+                          }}
+                        error={!!this.props.errorMotherMaidenName}
+                        helperText={this.props.errorMotherMaidenName} />
+                    </FormControl>
+
+
                     {/* <Button 
                       variant="contained" 
                       color="primary"
@@ -379,12 +413,15 @@ const mapStateToProps = createStructuredSelector({
   birthdate: makeSelectBirthdate(),
   address: makeSelectAddress(),
   gender: makeSelectGender(),
+  motherMaidenName: makeSelectMotherMaidenName(),
   errorFullname: makeSelectErrorFullname(),
   errorBirthplace: makeSelectErrorBirthplace(),
   errorBirthdate: makeSelectErrorBirthdate(),
   errorAddress: makeSelectErrorAddress(),
   errorGender: makeSelectErrorGender(),
-  isTriggered: makeSelectTriggered()
+  errorMotherMaidenName: makeSelectErrorMotherMaidenName(),
+  isTriggered: makeSelectTriggered(),
+  opsi_jenkel: makeSelectJenkel()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -396,8 +433,10 @@ function mapDispatchToProps(dispatch) {
     changeBirthdate: value => dispatch(changeBirthdateAction(value)),
     changeAddress: value => dispatch(changeAddressAction(value)),
     changeGender: value => dispatch(changeGenderAction(value)),
+    changeMotherMaidenName: value => dispatch(changeMotherMaidenNameAction(value)),
     validateInput: (inputname, inputvalue) => dispatch(validateInputAction(inputname, inputvalue)),
-    changeTriggered: value => dispatch(changeTriggeredAction(value))
+    changeTriggered: value => dispatch(changeTriggeredAction(value)),
+    getOpsiJenkel: () => dispatch(getOpsiJenkelAction())
   };
 }
 

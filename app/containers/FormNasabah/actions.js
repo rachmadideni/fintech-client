@@ -10,10 +10,27 @@ import {
   CHANGE_BIRTHDATE_ACTION,
   CHANGE_ADDRESS_ACTION,
   CHANGE_GENDER_ACTION,
+  CHANGE_MOTHER_MAIDEN_NAME_ACTION,
   VALIDATE_INPUT_ACTION,
   CHANGE_VALIDATION_MESSAGE_ACTION,
-  CHANGE_TRIGGERED_ACTION
+  CHANGE_TRIGGERED_ACTION,
+  GET_OPSI_JENKEL_ACTION,
+  GET_OPSI_JENKEL_SUCCESS_ACTION
 } from './constants';
+
+
+export function getOpsiJenkelAction() {
+  return {
+    type: GET_OPSI_JENKEL_ACTION
+  };
+}
+
+export function getOpsiJenkelSuccessAction(opsi) {
+  return {
+    type: GET_OPSI_JENKEL_SUCCESS_ACTION,
+    payload:opsi
+  };
+}
 
 export function changeFullnameAction(fullname) {
   return {
@@ -47,6 +64,13 @@ export function changeGenderAction(gender) {
   return {
     type: CHANGE_GENDER_ACTION,
     payload:gender
+  };
+}
+
+export function changeMotherMaidenNameAction(name) {
+  return {
+    type: CHANGE_MOTHER_MAIDEN_NAME_ACTION,
+    payload:name
   };
 }
 

@@ -29,4 +29,12 @@ export default defineMessages({
     id: `${scope}.btnConfirm`,
     defaultMessage: 'Konfirmasi kode',
   },
+  codeIsMatch:{
+    id: `${scope}.codeIsMatch`,
+    defaultMessage: 'kode verifikasi sesuai. mohon tunggu',
+  },
+  tokenExpired:{
+    id: `${scope}.tokenExpired`,
+    defaultMessage: 'kode verifikasi expired',
+  }
 });

@@ -31,6 +31,9 @@ const makeSelectKodeFromServer = () => createSelector(selectVerifyConfirmPageDom
 const makeSelectError = () => createSelector(selectVerifyConfirmPageDomain,
   substate => substate.error.message)
 
+const makeSelectSuccess = () => createSelector(selectVerifyConfirmPageDomain,
+  substate => substate.confirm.successMessage)
+
 
 
 export default makeSelectVerifyConfirmPage;
@@ -38,5 +41,6 @@ export {
   selectVerifyConfirmPageDomain,
   makeSelectKodeAktifasi,
   makeSelectKodeFromServer,
-  makeSelectError
+  makeSelectError,
+  makeSelectSuccess
 };

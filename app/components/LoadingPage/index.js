@@ -18,9 +18,9 @@ function LoadingPage() {
     // <Grid item xs>
       <Backdrop 
         open={true}
-        invisible={true}      
+        invisible={false}      
         style={{
-          zIndex:2000
+          zIndex:5000
         }}>
           <Grid 
             container 
@@ -38,7 +38,7 @@ function LoadingPage() {
                 style={{
                   fontFamily:typography.fontFamily,
                   marginBottom:20,
-                  color:color.green
+                  color:color.white
                 }}>
                   mohon tunggu                      
               </Typography>

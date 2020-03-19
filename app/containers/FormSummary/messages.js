@@ -15,7 +15,11 @@ export default defineMessages({
   },
   thankyou:{
     id: `${scope}.thankyou`,
-    defaultMessage: 'Terima kasih telah melengkapi pengajuan',
+    defaultMessage: 'Terima kasih pengajuan anda telah di terima',
+  },
+  thankyou_details:{
+    id: `${scope}.thankyou_details`,
+    defaultMessage: 'pantau terus email dan SMS kamu untuk pemberitahuan selanjutnya',
   },
   summary:{
     id: `${scope}.summary`,

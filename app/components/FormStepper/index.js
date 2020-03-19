@@ -33,14 +33,15 @@ function FormStepper(props) {
     limitAngsuran,
     nasabah,
     work,
-    documents
+    documents,
+    pengajuan
   } = props;
 
   let currstep = completedStep[activeStep].number;
   let totalstep = completedStep.length;
 
   const check_customer_form = nasabah => {
-    if(nasabah.fullname && nasabah.birthplace && nasabah.birthdate && nasabah.address && nasabah.gender){
+    if(nasabah.fullname && nasabah.birthplace && nasabah.birthdate && nasabah.address && nasabah.gender && nasabah.mother_maiden_name){
       return false;
     }
     return true
@@ -54,7 +55,18 @@ function FormStepper(props) {
   }
   
   const check_document_form = documents => {
-    if(documents.ktp && documents.idcard && documents.npwp){
+    let ktp = documents.uploaded.findIndex((elem) => elem.idberk === 3);  
+    let idcard = documents.uploaded.findIndex((elem) => elem.idberk === 5);  
+    let npwp = documents.uploaded.findIndex((elem) => elem.idberk === 6);  
+    // if(ktp > -1 && idcard > -1 && npwp > -1){
+    if(ktp > -1){
+      return false;
+    }
+    return true;
+  }
+
+  const check_pengajuan_form = pengajuan => {
+    if(pengajuan.jenis && pengajuan.tujuan) {
       return false;
     }
     return true;
@@ -63,7 +75,10 @@ function FormStepper(props) {
   return (
     <Grid 
       container 
-      wrap="nowrap">
+      wrap="nowrap"
+      style={{
+        marginBottom:10
+      }}>
         { activeStep > 0 && <StepBackButton active={true} onClickBack={onClickBack} /> }
         <StepCircularProgress 
           stepvalue={stepProgress}
@@ -101,6 +116,13 @@ function FormStepper(props) {
               check_document_form(documents)
             } /> : null
         }
+        {/* { activeStep === 4 ? 
+          <StepNextButton 
+            onClickNext={onClickNext}
+            isDisabled={
+              check_pengajuan_form(pengajuan)
+            } /> : null
+        } */}
     </Grid>
   );
 }

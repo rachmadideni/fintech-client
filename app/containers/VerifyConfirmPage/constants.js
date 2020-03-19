@@ -17,3 +17,4 @@ export const REQUEST_KODE_ERROR_ACTION = 'app/VerifyConfirmPage/REQUEST_KODE_ERR
 
 export const CHECK_KODE_ISMATCH_ACTION = 'app/VerifyConfirmPage/CHECK_KODE_ISMATCH_ACTION';
 export const LOG_ERROR_ACTION = 'app/VerifyConfirmPage/LOG_ERROR_ACTION';
+export const LOG_SUCCESS_ACTION = 'app/VerifyConfirmPage/LOG_SUCCESS_ACTION';

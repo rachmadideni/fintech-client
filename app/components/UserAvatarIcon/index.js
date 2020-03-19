@@ -20,7 +20,8 @@ const AvatarStyled = styled(Avatar)`
 `
 
 function UserAvatarIcon(props) {
-  return <AvatarStyled>{props.title}</AvatarStyled>;
+  const name = props.title ? props.title : "U"; 
+  return <AvatarStyled>{name}</AvatarStyled>;
 }
 
 UserAvatarIcon.propTypes = {

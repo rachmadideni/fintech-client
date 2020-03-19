@@ -13,7 +13,7 @@ const GridContainer = styled(Grid)`
 && {
   justify-content:center;
   align-items:center;
-  height:82vh;
+  // height:82vh;
   padding-bottom:5px;
   padding-left:10px;
 }`;

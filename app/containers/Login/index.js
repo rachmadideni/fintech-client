@@ -447,6 +447,7 @@ class Login extends React.Component {
                           </Grid>                      
                         </Grid>                    
                         <NotificationSnackbar 
+                          verticalPos="bottom"
                           open={this.state.isNotificationOpen}
                           onClose={()=>this.props.logError(null)}
                           hideDuration={3000}

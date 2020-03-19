@@ -7,173 +7,253 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectUserDashboard from './selectors';
+import injectSaga from 'utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import {
+  status_sp3
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+import {
+  cekSp3Action
+} from './actions'
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import { ArrowForwardSharp } from '@material-ui/icons';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+// import Button from '@material-ui/core/Button';
+// import Avatar from '@material-ui/core/Avatar';
+// import { ArrowForwardSharp } from '@material-ui/icons';
 
 // Component
-import DashboardContainer from 'components/DashboardContainer';
-import DashboardWelcomeUser from 'components/DashboardWelcomeUser';
-import DashboardProduct from 'components/DashboardProduct';
-import DashboardButton from 'components/DashboardButton';
+import DashboardWelcomeUser from '../../components/DashboardWelcomeUser';
 
-import PagesIcon from '@material-ui/icons/Pages';
+// import DashboardContainer from 'components/DashboardContainer';
+// import DashboardProduct from 'components/DashboardProduct';
+// import DashboardButton from 'components/DashboardButton';
+
 import BookIcon from '@material-ui/icons/Book';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+// import PagesIcon from '@material-ui/icons/Pages';
 
 import { typography, color } from '../../styles/constants';
 import demimoore from '../../images/demimoore.jpg';
+import styled from 'styled-components';
+
+const Wrapper = styled(props=>{
+  return (
+    <Grid 
+      container 
+      wrap="nowrap" 
+      direction="column"
+      {...props}>
+      {props.children}
+    </Grid>
+  );
+})`
+  && {
+    display:flex;    
+    padding-top:20px;
+    background-color:transparent;
+    justify-content:center;
+    align-items:center;
+    margin-top:12px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+`;
+
+const StyledTabs = styled(Tabs).attrs({
+  classes:{
+    flexContainer: 'flex-container',
+    indicator:'indicator'
+  }
+})`
+  && {
+    .flex-container {
+      flex-direction: row;
+    }
+    .indicator {
+      display:none;
+    }
+  }
+`
+
+const IconTab = styled(Tab).attrs({
+  classes:{
+    selected:'selected',
+    wrapper:'wrapper',
+    disabled:'disabled'
+  }
+})`
+  && {
+    // width:120px;
+    // min-height: 58px;
+    min-width: 120px;
+    flex-direction:row;    
+    
+    transition: background-color 200ms ease-in-out;
+    border-radius:4px;
+    border:solid 1px ${color.grey};
+    box-shadow:none;
+    font-size:12px;
+    font-weight:bold;
+    text-transform:capitalize;
+    // color:${color.green};
+    margin:4px;
+    font-family:${typography.fontFamily};    
+    line-height:1.2;            
+    background-image:linear-gradient(${color.green},${color.blue});
+    color:${color.white};    
+    opacity: 1;
+  }
+  
+  &.selected {    
+    opacity: 1;
+    font-weight:bold;
+    text-transform:capitalize;
+  }
+
+  &.disabled {
+    opacity: 0.1;
+    background-color:${color.grey};
+  }`;
+
+export function ProductTabs(props){
+  const { tabs, intl, ...tabsProps } = props;
+  return (
+    <StyledTabs  {...tabsProps}>
+      {tabs.map((tab, index) => {
+        const key = `navTab-${tab.label}-${index}`;
+        return <IconTab key={key} icon={<tab.icon />} disabled={tab.disabled} label={intl.formatMessage(tab.label)} />;
+      })}
+    </StyledTabs>
+  );
+}
+
 
 class UserDashboard extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      MenuTabValue:-1
+    }
+  }
+  
+  componentDidMount(){
+    this.props.cekSp3();
   }
 
-  componentDidMount(){
-    // console.log(this.props);
+  getTabs = () => {
+    const {
+      status_sp3
+    } = this.props;
+
+    return [
+      {
+        icon: AddCircleIcon,
+        label: messages.btnFormPengajuan,
+        value:0,
+        disabled: status_sp3 > 0 && status_sp3 < 3 ? true : false 
+      },
+      {
+        icon: BookIcon,
+        label: messages.btnFormAkad,
+        value:1,
+        disabled: status_sp3 === 2 ? false : true
+      }
+    ];
+  }
+
+  handleMenuTabChange = (e, value) => {
+    this.setState({
+      MenuTabValue:value
+    });
+    const { history } = this.props;
+    if(value === 0){
+      return history.replace('/application-form/step/customer/installment');
+    }
+    else if(value === 1){
+      return history.replace('/akad');
+    }
   }
 
   onClickProduct = () => {
-    const { history } = this.props;
-    // return history.replace('/pinjaman/angsuran');
+    const { history } = this.props;    
     return history.replace('/application-form/step/customer/installment');
   }
 
   render(){
     const { intl } = this.props
     return (
-      <DashboardContainer 
-        container 
-        wrap="nowrap" 
-        direction="column">      
+      <Wrapper>      
       
           <DashboardWelcomeUser 
             imgProps={demimoore} 
-            welcomeText={`Selamat datang \nMochammad Ibrahim Aprianto`} />
-
-          <Grid item style={{ paddingLeft:20, paddingRight:20 }}>
-            <Typography 
-              variant="body2"
-              align="center"              
-              style={{
-                fontFamily:typography.fontFamily,
-                fontSize:13,
-              }}>
-              {intl.formatMessage(messages.noApplicationYet)}
-            </Typography>
-            <Typography 
-              variant="body2"
-              align="center"
-              gutterBottom
-              style={{
-                fontFamily:typography.fontFamily,
-                fontSize:14,
-                fontWeight:'normal',
-                color:color.black
-              }}>
-              {intl.formatMessage(messages.pembiayaanMultiGuna)}
-            </Typography>
-          </Grid>
-          <DashboardProduct 
-            chooseProductText=""
-            productButtonProps={
-              <>              
-              <DashboardButton 
-                fullWidth 
-                variant="contained" 
-                color="primary"
-                disableElevation
-                endIcon={<ArrowForwardSharp size="small" />}
-                text={intl.formatMessage(messages.btnPengajuan)}
-                onClick={this.onClickProduct} />
-              
-              {/* <DashboardButton 
-                fullWidth 
-                disabled 
-                variant="contained" 
-                color="primary"
-                disableElevation
-                startIcon={<PagesIcon size="small" />}
-                text="Al Murabahah"  />
-                <div style={{ flexGrow:1,height:20 }} />
-                <DashboardButton 
-                  fullWidth 
-                  disabled 
-                  variant="outlined" 
-                  color="primary"
-                  disableElevation
-                  startIcon={<BookIcon size="small" />}
-                  text="user guide"  /> */}
-              </>
-            } />
+            welcomeText={`Selamat datang di \nAplikasi Pembiayaan`} />
           
-          <Grid item style={{ paddingLeft:55, paddingRight:55 }}>
-            <Grid 
-              container 
-              justify="center">
+          
+          <Grid 
+            item
+            style={{
+              width:'100%',
+              padding:'12px 20px 15px 20px',               
+              border:`solid 2px ${color.lightGrey}`,
+              borderRadius:8
+            }}>
+              <Typography
+                align="left"
+                gutterBottom
+                style={{
+                  textTransform:'capitalize',
+                  fontWeight:'bold'
+                }}>
+                pengajuan
+              </Typography>          
               
-              {/* <Button 
-                fullWidth 
-                variant="contained" 
-                color="primary"
-                startIcon={<PagesIcon size="small" />} 
+              <Grid 
+                item 
                 style={{ 
-                  marginTop:10, 
-                  marginRight:10, 
-                  marginBottom:10, 
-                  boxShadow:'none',
-                  textTransform:'capitalize',
-                  fontFamily:typography.fontFamily,
-                  fontWeight:'bold' }}>
-                Al Ijarah
-              </Button>
-              <Button 
-                fullWidth 
-                disabled 
-                variant="contained" 
-                color="primary" 
-                style={{ marginRight:10, marginBottom:10,boxShadow:'none'  }}>
-                Al Murabahah
-              </Button>
-              <div style={{ flexGrow:1,height:20 }} />
-              <Button 
-                fullWidth 
-                variant="outlined" 
-                color="primary" 
-                startIcon={<BookIcon size="small" />}
-                style={{ 
-                  marginRight:10, 
-                  marginBottom:10, 
-                  boxShadow:'none',
-                  textTransform:'capitalize',
-                  fontFamily:typography.fontFamily,
-                  fontSize:typography.size.medium,
-                  fontWeight:'bold'  }}>
-                user guide
-              </Button>
-              <Button 
-                fullWidth 
-                disabled 
-                variant="outlined" 
-                color="primary" 
-                style={{ marginRight:10, marginBottom:10, boxShadow:'none'  }}>
-                Helpdesk
-              </Button> */}
-            </Grid>
-          </Grid>
-          </DashboardContainer>
+                  width:250,
+                  marginBottom:10,
+                }}>
+                
+                <Typography               
+                  align="center"                            
+                  style={{
+                    fontFamily:typography.fontFamily,
+                    fontSize:11,
+                  }}>
+                  {
+                    this.props.status_sp3 === 1 && 
+                    <span>{`pengajuan anda sdh kami terima terima.                    
+                    silahkan tunggu informasi selanjutnya`}</span>
+                    
+                  }                  
+                  {
+                    this.props.status_sp3 === 0 && 
+                    `${intl.formatMessage(messages.noApplicationYet)}  
+                    ${intl.formatMessage(messages.pembiayaanMultiGuna)}`
+                  }
+                </Typography>
+                                
+              </Grid>
+
+              <ProductTabs 
+                intl={intl}
+                centered
+                orientation="vertical"
+                value={this.state.MenuTabValue}
+                onChange={this.handleMenuTabChange} 
+                tabs={this.getTabs()} />          
+          </Grid>                    
+      </Wrapper>
     );
   }
 }
@@ -183,12 +263,14 @@ UserDashboard.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  userDashboard: makeSelectUserDashboard(),
+  // userDashboard: makeSelectUserDashboard(),
+  status_sp3: status_sp3()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    cekSp3: () => dispatch(cekSp3Action())
   };
 }
 
@@ -197,8 +279,13 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
+const withReducer = injectReducer({ key: 'userDashboard', reducer });
+const withSaga = injectSaga({ key: 'userDashboardSaga', saga });
+
 export default compose(
   withConnect,
+  withReducer,
+  withSaga,
   injectIntl,
   memo,
 )(UserDashboard);

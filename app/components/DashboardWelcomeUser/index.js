@@ -12,8 +12,13 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { color, typography } from '../../styles/constants';
 
-const Wrapper = styled(Grid)`
+const Wrapper = styled.div`
 && {
+  flex:1;
+  width:100%;
+  border-radius:8px;
+  padding:10px;
+  background-color:${color.lightGrey};  
   margin-bottom:20px;
 }`;
 
@@ -25,7 +30,8 @@ const AvatarStyled = styled(Avatar)`
 const WelcomeMessage = styled(Typography)`
 && {
   font-family:${typography.fontFamily};
-  font-size:${typography.size.medium};
+  // font-size:${typography.size.tiny};
+  font-size:12px;
   color:${color.black};
   font-weight:bold;
   line-height:15px;
@@ -39,8 +45,9 @@ function DashboardWelcomeUser(props) {
       <Grid 
         container 
         wrap="nowrap" 
-        justify="center" 
-        alignItems="flex-start">
+        justify="flex-start" 
+        alignItems="center"
+        >
         <AvatarStyled src={imgProps} />
         <WelcomeMessage>
           {welcomeText}

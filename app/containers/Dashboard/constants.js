@@ -28,7 +28,7 @@ export const TABS = [{
     value:'profil',
     icon:AccountCircleOutlined
 },{
-    label:'inbox',
-    value:'inbox',
+    label:'pesan',
+    value:'pesan',
     icon:EmailOutlined
 }]

@@ -8,8 +8,26 @@ import {
   DEFAULT_ACTION,
   CHANGE_JENIS_PENGAJUAN_ACTION,
   CHANGE_SUB_PENGAJUAN_ACTION,
-  CHANGE_PEMANFAATAN_LAIN_ACTION
+  CHANGE_PEMANFAATAN_LAIN_ACTION,
+  GET_OPSI_JENIS_PENGAJUAN_ACTION,
+  GET_OPSI_JENIS_PENGAJUAN_SUCCESS_ACTION
 } from './constants';
+
+
+
+
+export function getOpsiJenisPengajuanAction() {
+  return {
+    type: GET_OPSI_JENIS_PENGAJUAN_ACTION,
+  };
+}
+
+export function getOpsiJenisPengajuanSuccessAction(data) {
+  return {
+    type: GET_OPSI_JENIS_PENGAJUAN_SUCCESS_ACTION,
+    payload:data
+  };
+}
 
 export function defaultAction() {
   return {

@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
-import {
-  replace
-} from 'connected-react-router';
+import request from 'utils/request';
+import { api } from 'environments';
+import { replace } from 'connected-react-router';
 import {
   KONFIRMASI_KODE_ACTION
 } from './constants'
@@ -11,19 +11,36 @@ import {
   logErrorAction
 } from './actions';
 
+import {
+  makeSelectUser
+} from '../Verifikasi/selectors';
+
 export function* konfirmasiKode(){
+  const user = yield select(makeSelectUser());
+
+  const endpoint = `${api.host}/api/konfirmasi_verifikasi`
+  const requestOpt = {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body: JSON.stringify({
+      nik:user.nik
+    })
+  };
   try {
+    // call api untuk update TGAKTIFASI & STATUS
+    yield call(request, endpoint, requestOpt);
+    // konfirmasi_verifikasi    
     yield put(konfirmasiKodeSuccessAction());
-    yield put(replace('/'));
-    // yield put(logErrorAction(null))
+    yield put(replace('/createPassword'));
+    
+
   } catch(err){
-    // yield put(logErrorAction('kode verifikasi tidak cocok!'))
     yield put(konfirmasiKodeErrorAction(err));
   }
 }
 
-// Individual exports for testing
 export default function* verifyConfirmPageSaga() {
-  // See example in containers/HomePage/saga.js
   yield takeLatest(KONFIRMASI_KODE_ACTION, konfirmasiKode)
 }

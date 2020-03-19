@@ -22,7 +22,6 @@ const makeSelectIsLoading = () =>
   createSelector(selectLoginDomain,
     substate => substate.isLoading);
 
-
 export { 
   makeSelectLogin,
   makeSelectCredential,

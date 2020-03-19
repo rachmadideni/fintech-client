@@ -18,7 +18,9 @@ export const initialState = {
   user:{
     nik:"",
     email:"",
-    nomtel:""
+    nomtel:"",
+    token_verifikasi:"",
+    kode_verifikasi:""
   },
   error:{
     message:null
@@ -43,7 +45,9 @@ const verifikasiReducer = (state = initialState, action) =>
         draft.error.message = null;
         return draft;
       case VERIFIKASI_SUCCESS_ACTION:
-        draft.isLoading = false;
+        draft.user.token_verifikasi = action.payload.token;
+        draft.user.kode_verifikasi = action.payload.kode;
+        draft.isLoading = action.payload.isLoading;
         return draft;
       case VERIFIKASI_ERROR_ACTION:
         draft.isLoading = false;

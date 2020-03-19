@@ -14,6 +14,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from 'containers/Login/Loadable';
 import Verifikasi from 'containers/Verifikasi/Loadable';
 import VerifyConfirmPage from 'containers/VerifyConfirmPage';
+import CreatePassword from 'containers/CreatePassword/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 // import ProductSelection from 'containers/ProductSelection/Loadable';
@@ -65,6 +66,11 @@ export default function App() {
           component={VerifyConfirmPage} />
         
         <Route 
+          exact 
+          path="/createPassword" 
+          component={CreatePassword} />
+        
+        <Route 
           exact          
           path="/dashboard" 
           render={routeProps=>(
@@ -89,6 +95,22 @@ export default function App() {
             </AuthGuard>
           )} />
         
+        <Route 
+          path="/summary"
+          render={routeProps=>(
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
+          )} />
+        
+        <Route 
+          path="/akad"
+          render={routeProps=>(
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
+          )} />
+
         <Route 
           path="/profil"
           render={routeProps=>(

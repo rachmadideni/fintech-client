@@ -47,7 +47,8 @@ import isEmail from 'validator/lib/isEmail';
 
 import styled from 'styled-components';
 import bggreen01 from '../../images/bg_green_1.png';
-//import demimoore from '../../images/demimoore.jpg';
+
+import LoadingPage from 'components/LoadingPage';
 
 import {
   AppBar,
@@ -223,15 +224,10 @@ class Verifikasi extends React.Component {
       <Wrapper 
         container
         wrap="nowrap"
-        direction="column"
-        style={{
-          // height:'100%',
-          // justifyContent:'center',
-          // alignItems:'center',
-          // paddingLeft:40,
-          // paddingRight:40,
-          // backgroundSize:'cover'
-        }}>
+        direction="column">
+          {
+            isLoading  && <LoadingPage />
+          }
           <AppBar style={{
             backgroundColor:'transparent',
             boxShadow:'none'

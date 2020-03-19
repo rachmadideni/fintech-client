@@ -11,16 +11,17 @@ import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-// import { useInjectSaga } from 'utils/injectSaga';
-// import { useInjectReducer } from 'utils/injectReducer';
-// import makeSelectFormPekerjaan from './selectors';
-import { makeSelectWorkData } from '../FormSubmissionStep/selectors';
+import { 
+  makeSelectWorkData,
+  makeSelectSbu
+} from '../FormSubmissionStep/selectors';
+
 import { 
   changeCompanyAction,
-  changeCompanyJoinDateAction
+  changeCompanyJoinDateAction,
+  getOpsiSbuAction
 } from './actions';
-// import reducer from './reducer';
-// import saga from './saga';
+
 import messages from './messages';
 import { GROUP_COMPANY } from './constants';
 
@@ -60,6 +61,10 @@ class FormPekerjaan extends React.Component {
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.validateInput = this.validateInput.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.getOpsiSbu();
   }
 
   onInputChange(inputValue,inputName){
@@ -114,7 +119,8 @@ class FormPekerjaan extends React.Component {
       intl,
       work,
       changeCompany,
-      changeCompanyJoinDate
+      changeCompanyJoinDate,
+      opsiSbu
     } = this.props;
     const { company, companyJoinDate, isSubmitTriggered } = this.state;
     return (
@@ -152,8 +158,20 @@ class FormPekerjaan extends React.Component {
                     variant="outlined" 
                     margin="dense"
                     color="secondary"
-                    labelWidth={110}>
-                      {GROUP_COMPANY.map((company,i)=><MenuItem key={`${company.title}-${i}`} value={company.value}>{company.title}</MenuItem>)}                      
+                    labelWidth={110}
+                    style={{
+                      textTransform:'lowercase'
+                    }}>
+                      {/* {GROUP_COMPANY.map((company,i)=><MenuItem key={`${company.title}-${i}`} value={company.value}>{company.title}</MenuItem>)}                       */}
+                      {opsiSbu.map((sbu,i) => 
+                        <MenuItem 
+                          key={`${sbu.title}-${i}`} 
+                          value={sbu.IDSBU} 
+                          style={{
+                            textTransform:'lowercase'
+                          }}>
+                          {sbu.NMSBU}
+                        </MenuItem>)}                      
                   </Select>
               </FormControl>
               <FormControl 
@@ -202,14 +220,16 @@ class FormPekerjaan extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   // formPekerjaan: makeSelectFormPekerjaan(),
-  work: makeSelectWorkData()
+  work: makeSelectWorkData(),
+  opsiSbu: makeSelectSbu()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     // dispatch,
     changeCompany: value => dispatch(changeCompanyAction(value)),
-    changeCompanyJoinDate: value => dispatch(changeCompanyJoinDateAction(value))
+    changeCompanyJoinDate: value => dispatch(changeCompanyJoinDateAction(value)),
+    getOpsiSbu: () => dispatch(getOpsiSbuAction())
   };
 }
 

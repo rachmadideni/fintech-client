@@ -71,7 +71,7 @@ InstallmentSlider.propTypes = {
   max:PropTypes.number.isRequired,
   step:PropTypes.number.isRequired,
   onChangeCommitted:PropTypes.func.isRequired,
-  disabled:PropTypes.bool.isRequired,
+  disabled:PropTypes.bool,
 };
 
 export default InstallmentSlider;

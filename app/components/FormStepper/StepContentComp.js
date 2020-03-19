@@ -20,7 +20,7 @@ const WrapperElem = styled(props=>{
     );
   })`
   && {
-    flex:3;
+    flex:3.5;
     flex-direction:column;
     justify-content:center;
     align-items:flex-start;  

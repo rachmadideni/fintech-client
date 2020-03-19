@@ -21,5 +21,14 @@ const makeSelectUserDashboard = () =>
     substate => substate,
   );
 
+const status_sp3 = () =>
+  createSelector(
+    selectUserDashboardDomain,
+    substate => substate.status_aplikasi,
+  );
+
 export default makeSelectUserDashboard;
-export { selectUserDashboardDomain };
+export { 
+  selectUserDashboardDomain,
+  status_sp3
+};

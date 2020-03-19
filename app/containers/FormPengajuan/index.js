@@ -5,21 +5,18 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectFormPengajuan from './selectors';
 import {
-  makeSelectPengajuan
+  makeSelectPengajuan,
+  makeSelectOpsiJenisPengajuan,
+  makeSelectNasabah
 } from '../FormSubmissionStep/selectors';
-import reducer from './reducer';
-import saga from './saga';
+
 import messages from './messages';
 
 import Grid from '@material-ui/core/Grid';
@@ -29,7 +26,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
-import { Scrollbars } from 'react-custom-scrollbars';
+// import { Scrollbars } from 'react-custom-scrollbars';
 
 import { color, typography } from '../../styles/constants';
 import {
@@ -40,8 +37,13 @@ import {
 import {
   changeJenisPengajuanAction,
   changeSubPengajuanAction,
-  changePemanfaatanLainAction
+  changePemanfaatanLainAction,
+  getOpsiJenisPengajuanAction
 } from './actions';
+
+import {
+  mapPengajuanAction
+} from '../FormSubmissionStep/actions';
 
 const Wrapper = styled(props=>{
   return (
@@ -62,49 +64,40 @@ class FormPengajuan extends React.Component {
     }
     this.renderTujuanPengajuan = this.renderTujuanPengajuan.bind(this);
   }
+
+  componentDidMount(){
+    this.props.getOpsiJenisPengajuan();    
+  }
   
   renderTujuanPengajuan(){
     const { jenis } = this.props.pengajuan;
+    const { opsiJenisPengajuan } = this.props;    
+    let filteredSub = jenis === 1 ? opsiJenisPengajuan.filter(item => item.KDPRDK === 1) : opsiJenisPengajuan.filter(item => item.KDPRDK === 2);          
     
-    // let filteredSub;
-    // switch(jenis){
-    //   case '1':{
-    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 1 );
-    //     return filteredSub;        
-    //   }
-    //   case '2':{
-    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 2 );
-    //     return filteredSub;        
-    //   }
-    //   default:
-    //     filteredSub = SUB_PENGAJUAN.filter( item => item.jenis == 1 );
-    //     return filteredSub;
-    // }
 
-    // console.log(filteredSub);
-    let filteredSub = jenis === 1 ? SUB_PENGAJUAN.filter(item=>item.jenis === 1) : SUB_PENGAJUAN.filter(item=>item.jenis === 2);
-    const menuItem = filteredSub.map( (item,i) => {
+    const menuItem = filteredSub.map( (item,i) => {      
       return (
         <MenuItem 
           key={`item-${i}`}
-          value={item.value} 
-          style={{ fontSize:12 }}>
-          {item.text}
-        </MenuItem>);
+          value={item.IDTUJU} 
+          style={{ fontSize:14 }}>
+          {item.NMTUJU}
+        </MenuItem>);      
     });    
     return menuItem;
   }
 
   handlePemanfaatanLainnya = (value) => {
-    console.log(value);
+    const { opsiJenisPengajuan } = this.props;
     this.props.changeSubPengajuan(value);
+
     // cari value di SUB_PENGAJUAN & output label/text
-    let selected = SUB_PENGAJUAN.filter(item => item.value === value);
+    // let selected = SUB_PENGAJUAN.filter(item => item.value === value);
+    let selected = opsiJenisPengajuan.filter(item => item.IDTUJU === value);
     // jika array length > 0
     if(selected.length > 0){
-      let text = selected[0].text;
+      let text = selected[0].NMTUJU;
       if(text.includes('lainnya')){
-        console.log('ada teks "lainnya" di text');
         this.setState(state=>({
           ...state,
           pemanfaatanLainnyaIsActive:true
@@ -113,23 +106,31 @@ class FormPengajuan extends React.Component {
         this.setState(state=>({
           ...state,
           pemanfaatanLainnyaIsActive:false
-        }))
+        }));
+        return this.props.changePemanfaatanLain("");
       }
     }
-   
-    console.log(selected);    
-    // jika di text ada kata lainnya 
-    // aktifkan input pemanfaatan barang/jasa lainnya 
+  }
+
+  check_pengajuan_form = pengajuan => {
+    if(pengajuan.jenis && pengajuan.tujuan) {
+      return false;
+    }
+    return true;
+  }
+
+  handleSubmit = evt => {
+    evt.preventDefault();
+    this.props.mapPengajuan();
   }
 
   render(){
     const {
       intl,
       pengajuan,
-      changeJenisPengajuan,
-      changeSubPengajuan,
+      changeJenisPengajuan,      
       changePemanfaatanLain
-    } = this.props;
+    } = this.props;    
 
     return (
       <Wrapper 
@@ -137,25 +138,18 @@ class FormPengajuan extends React.Component {
         wrap="nowrap"
         direction="column"
         alignItems="center">
-          <Grid 
-            item 
-            style={{ width:'100%' }}>
-            <form 
-              autoComplete="off">
-
-            {/* <Scrollbars 
-              renderTrackVertical={props=><div {...props} className="track-vertical" />}
-              renderThumbVertical={props=> <div {...props} className="thumb-vertical" />}
-              style={{ width:'80vw',height:'61vh'}}> */}
+          <Grid item style={{ width:'100%' }}>
+            <form autoComplete="off">
                                     
             <FormControl 
               variant="outlined" 
               margin="dense" 
               fullWidth>
+              
               <InputLabel 
                 color="secondary" 
                 shrink>
-                  Jenis pengajuan
+                  {intl.formatMessage(messages.jenis_manfaat)}
               </InputLabel>
               
               <Select 
@@ -164,24 +158,20 @@ class FormPengajuan extends React.Component {
                 variant="outlined" 
                 margin="dense"
                 color="secondary"
-                labelWidth={120}
+                labelWidth={115}
                 style={{ 
                   fontFamily:typography.fontFamily,
-                  fontSize:12,
+                  fontSize:14,
                 }}
                 value={pengajuan.jenis}
-                onChange={evt=>{
+                onChange={ evt => {
                   return changeJenisPengajuan(evt.target.value);
-                }}>
-                  {/* 
-                  <MenuItem value="PB" style={{ fontSize:14 }}>Pembelian Barang</MenuItem>                  
-                  <MenuItem value="PJ" style={{ fontSize:14 }}>Pemanfaatan Jasa</MenuItem>
-                  */}
+                }}>                  
                   {
                     JENIS_PENGAJUAN.map((item,i)=>(
                       <MenuItem 
                         value={item.value} 
-                        style={{ fontSize:12 }}>
+                        style={{ fontSize:14 }}>
                         {item.text}
                       </MenuItem>
                     ))
@@ -196,7 +186,8 @@ class FormPengajuan extends React.Component {
               <InputLabel 
                 color="secondary" 
                 shrink>
-                  sub pengajuan
+                  {intl.formatMessage(messages.pemanfaatan)}
+                  {intl.formatMessage(messages.pemanfaatan).length}
               </InputLabel>
               <Select 
                 id="subpeng" 
@@ -204,33 +195,16 @@ class FormPengajuan extends React.Component {
                 variant="outlined" 
                 margin="dense"
                 color="secondary"
-                labelWidth={120}
+                labelWidth={205}
                 style={{ 
                   fontFamily:typography.fontFamily,
-                  fontSize:12
+                  fontSize:14
                 }}
                 value={pengajuan.tujuan}
-                onChange={evt=>{
-                  console.log(evt.target);
+                onChange={ evt => {                  
                   this.handlePemanfaatanLainnya(evt.target.value);
-                  // return changeSubPengajuan(evt.target.value)
-                }}>
-                  {/*
-                  <MenuItem value="PB1" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (sepeda)</MenuItem>                  
-                  <MenuItem value="PB2" style={{ fontSize:14 }}>Pembelian Kendaraan Roda dua (motor)</MenuItem>                  
-                  <MenuItem value="PB3" style={{ fontSize:14 }}>Pembelian Kendaraan Roda Empat (mobil)</MenuItem>                  
-                  <MenuItem value="PB4" style={{ fontSize:14 }}>Pembelian Barang Elektronik (HP)</MenuItem>
-                  */}
-                  {/*
-                    SUB_PENGAJUAN.map((item,i)=>(
-                      <MenuItem 
-                        value={item.value} 
-                        style={{ fontSize:12 }}>
-                        {item.text}
-                      </MenuItem>
-                    ))
-                  */}
-                  {this.renderTujuanPengajuan()}
+                }}>                  
+                  {this.renderTujuanPengajuan()}                  
               </Select>
             </FormControl>
 
@@ -248,38 +222,33 @@ class FormPengajuan extends React.Component {
                   margin="dense"
                   disabled={!!this.state.pemanfaatanLainnyaIsActive ? false : true}
                   value={pengajuan.pemanfaatan_lain}
-                  onChange={evt=>{
-                      // if(isTriggered){
-                        //this.validateInput(evt.target.value,'fullname');
-                        // this.props.validateInput('fullname', this.props.fullname);
-                      // }
-                      // return this.onInputChange(evt.target.value,'fullname');
+                  onChange={ evt => {
                       return changePemanfaatanLain(evt.target.value);
-                  }} 
+                  }}
                   style={{ 
                     fontFamily:typography.fontFamily,
                     fontSize:12
                   }} />
-            </FormControl>            
-                                  
-            {/* </Scrollbars> */}
-            {/* <Grid 
+            </FormControl>
+
+            <Grid 
               item 
               xs 
-              style={{ paddingTop:20, justifyContent:'center', alignItems:'center'}}>
+              style={{ paddingTop:0, justifyContent:'center', alignItems:'center'}}>
               <Button 
-                color="secondary" 
+                color="primary" 
                 variant="contained" 
-                fullWidth 
-                disabled={true}
-                style={{ 
+                fullWidth
+                onClick={this.handleSubmit} 
+                disabled={this.check_pengajuan_form(pengajuan)}
+                style={{
+                  fontFamily:typography.fontFamily, 
                   textTransform:'capitalize',
-                  fontWeight:'bold',
-                  
+                  fontWeight:'bold'                  
                 }}>
-                next step
+                {intl.formatMessage(messages.submit)}
               </Button>
-            </Grid>       */}
+            </Grid>
             </form>
           </Grid>
       </Wrapper>
@@ -288,16 +257,18 @@ class FormPengajuan extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  // formPengajuan: makeSelectFormPengajuan(),
-  pengajuan: makeSelectPengajuan()
+  pengajuan: makeSelectPengajuan(),
+  opsiJenisPengajuan: makeSelectOpsiJenisPengajuan(),
+  nasabah: makeSelectNasabah()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    // dispatch,
     changeJenisPengajuan: (jenisPengajuan) => dispatch(changeJenisPengajuanAction(jenisPengajuan)),
     changeSubPengajuan: (tujuanPengajuan) => dispatch(changeSubPengajuanAction(tujuanPengajuan)),
-    changePemanfaatanLain: (pemanfaatan) => dispatch(changePemanfaatanLainAction(pemanfaatan))
+    changePemanfaatanLain: (pemanfaatan) => dispatch(changePemanfaatanLainAction(pemanfaatan)),
+    getOpsiJenisPengajuan: () => dispatch(getOpsiJenisPengajuanAction()),
+    mapPengajuan: () => dispatch(mapPengajuanAction())
   };
 }
 
@@ -307,6 +278,6 @@ const withConnect = connect(
 );
 
 export default compose(
-  injectIntl,
-  withConnect
+  withConnect,
+  injectIntl
 )(FormPengajuan);

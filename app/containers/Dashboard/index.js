@@ -38,9 +38,11 @@ import Pinjaman from '../Pinjaman/Loadable';
 import FormPengajuan from '../FormPengajuan/Loadable';
 import UserDashboard from 'containers/UserDashboard/Loadable';
 import FormSubmissionStep from 'containers/FormSubmissionStep';
+import FormSummary from 'containers/FormSummary/Loadable';
 import UserProfile from 'containers/UserProfile/Loadable';
 import UserInbox from 'containers/UserInbox/Loadable';
 import ChangePasswordPage from 'containers/ChangePasswordPage/Loadable';
+import FormAkadStep from 'containers/FormAkadStep/Loadable';
 // import ProductSelection from 'containers/ProductSelection/Loadable';
 // import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
@@ -95,7 +97,7 @@ class Dashboard extends React.Component {
     if(value === "profil"){
       return history.replace('/profil');
     }
-    if(value === "inbox"){
+    if(value === "pesan"){
       return history.replace('/inbox');
     }
     if(value === "pinjaman"){
@@ -136,7 +138,7 @@ class Dashboard extends React.Component {
                     color="primary" />} 
                 avatarProps={
                   <ButtonAvatar                   
-                    iconProps={<UserAvatarIcon title="mia" />} />}
+                    iconProps={<UserAvatarIcon title="" />} />}
                     onClick={()=>console.log(1)} />
             </Grid>
 
@@ -175,6 +177,19 @@ class Dashboard extends React.Component {
                         <FormSubmissionStep history={history} {...routeProps} />
                       )} />
                     
+                    <Route 
+                      path="/summary"
+                      render={routeProps=>(
+                        <FormSummary history={history} {...routeProps} />
+                      )} />
+                    
+                    <Route 
+                      path="/akad"
+                      render={routeProps=>(
+                        <FormAkadStep history={history} {...routeProps} />
+                      )} />
+                    
+
                     <Route 
                       path="/profil"
                       render={routeProps=>(

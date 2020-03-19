@@ -6,7 +6,8 @@
 import produce from 'immer';
 import {
   CHANGE_KODE_AKTIFASI_ACTION,
-  LOG_ERROR_ACTION
+  LOG_ERROR_ACTION,
+  LOG_SUCCESS_ACTION
 } from './constants';
 
 export const initialState = {
@@ -15,6 +16,9 @@ export const initialState = {
   fromUser_activation_code:"",
   error:{
     message:null
+  },
+  confirm:{
+    successMessage:null
   }
 
 };
@@ -31,6 +35,9 @@ const verifyConfirmPageReducer = (state = initialState, action) =>
       }
       case LOG_ERROR_ACTION:
       draft.error.message = action.payload;  
+      return draft;
+      case LOG_SUCCESS_ACTION:
+      draft.confirm.successMessage = action.payload;  
       return draft;
     }
     return draft;

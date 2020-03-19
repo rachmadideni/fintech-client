@@ -2,7 +2,7 @@
  *
  * FormSubmissionStep
  *
- * Functionality:
+ * Objective:
  * Directed user to specific submission step
  * Detect required input before proceeding to next step
  * give visual clues to user while he/she fills the forms
@@ -43,15 +43,8 @@ import {
 
 // MUI 
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
 
-// CUSTOM
-import RadialProgress from '../../components/RadialProgress';
-
-// pages
+// PAGES
 import PerhitunganAngsuran from 'containers/PerhitunganAngsuran/Loadable';
 import FormNasabah from 'containers/FormNasabah/Loadable';
 import FormPekerjaan from 'containers/FormPekerjaan/Loadable';
@@ -59,14 +52,7 @@ import FormDocument from 'containers/FormDocument/Loadable';
 import FormSummary from 'containers/FormSummary/Loadable';
 import FormPengajuan from 'containers/FormPengajuan/Loadable';
 
-// helpers
-import { check_max_installment } from '../PerhitunganAngsuran/helpers';
-
-// import Pinjaman from 'containers/Pinjaman';
-// import FormPengajuan from 'containers/FormPengajuan/Loadable';
-
-// Stepper Components
-
+// COMPONENTS
 import FormStepper from '../../components/FormStepper';
 
 const Wrapper = styled(props=>{
@@ -87,223 +73,6 @@ const Wrapper = styled(props=>{
   }
 `;
 
-// const StepBackButton = styled(props=> {
-//   const { active, onClickBack, ...otherProps } = props;
-//   return (
-//     <Grid {...otherProps}>
-//       <IconButton 
-//         edge="start" 
-//         color={active ? 'primary' : 'default'} 
-//         disable={active}
-//         disableRipple={!active ? true : false }
-//         onClick={onClickBack}>
-//         <ChevronLeft />
-//       </IconButton>
-//     </Grid>
-//   );
-// })``;
-
-// const StepNextButton = styled(props=> {
-//   const { isDisabled, onClickNext } = props;
-//   console.log(isDisabled);
-//   return (
-//     <Grid>
-//       <IconButton 
-//         edge="start"
-//         size="medium" 
-//         color="primary" 
-//         disabled={isDisabled}
-//         onClick={onClickNext}>
-//         <ChevronRight />
-//       </IconButton>
-//     </Grid>
-//   );
-// })``;
-
-// const StepCircularProgress = styled(props=>{
-//   const { stepvalue, currentstep, totalstep } = props;
-//   return (
-//     <Grid 
-//       container 
-//       wrap="nowrap"
-//       style={{
-//         flex:1,
-//         flexDirection:'row', 
-//         justifyContent:'center',
-//         alignItems:'center'
-//       }}>
-//         <RadialProgress 
-//           variant="static" 
-//           size={36} 
-//           thickness={5} 
-//           value={stepvalue}         
-//           currentstep={currentstep}
-//           totalstep={totalstep}
-//           />
-//     </Grid>
-//   );
-// })`
-// && {
-//   flex:1;
-//   flex-direction:row;
-//   justify-content:center;
-//   align-items:center;
-// }
-// `;
-
-// StepCircularProgress.propTypes = {
-//   totalstep:PropTypes.number
-// }
-
-// //
-// const StepTitleWrapper = styled(props=>{
-//   const { children, ...otherProps } = props;
-//   return (
-//     <Grid 
-//       container 
-//       wrap="nowrap"
-//       {...otherProps}>
-//       {children}
-//     </Grid>
-//   );
-// })`
-// && {
-//   flex:3;
-//   flex-direction:column;
-//   justify-content:center;
-//   align-items:flex-start;  
-// }`;
-
-// const StepTitle = styled(props=>{
-//   const { title, ...otherProps } = props;
-//   return (
-//     <Typography {...otherProps}>
-//       {title}
-//     </Typography>
-//   )
-// })`
-// && {
-//   font-size:14px;
-//   font-weight:bold;
-//   color:black;
-//   text-transform:capitalize;
-// }`;
-
-// const StepSubtitle = styled(props=>{
-//   const { subtitle, ...otherProps } = props;  
-//   return (
-//     <Typography {...otherProps}>
-//       {subtitle}
-//     </Typography>
-//   )
-// })`
-//   && {
-//     font-size:9px;
-//     font-weight:bold;
-//     color:grey;
-//     text-transform:capitalize;
-//   }
-// `
-
-// const check_customer_form = nasabah => {
-//   if(nasabah.fullname && nasabah.birthplace && nasabah.birthdate && nasabah.address && nasabah.gender){
-//     return false;
-//   }
-//   return true
-// }
-
-// const check_work_form = work => {
-//   if(work.company && work.companyJoinDate){
-//     return false;
-//   }
-//   return true;
-// }
-
-// const check_document_form = documents => {
-//   if(documents.ktp && documents.idcard){
-//     return false;
-//   }
-//   return true;
-// }
-
-// function FormStepper(props){
-//   const { 
-//     intl,
-//     stepProgress,
-//     completedStep,
-//     onClickNext,
-//     onClickBack,
-//     activeStep,
-//     gaji,
-//     plafon,
-//     margin,
-//     tenor,
-//     limitAngsuran,
-//     nasabah,
-//     work,
-//     documents
-//   } = props;  
-
-//   // let stepValueTotal = completedStep.reduce((a,b)=>a+(b['stepValue'] || 0),0);
-//   // let currentStep = completedStep.findIndex((el)=>el.isActive === false) > -1 ? completedStep.findIndex((el)=>el.isActive === false) : completedStep.length-1;
-//   let currstep = completedStep[activeStep].number;
-//   let totalstep = completedStep.length;
-  
-//   return (
-//     <Grid 
-//       container 
-//       wrap="nowrap">
-//         {
-//           activeStep > 0 && 
-//           <StepBackButton 
-//             active={true}
-//             onClickBack={onClickBack} />
-//         }                            
-//         <StepCircularProgress
-//           stepvalue={stepProgress} 
-//           currentstep={currstep} 
-//           totalstep={totalstep} />
-        
-//         <StepTitleWrapper>
-//           <StepTitle 
-//             title={intl.formatMessage(completedStep[activeStep].title)} />
-//           <StepSubtitle 
-//             subtitle={intl.formatMessage(completedStep[activeStep].subtitle)} />
-//         </StepTitleWrapper>
-//         {
-//           activeStep === 0 ? 
-//           <StepNextButton
-//             onClickNext={onClickNext} 
-//             isDisabled={gaji < 1 || check_max_installment(limitAngsuran,plafon,margin,tenor)} /> : null             
-//         }{
-//           activeStep === 1 ?
-//           <StepNextButton
-//             onClickNext={onClickNext} 
-//             isDisabled={check_customer_form(nasabah)} /> : null
-//         }
-//         {
-//           activeStep === 2 ?
-//           <StepNextButton
-//             onClickNext={onClickNext} 
-//             isDisabled={check_work_form(work)} /> : null
-//         }
-//         {
-//           activeStep === 3 ?
-//           <StepNextButton
-//             onClickNext={onClickNext} 
-//             isDisabled={check_document_form(documents)} /> : null
-//         }        
-//     </Grid>
-//   );  
-// }
-
-// FormStepper.propTypes = {
-//   stepProgress:PropTypes.number.isRequired,
-//   completedStep:PropTypes.array.isRequired,
-//   onClickNext:PropTypes.func.isRequired,
-//   onClickBack:PropTypes.func.isRequired
-// }
-
 class FormSubmissionStep extends React.Component {
   constructor(props){
     super(props);
@@ -315,9 +84,6 @@ class FormSubmissionStep extends React.Component {
     // routing based on props
     if(prevProps.activeStep !== this.props.activeStep){
       
-      // let stepIndex = this.props.completedStep.map(el => el.isActive).lastIndexOf(false);
-      // let stepIndex = this.props.completedStep.findIndex((el)=>el.isActive === false);
-
       if(activeStep === 0){
         return history.push(`/application-form/step/customer/installment`);                  
       }
@@ -346,19 +112,15 @@ class FormSubmissionStep extends React.Component {
   }
   
   handleNextStep = () => {
-    const { completedStep, activeStep } = this.props;
-    //let currentstep = completedStep.findIndex((el)=>el.isActive === false);     
-    if(activeStep > -1 && activeStep <= completedStep.length){
-      console.log(activeStep)
-      console.log(completedStep.length)
-      this.props.setActiveStep(1);// 1 increment -1 decrement
+    const { completedStep, activeStep } = this.props;     
+    if(activeStep > -1 && activeStep <= completedStep.length){      
+      this.props.setActiveStep(1); // 1 increment -1 decrement
       this.props.setCompletedStep(true, 25);      
     }
   }
 
   handleBackStep = () => {
     const { activeStep } = this.props;
-    // let stepIndex = this.props.completedStep.map(el => el.isActive).lastIndexOf(true);
     if(activeStep > -1){
       this.props.setActiveStep(-1);// 1 increment -1 decrement
       this.props.setCompletedStep(false, 0);
@@ -422,8 +184,7 @@ class FormSubmissionStep extends React.Component {
                 path="/application-form/step/customer/summary"
                 render={routeProps=>(
                   <FormSummary history={history} {...routeProps} />
-                )} />
-              
+                )} />              
               <Route                 
                 path="/application-form/step/customer/pengajuan"
                 render={routeProps=>(
@@ -437,7 +198,7 @@ class FormSubmissionStep extends React.Component {
 }
 
 // FormSubmissionStep.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
+//     FormStepper: PropTypes.element.isRequired    
 // };
 
 const mapStateToProps = createStructuredSelector({
@@ -456,8 +217,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    // dispatch,
+  return {    
     setCompletedStep: (step,value,stepValue) => dispatch(setCompletedStepAction(step,value,stepValue)),
     setActiveStep: (step) => dispatch(setActiveStepAction(step))
   };

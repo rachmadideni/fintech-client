@@ -5,7 +5,6 @@
  */
 
 import React, { memo } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
@@ -17,17 +16,18 @@ import {
   makeSelectTenor,
   makeSelectMargin,
   makeSelectAngsuran,
+  makeSelectParameter
 } from 'containers/FormSubmissionStep/selectors';
 
 import {
   changeGajiAction,
   changePlafonAction,
   changeTenorAction,
-  changeAngsuranAction  
+  changeAngsuranAction,
+  getParamAction  
 } from './actions';
 
 import messages from './messages';
-import { PLAFON, TENOR } from './constants';
 
 // helpers function
 import { calc_installment } from './helpers';
@@ -40,6 +40,10 @@ import NumberInput from '../../components/NumberInput';
 import InstallmentSlider from 'components/InstallmentSlider';
 import { FormItemHeaderText, FormItemText } from './components';
 
+// Tour 
+import { TOUR_STEPS } from './constants';
+import Tour from 'reactour';
+
 const valueText = value => 'test'
 
 class PerhitunganAngsuran extends React.Component {
@@ -48,6 +52,7 @@ class PerhitunganAngsuran extends React.Component {
   }
   
   componentDidMount(){
+    this.props.getParam();
     this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
   }
 
@@ -103,7 +108,11 @@ class PerhitunganAngsuran extends React.Component {
   // }
 
   render(){
-    const { intl } = this.props;
+    const { 
+      intl,
+      parameter
+    } = this.props;
+    
     return (
       <Grid 
         container 
@@ -114,6 +123,12 @@ class PerhitunganAngsuran extends React.Component {
             style={{ 
               marginTop:20
           }}>
+
+          {/* <Tour 
+            isOpen={true}
+            steps={TOUR_STEPS}
+            showCloseButton={false} 
+            onRequestClose={()=>console.log('close')} /> */}
 
           <Grid 
             container 
@@ -163,8 +178,8 @@ class PerhitunganAngsuran extends React.Component {
             <InstallmentSlider 
               color="secondary"                            
               value={this.props.plafon}
-              min={Math.min(...PLAFON)}
-              max={Math.max(...PLAFON)}
+              min={parameter ? parameter.MIN_PLAFON : 10000000}
+              max={parameter ? parameter.MAX_PLAFON : 50000000}
               step={5000000}
               valueLabelDisplay="off"
               getAriaValueText={valueText}
@@ -196,8 +211,8 @@ class PerhitunganAngsuran extends React.Component {
             <InstallmentSlider
               color="secondary"                             
               value={this.props.tenor}                           
-              min={Math.min(...TENOR)}
-              max={Math.max(...TENOR)}
+              min={parameter ? parameter.MIN_TENOR : 12}
+              max={parameter ? parameter.MAX_TENOR : 36}
               step={12}
               valueLabelDisplay="off"
               getAriaValueText={valueText}
@@ -225,20 +240,6 @@ class PerhitunganAngsuran extends React.Component {
                   </FormItemText>                
                 </Grid>
             </Grid>
-
-            {/* <Button
-              fullWidth 
-              variant="contained" 
-              color="primary"
-              disabled={this.props.gaji < 1 || this.isMaxAngsReached(this.props.plafon,this.props.margin,this.props.tenor)}              
-              style={{
-                marginTop:20,
-                fontWeight:'bold',
-                textTransform:'capitalize'
-              }}
-              onClick={this.handleSubmit}>
-              Submit
-            </Button> */}
           </Grid>
       </Grid>
     );
@@ -250,7 +251,8 @@ const mapStateToProps = createStructuredSelector({
   plafon: makeSelectPlafon(),
   tenor: makeSelectTenor(),
   margin: makeSelectMargin(),
-  angsuran: makeSelectAngsuran()  
+  angsuran: makeSelectAngsuran(),
+  parameter: makeSelectParameter()  
 });
 
 function mapDispatchToProps(dispatch) {
@@ -258,7 +260,8 @@ function mapDispatchToProps(dispatch) {
     changeGaji: value => dispatch(changeGajiAction(value)),
     changePlafon: value => dispatch(changePlafonAction(value)),
     changeTenor: value => dispatch(changeTenorAction(value)),
-    changeAngsuran: value => dispatch(changeAngsuranAction(value))    
+    changeAngsuran: value => dispatch(changeAngsuranAction(value)),
+    getParam: () => dispatch(getParamAction())    
   };
 }
 

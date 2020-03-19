@@ -15,27 +15,27 @@ export default defineMessages({
   },
   step1Title:{
     id:`${scope}.step1Title`,
-    defaultMessage:'Perhitungan Angsuran'
+    defaultMessage:'simulasi cicilan'
   },
   step1Subtitle:{
     id:`${scope}.step1Subtitle`,
-    defaultMessage:'ini akan menghitung angsuran ta'
+    defaultMessage:'data sesuai kondisi pada saat pengajuan pinjaman'
   },
   step2Title:{
     id:`${scope}.step2Title`,
-    defaultMessage:'Data Pribadi'
+    defaultMessage:'data pemohon'
   },
   step2Subtitle:{
     id:`${scope}.step2Subtitle`,
-    defaultMessage:'ini pengisian data pribadi ta'
+    defaultMessage:'informasi sesuai kartu identitas pemohon'
   },
   step3Title:{
     id:`${scope}.step3Title`,
-    defaultMessage:'Data Pekerjaan'
+    defaultMessage:'data pekerjaan'
   },
   step3Subtitle:{
     id:`${scope}.step3Subtitle`,
-    defaultMessage:'ini pengisian data pekerjaan ta'
+    defaultMessage:'data sesuai dengan tempat pemohon bekerja'
   },
   step4Title:{
     id:`${scope}.step4Title`,
@@ -43,14 +43,14 @@ export default defineMessages({
   },
   step4Subtitle:{
     id:`${scope}.step4Subtitle`,
-    defaultMessage:'ini upload dokumen ta'
+    defaultMessage:'closeup jelas foto dokumen atau dokumen hasil scan'
   },
   step5Title:{
     id:`${scope}.step5Title`,
-    defaultMessage:'jenis pengajuan'
+    defaultMessage:'tujuan & manfaat pinjaman'
   },
   step5Subtitle:{
     id:`${scope}.step5Title`,
-    defaultMessage:'ini form jenis pengajuan'
+    defaultMessage:'informasi sesuai dengan manfaat pinjaman yang diperoleh'
   }
 });

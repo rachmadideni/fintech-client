@@ -1,4 +1,6 @@
 import { takeLatest, all, call, put, select } from 'redux-saga/effects';
+import request from 'utils/request';
+import { api } from 'environments';
 import { 
   LOGIN_ACTION,
   TEST_TOKEN_LOGIN
@@ -11,33 +13,33 @@ import {
 import {
   makeSelectCredential
 } from '../Login/selectors';
-import { setAuthTokenAction } from '../App/actions';
+import { setAuthTokenAction, removeAuthTokenAction } from '../App/actions';
 import {
   loginSuccessAction,
   loginErrorAction
 } from './actions';
 
 import { 
-  setTokenInStorage,
+  setTokenInStorage,  
   removeTokenInStorage
 } from './helpers';
 
 import messages from './messages'
 
 export function* login(){
-  try {
+  
     const { nik, password } = yield select(makeSelectCredential());
     const metadata = JSON.stringify({
       userAgent: navigator.userAgent,
+      isAndroid: /(android)/i.test(navigator.userAgent)
     });
 
     // call login api
-    // const endpoint `${api.host}/api/v${api.version}/auth/login`
+    const endpoint = `${api.host}/api/login`;
     const requestOpt = {
       method:'POST',
       headers:{
         'Content-Type':'application/json',
-        //'APPLICATION-ID':apps['mps_pwa'].id
       },
       body: JSON.stringify({
         nik,
@@ -46,21 +48,19 @@ export function* login(){
       })
     };
 
+  try {  
     // response dari login api
-    // const response = yield call(request, endpoint, requestOpt);
-    if(nik == "01540110"){
-      // console.log(nik);
-      // TODO : buat auth token untuk login 
-      // yield put(setVerifyUserToken(response.data));
-      yield call(setTokenInStorage, TEST_TOKEN_LOGIN);// store token di local storage
-      yield put(setAuthTokenAction(TEST_TOKEN_LOGIN));// store token di state
+    const response = yield call(request, endpoint, requestOpt);  
+    if(response.status){
+      yield call(setTokenInStorage, response.token);// store token di local storage
+      yield put(setAuthTokenAction(response.token));// store token di state
       yield put(loginSuccessAction()); // beritahu store 
     } else {
-      let errorMsg = messages.userLoginFailed.defaultMessage;
+      let errorMsg = messages.user_not_exists.defaultMessage;
       yield put(loginErrorAction(errorMsg));
     }
+    
   } catch(err){
-    // console.log(err);
     let errorMsg = messages.userLoginFailed.defaultMessage;
     yield put(loginErrorAction(errorMsg));
   }
@@ -68,7 +68,7 @@ export function* login(){
 
 export function* logout(){
   try {
-    yield call(removeTokenInStorage, 'token'); 
+    yield call(removeTokenInStorage, 'token');
   } catch(err){
     console.log(err);
   }

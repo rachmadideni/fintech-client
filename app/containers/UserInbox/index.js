@@ -112,7 +112,8 @@ class UserInbox extends React.Component {
             </StyledHeader>
             {userInbox.isFetching ? this.renderSkeleton() : 
             <GridList cellHeight={60} style={{ marginTop:20 }}>
-              {INBOX.map((item,i)=>(
+              { INBOX.length > 0 ?
+                INBOX.map((item,i)=>(
                 <GridListTile cols={2} rows={0}>
                   <CardTile 
                     variant="outlined" 
@@ -125,7 +126,20 @@ class UserInbox extends React.Component {
                     </StyledTileText>
                   </CardTile>
                 </GridListTile>
-              ))}
+              ))
+              : 
+              <Grid item xs>
+                <Typography 
+                  align="center"
+                  style={{
+                    fontFamily:typography.fontFamily,
+                    fontSize:'12px',
+                    color:color.grey
+                  }}>
+                  belum ada pesan masuk
+                </Typography>
+              </Grid>
+            }
             </GridList>            
             }
           </Grid>

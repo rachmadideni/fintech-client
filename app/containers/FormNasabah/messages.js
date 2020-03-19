@@ -15,7 +15,7 @@ export default defineMessages({
   },
   fullName:{
     id:`${scope}.fullName`,
-    defaultMessage:'nama lengkap'
+    defaultMessage:'nama lengkap sesuai ktp'
   },
   birthPlace:{
     id:`${scope}.birthPlace`,
@@ -27,11 +27,15 @@ export default defineMessages({
   },
   address:{
     id:`${scope}.address`,
-    defaultMessage:'alamat'
+    defaultMessage:'alamat sesuai ktp'
   },
   gender:{
     id:`${scope}.gender`,
     defaultMessage:'jenis kelamin'
+  },
+  motherMaidenName:{
+    id:`${scope}.motherMaidenName`,
+    defaultMessage:'Nama Ibu Kandung'
   },
   emptyFullname:{
     id:`${scope}.emptyFullname`,

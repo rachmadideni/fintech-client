@@ -20,5 +20,16 @@ export default function createReducer(injectedReducers = {}) {
     ...injectedReducers,
   });
 
+  
+  // const rootReducer = (state, action) => {
+
+  //   if(action.type === 'RESET_INPUT_ACTION'){
+  //     console.log(action.type);
+  //     state = undefined;
+  //   }
+  //   return appReducer(state, action);
+  // }
+  
   return rootReducer;
+
 }

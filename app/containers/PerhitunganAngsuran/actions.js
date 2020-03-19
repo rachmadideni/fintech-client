@@ -10,8 +10,23 @@ import {
   CHANGE_PLAFON_ACTION,
   CHANGE_TENOR_ACTION,
   CHANGE_ANGSURAN_ACTION,
-  SET_LIMIT_ANGSURAN_ACTION
+  SET_LIMIT_ANGSURAN_ACTION,
+  GET_PARAM_ACTION,
+  GET_PARAM_SUCCESS_ACTION
 } from './constants';
+
+export function getParamAction(){
+  return {
+    type:GET_PARAM_ACTION
+  }
+}
+
+export function getParamSuccessAction(parameter){
+  return {
+    type:GET_PARAM_SUCCESS_ACTION,
+    payload:parameter
+  }
+}
 
 export function defaultAction() {
   return {

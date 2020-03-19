@@ -28,120 +28,83 @@ import Typography from '@material-ui/core/Typography';
 
 import styled from 'styled-components';
 
-const StyledRow = styled(Grid)`
-&& {
-  margin-left:12px;
-}
+const Wrapper = styled(props=>{
+  return (
+    <Grid 
+      container 
+      wrap="nowrap" 
+      direction="column"
+      {...props}>
+      {props.children}
+    </Grid>
+  );
+})`
+  && {
+    padding-top:20px;
+    background-color:transparent;
+    justify-content:center;
+    align-items:flex-start;
+    margin-top:12px;
+    padding-left:20px;
+    padding-right:20px;
+  }
 `;
 
-const HeadTypo = styled(Typography)`
+const MessageWrapper = styled.div`
 && {
-  font-size:13px;
-  font-weight:bold;
-  text-transform:capitalize;
-  font-family:${typography.fontFamily};
+  flex:1;
+  width:100%;
+  border-radius:4px;
+  padding:12px;
+  background-color:${color.lightGrey};  
+  margin-bottom:20px;
 }`;
 
-const HeadData = styled(Typography)`
+const ThankYouMessage = styled(Typography)`
 && {
   font-family:${typography.fontFamily};
   font-size:12px;
-  font-weight:normal;
-  text-transform:capitalize;
+  color:${color.black};
+  font-weight:bold;
+  line-height:15px;
+  white-space: pre-wrap;
 }`;
 
-function Row(props){
-  const { head, data, image, ...otherProps } = props;
-  return (
-    <StyledRow 
-      {...otherProps}>
-      <Grid 
-        item>
-        <HeadTypo>
-        {head}
-        </HeadTypo>
-        <hr />
-      </Grid>
-      <Grid 
-        item>
-        <HeadData>
-        {data || null}
-        </HeadData>
-      </Grid>
-      <Grid item>
-        <Grid 
-          container 
-          wrap="nowrap">
-            <Grid item>
-              <img 
-                src={image} 
-                width={image ? 100 : null} 
-                height={image ? 120 : null}
-                style={{ marginBottom:5 }} />
-            </Grid>
-            <Grid item>
-              <img 
-                src={image} 
-                width={image ? 100 : null} 
-                height={image ? 120 : null}
-                style={{ marginBottom:5 }} />
-            </Grid>
-        </Grid>        
-      </Grid>
-    </StyledRow> 
-  );
-}
 
 class FormSummary extends React.Component {
   render(){
     const { intl } = this.props;
     return (
-      <Grid
-        container
-        wrap="nowrap"
-        direction="column"
-        justify="center"
-        alignItems="flex-start"
-        style={{
-          minHeight:'80%',
-          overflowY:'auto',
-          marginBottom:100
-        }}>
-          <Grid item xs>
-            <Typography 
+      <Wrapper>
+          <MessageWrapper>
+            <Typography
+              align="center" 
               style={{
                 fontFamily:typography.fontFamily,
-                fontSize:14,
-                color:color.grey,
+                fontSize:'12px',
+                color:color.green,
                 fontWeight:'bold'
               }}
               gutterBottom>
               {intl.formatMessage(messages.thankyou)}
             </Typography>
             <Typography
+              align="center" 
               style={{
                 fontFamily:typography.fontFamily,
-                fontSize:15,
-                fontWeight:'bold'
-              }} 
+                fontSize:'11px',
+                color:color.black,
+                fontWeight:'normal'
+              }}
               gutterBottom>
-              {intl.formatMessage(messages.summary)}
+              {intl.formatMessage(messages.thankyou_details)}
             </Typography>
-          </Grid>
-          {/* Summary */}                    
-          <Row head="nama lengkap" data={this.props.nasabah.fullname} />
-          <Row head="alamat" data={this.props.nasabah.address} />
-          <Row head="tempat kelahiran" data={this.props.nasabah.birthplace} />
-          <Row head="tanggal lahir" data={this.props.nasabah.birthdate} />
-          <Row head="jenis kelamin" data={this.props.nasabah.gender} />
-          
-          <Row head="perusahaan" data={this.props.work.company} />
-          <Row head="tanggal mulai bekerja" data={this.props.work.companyJoinDate} />
-          {/* <Row head="Dokumen" image={this.props.documents} /> */}
-          {/* <Row head="Id Card" image={this.props.documents.idcard} /> */}
+          </MessageWrapper>
+          <Grid item xs>
             
+          </Grid>
           
-      </Grid>  
+      </Wrapper>  
     );
   }
 }

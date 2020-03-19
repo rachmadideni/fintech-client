@@ -17,6 +17,8 @@ const makeSelectCompletedStep = () => createSelector(selectFormSubmissionStepDom
 
 const makeSelectActiveStep = () => createSelector(selectFormSubmissionStepDomain, substate => substate.activeStep);
 const makeSelectStepProgress = () => createSelector(selectFormSubmissionStepDomain, substate=>substate.stepProgress);
+
+const makeSelectFinance = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.angsuran); 
 const makeSelectGaji = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.angsuran.pendapatan);
 const makeSelectPlafon = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.angsuran.plafon);
 const makeSelectTenor = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.angsuran.tenor);
@@ -31,12 +33,14 @@ const makeSelectBirthplace = () => createSelector(selectFormSubmissionStepDomain
 const makeSelectBirthdate = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.birthdate);
 const makeSelectAddress = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.address);
 const makeSelectGender = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.gender);
+const makeSelectMotherMaidenName = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.mother_maiden_name);
 
 const makeSelectErrorFullname = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.fullname);
 const makeSelectErrorBirthplace = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.birthplace);
 const makeSelectErrorBirthdate = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.birthdate);
 const makeSelectErrorAddress = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.address);
 const makeSelectErrorGender = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.gender);
+const makeSelectErrorMotherMaidenName = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.error.mother_maiden_name);
 
 const makeSelectTriggered = () => createSelector(selectFormSubmissionStepDomain, substate => substate.data.nasabah.isSubmitTriggered);
 
@@ -49,10 +53,39 @@ const makeSelectDocuments = () => createSelector(selectFormSubmissionStepDomain,
 const makeSelectPengajuan = () => createSelector(selectFormSubmissionStepDomain,
   substate => substate.data.pengajuan);
 
+const makeSelectParameter = () => createSelector(selectFormSubmissionStepDomain, 
+  substate => substate.opsi.param
+);
+
+const makeSelectJenkel = () => createSelector(selectFormSubmissionStepDomain, 
+  substate => substate.opsi.jenis_kelamin
+);
+
+const makeSelectSbu = () => createSelector(selectFormSubmissionStepDomain, 
+  substate => substate.opsi.sbu
+);
+
+const makeSelectOpsiDokumenTahap1 = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.opsi.dokumen);
+
+const makeSelectOpsiJenisPengajuan = () => createSelector(selectFormSubmissionStepDomain, 
+  substate => substate.opsi.sub_pengajuan);
+
+const makeSelectUploadedFiles = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.data.documents.uploaded);
+
+
+const makeSelectCifData = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.send.nasabah); 
+
+const makeSelectFinanceData = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.send.finance); 
+
 export { 
   makeSelectCompletedStep,
   makeSelectActiveStep,
   makeSelectStepProgress,
+  makeSelectFinance,
   makeSelectGaji,
   makeSelectPlafon,
   makeSelectTenor,
@@ -64,14 +97,24 @@ export {
   makeSelectBirthdate,
   makeSelectAddress,
   makeSelectGender,
+  makeSelectMotherMaidenName,
   makeSelectErrorFullname,
   makeSelectErrorBirthplace,
   makeSelectErrorBirthdate,
   makeSelectErrorAddress,
   makeSelectErrorGender,
+  makeSelectErrorMotherMaidenName,
   makeSelectTriggered,
   makeSelectNasabah,
   makeSelectWorkData,
   makeSelectDocuments,
-  makeSelectPengajuan
+  makeSelectPengajuan,
+  makeSelectParameter,
+  makeSelectJenkel,
+  makeSelectSbu,
+  makeSelectOpsiDokumenTahap1,
+  makeSelectUploadedFiles,
+  makeSelectOpsiJenisPengajuan,
+  makeSelectCifData,
+  makeSelectFinanceData
 };

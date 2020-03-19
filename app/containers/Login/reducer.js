@@ -33,7 +33,7 @@ const loginReducer = (state = initialState, action) =>
     switch (action.type) {
       case RESET_INPUT_ACTION:{
         draft.credential.nik = "";
-        draft.credential.password = "";
+        draft.credential.password = "";        
         return draft;
       }
       case CHANGE_NIK:

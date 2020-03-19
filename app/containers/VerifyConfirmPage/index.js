@@ -16,16 +16,29 @@ import injectReducer from 'utils/injectReducer';
 import {
   makeSelectKodeAktifasi,
   makeSelectKodeFromServer,
-  makeSelectError
+  makeSelectError,
+  makeSelectSuccess
 } from './selectors';
+
+import {
+  makeSelectTokenVerifikasi,
+  makeSelectKodeVerifikasi
+} from '../Verifikasi/selectors';
+
 import {
   changeKodeAktifasiAction,
   konfirmasiKodeAction,
-  logErrorAction
+  logErrorAction,
+  logSuccessAction
 } from './actions';
+
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+
+// import {
+//   getTokenVerifikasiFromStorage
+// } from '../Login/helpers';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -54,6 +67,10 @@ import {
 
 import ReactCodeInput from 'react-code-input';
 import NotificationSnackbar from 'components/NotificationSnackbar';
+import NotificationSuccess from 'components/NotificationSnackbar';
+
+import jwt_decode from 'jwt-decode';
+var store = require('store');
 
 const StyledCodeInput = styled(ReactCodeInput)`
 && {
@@ -110,86 +127,148 @@ const Wrapper = styled(Grid)`
 class VerifyConfirmPage extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
+    this.state = {      
       error:{
         errorMessage:null
       },
       isSubmitTriggered:false,
-      isNotificationOpen:false
+      isNotificationOpen:false,
+      confirm:{
+        successMessage:null
+      },
+      successNotified:false
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidUpdate(prevProps){
     if(!!this.props.errorMessage && prevProps.errorMessage === null){
       this.setState(state=>({
         ...state,
-        isNotificationOpen:true
+        isNotificationOpen:true,
+        // successNotified:false
       }));
     } else if(!!prevProps.errorMessage && this.props.errorMessage === null){
       this.setState(state=>({
         ...state,
-        isNotificationOpen:false
+        isNotificationOpen:false,
+        // successNotified:true
       }));
+    } else if(!!prevProps.successMessage && this.props.successMessage === null){
+      this.setState(state=>({
+        ...state,
+        successNotified:false
+      }))
+    } else if(!!this.props.successMessage && prevProps.successMessage === null){
+      this.setState(state=>({
+        ...state,
+        successNotified:true
+      }))
     }
   }
 
+  isTokenExpired = () => {
+    let isExpired = false;
+    // const token_verifikasi = getTokenVerifikasiFromStorage();
+    const token_verifikasi = store.get('token_verifikasi');
+    console.log(token_verifikasi);
+    try {
+      const { exp } = jwt_decode(token_verifikasi);
+      console.log(exp);
+      // console.log(exp * 1000);
+      console.log(new Date(exp * 1000));
+      if(Date.now() >= exp * 1000){
+        isExpired = false;
+      } else {
+        isExpired = true;
+      }
+    } catch(err){
+      isExpired = true;
+    }
+
+    return !isExpired;
+  }
+
   validateKodeAktifasi = kode => {
+    
     const { 
-      intl, 
-      kodeFromServer 
-    } = this.props
+      intl,       
+      kodeVerifikasi       
+    } = this.props;
+
+    console.log(this.isTokenExpired());
+
     let isError = false;
     let errorMsg = null;
+    // let isSuccess = false;
+    let successMessage = null;
+
     if(isEmpty(kode)){
       isError = true;
+      // isSuccess = false;
       errorMsg = intl.formatMessage(messages.emptyCode);
-    } else if(kode !== kodeFromServer){
+      successMessage = null;
+    } else if(kode !== kodeVerifikasi){
       isError = true;
+      // isSuccess = false;
       errorMsg = intl.formatMessage(messages.codeNotMatch);
-      // console.log(kode);
-      // console.log(kodeFromServer);
-      // console.log(errorMsg);
-    }
-      else {
+      successMessage = null;
+    } else if(kode === kodeVerifikasi) {
       isError = false;
-      errorMsg = null
+      // isSuccess = true;
+      errorMsg = null;
+      successMessage = intl.formatMessage(messages.codeIsMatch);      
+    } else if(this.isTokenExpired()){      
+      isError = true;
+      errorMsg = int.formatMessage(messages.tokenExpired);
     }
 
     this.setState(state=>({
       ...state,
       error:{
         ...state.error,
-        // kodeAktifasi:errorMsg,
         message:errorMsg
       }
     }));
+    console.log(!isError);
     return !isError;
   }
 
-  handleSubmit(evt){
-    evt.preventDefault();
-    const { kodeAktifasi } = this.props;
-    this.setState(state=>({
-      ...state,
-      isSubmitTriggered:true
-    }));
+  // handleSubmit(evt){
+  //   evt.preventDefault();
+  //   const { 
+  //     kodeVerifikasi
+  //   } = this.props;
+    
+  //   this.setState(state=>({
+  //     ...state,
+  //     isSubmitTriggered:true
+  //   }));
 
-    if(this.validateKodeAktifasi(kodeAktifasi)){
-      return this.props.konfirmasiKode();
-    }
-    return false;
-  }
+  //   if(this.validateKodeAktifasi(kodeVerifikasi)){
+  //     return this.props.konfirmasiKode();
+  //   }
+  //   return false;
+  // }
 
   handleBack = () => {
     const { history } = this.props;
     return history.replace('/login');
   }
 
-  testSubmit = (val) => {
-    console.log(val);
-    this.props.changeKodeAktifasi(val);
-    this.props.konfirmasiKode();
+  autoSubmit = (val) => {    
+    const { intl } = this.props;
+    this.props.logSuccess(intl.formatMessage(messages.codeIsMatch));
+    this.setState(state=>({    
+      ...state,
+      successNotified:true,
+      confirm:{
+        ...state.confirm,
+        successMessage:intl.formatMessage(messages.codeIsMatch)
+      }
+    }))
+    // console.log(this.state);
+    // this.props.konfirmasiKode();
   }
 
   render(){
@@ -278,32 +357,7 @@ class VerifyConfirmPage extends React.Component {
                                   }}>
                                   {intl.formatMessage(messages.header)}  
                                 </Typography>
-                                
-                                {/* <FormControl 
-                                  margin="dense" 
-                                  fullWidth>
-                                    <TextField 
-                                      id="nik" 
-                                      name="nik"                               
-                                      label={intl.formatMessage(messages.kodeAktifasi)}
-                                      value={kodeAktifasi}
-                                      type="text" 
-                                      fullWidth
-                                      variant="outlined"
-                                      margin="dense"
-                                      placeholder="masukkan kode aktifasi"
-                                      onChange={ evt => {
-                                        if(this.state.isSubmitTriggered){
-                                          this.validateKodeAktifasi(evt.target.value);
-                                        }
-                                        return changeKodeAktifasi(evt.target.value)
-                                      }}
-                                      error={!!this.state.error.kodeAktifasi}
-                                      helperText={this.state.error.kodeAktifasi}
-                                      style={{
-                                        fontFamily:typography.fontFamily                                        
-                                      }} />
-                                </FormControl> */}
+                                                                
                                 <FormControl 
                                   margin="dense" 
                                   fullWidth
@@ -320,26 +374,21 @@ class VerifyConfirmPage extends React.Component {
                                   }}>
                                     masukkan kode verifikasi  
                                 </Typography>                                   
-                                  <StyledCodeInput 
-                                    type="number"
+                                  <StyledCodeInput                                     
+                                    type="string"
                                     fields={6}
                                     onChange={val => {
                                       if(val.length === 6){                                        
-                                        // cek kode inputan user cocok dgn kode dari server 
                                         if(this.validateKodeAktifasi(val)){
-                                          // klo kode cocok simpan ke state fromUser_activation_code
-                                          return this.testSubmit(val);        
-                                          // return changeKodeAktifasi(val);
-                                          // return this.props.konfirmasiKode();
+                                          return this.autoSubmit(val);
                                         }
                                         // klo tidak cocok log error dan tampilkan notifikasi
                                         return this.props.logError(intl.formatMessage(messages.codeNotMatch));
-                                        // return false;
                                       }
                                       return false;
                                     }} />
                                 </FormControl>
-                                <Button
+                                {/* <Button
                                   fullWidth
                                   variant="contained"
                                   color="primary"
@@ -353,14 +402,26 @@ class VerifyConfirmPage extends React.Component {
                                     fontWeight:'bold'
                                   }}>
                                     {intl.formatMessage(messages.btnConfirm)}
-                                </Button>
+                                </Button> */}
                             </Grid>
                         </Grid>
+                        
                         <NotificationSnackbar 
+                          verticalPos="bottom"
                           open={this.state.isNotificationOpen}
                           onClose={()=>this.props.logError(null)}
                           hideDuration={3000}
                           message={this.props.errorMessage} />
+
+                        <NotificationSuccess 
+                          verticalPos="top"
+                          open={this.state.successNotified}
+                          onClose={ () => {
+                            this.props.logSuccess(null);
+                            return this.props.konfirmasiKode(); 
+                          }}
+                          hideDuration={3000}
+                          message={this.props.successMessage} />
                       </form>
                     </Grid>
                   </Paper>
@@ -377,10 +438,13 @@ VerifyConfirmPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  // verifyConfirmPage: makeSelectVerifyConfirmPage(),
   kodeAktifasi: makeSelectKodeAktifasi(),
   kodeFromServer: makeSelectKodeFromServer(),
-  errorMessage: makeSelectError()
+
+  tokenVerifikasi: makeSelectTokenVerifikasi(),
+  kodeVerifikasi: makeSelectKodeVerifikasi(),
+  errorMessage: makeSelectError(),
+  successMessage: makeSelectSuccess()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -388,7 +452,8 @@ function mapDispatchToProps(dispatch) {
     // dispatch,
     changeKodeAktifasi: (kode) => dispatch(changeKodeAktifasiAction(kode)),
     konfirmasiKode: () => dispatch(konfirmasiKodeAction()),
-    logError: (err) =>  dispatch(logErrorAction(err))
+    logError: (err) =>  dispatch(logErrorAction(err)),
+    logSuccess: (msg) =>  dispatch(logSuccessAction(msg))    
   };
 }
 

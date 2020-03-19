@@ -1,14 +1,20 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, all, call, put, select } from 'redux-saga/effects';
 import request from 'utils/request';
+import { api } from 'environments';
 import { replace } from 'connected-react-router';
-// todo :
-// import { api, apps } from environments;
+
 import {
   VERIFIKASI_ACTION
 } from './constants';
 
 import {
-  makeSelectUser
+  setTokenVerifikasi,
+  removeTokenVerifikasi
+} from '../Login/helpers';
+
+import {
+  makeSelectUser,
+  makeSelectTokenVerifikasi
 } from './selectors'
 
 import {
@@ -23,45 +29,43 @@ export function* requestVerifikasi(){
     nomtel
   } = yield select(makeSelectUser());
 
+  console.log(nik);
+
   const metaData = JSON.stringify({
     userAgent: navigator.userAgent
   });
 
-  // const endpoint `${api.host}/api/v${api.version}/auth/verifyUserToken`
+  const endpoint = `${api.host}/api/verifikasi_user`
   const requestOpt = {
     method:'POST',
     headers:{
-      'Content-Type':'application/json',
-      // 'APPLICATION-ID':apps['mps_pwa'].id
+      'Content-Type':'application/json'
     },
     body: JSON.stringify({
       nik,
       email,
-      nomtel,
-      metaData
+      nomohp:nomtel
     })
   };
-
+  
   try {
-    console.log(metaData);
-    // const response = yield call(request, endpoint, requestOpt);
-    // hardcode test
-    if(nik == "01540110"){
-      // TODO : buat short limit token untuk verifikasi 
-      // yield put(setVerifyUserToken(response.data));
-      yield put(verifikasiSuccessAction());
-      yield put(replace('/verifikasi/confirm'));// jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode 
-    } else {
-      yield put(verifikasiErrorAction(err))
+    
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
+      yield call(setTokenVerifikasi, response.token_verifikasi);
+      yield put(replace('/verifikasi/confirm'));// jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode     
     }
+    
   } catch(err){
     // TODO : buat error message
+    console.log(err);
     yield put(verifikasiErrorAction(err))
   }
 }
 
-// Individual exports for testing
 export default function* verifikasiSaga() {
-  // See example in containers/HomePage/saga.js
-  yield takeLatest(VERIFIKASI_ACTION, requestVerifikasi);
+  yield all([
+    takeLatest(VERIFIKASI_ACTION, requestVerifikasi),
+  ]);
 }
