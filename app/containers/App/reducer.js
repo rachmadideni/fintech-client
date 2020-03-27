@@ -10,14 +10,18 @@
 import produce from 'immer';
 import { 
   SET_AUTH_TOKEN_ACTION,
-  REMOVE_AUTH_TOKEN_ACTION
+  REMOVE_AUTH_TOKEN_ACTION,
+  SET_NIK_ACTION,
+  SET_EMAIL_ACTION
  } from './constants';
 
 // The initial state of the App
 export const initialState = {
   loading: false,
   auth:{
-    token:null
+    token:null,
+    nik:null,
+    email:null
   }
 };
 
@@ -31,6 +35,14 @@ const appReducer = (state = initialState, action) =>
       }
       case REMOVE_AUTH_TOKEN_ACTION:{
         draft.auth.token = null;
+        return draft;
+      }
+      case SET_NIK_ACTION:{
+        draft.auth.nik = action.payload;
+        return draft;
+      }
+      case SET_EMAIL_ACTION:{
+        draft.auth.email = action.payload;
         return draft;
       }
     }

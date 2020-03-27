@@ -15,8 +15,19 @@ import {
   SUBMIT_PENGAJUAN_ACTION,
   SUBMIT_PENGAJUAN_SUCCESS_ACTION,
   RESET_FORM_ACTION,
-  RESET_FORM_SUCCESS_ACTION
+  RESET_FORM_SUCCESS_ACTION,
+  SET_SIMULASI_TOUR_ACTION
 } from './constants';
+
+export function setSimulasiTourAction(open, count){
+  return {
+    type:SET_SIMULASI_TOUR_ACTION,
+    payload:{
+      open,
+      count
+    }
+  }
+}
 
 export function resetFormAction(){
   return {

@@ -46,7 +46,7 @@ import { typography, color } from '../../styles/constants';
 import demimoore from '../../images/demimoore.jpg';
 import styled from 'styled-components';
 
-const Wrapper = styled(props=>{
+const Wrapper = styled( props => {
   return (
     <Grid 
       container 

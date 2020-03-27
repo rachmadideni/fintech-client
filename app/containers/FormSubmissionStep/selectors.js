@@ -81,7 +81,13 @@ const makeSelectCifData = () => createSelector(selectFormSubmissionStepDomain,
 const makeSelectFinanceData = () => createSelector(selectFormSubmissionStepDomain,
   substate => substate.send.finance); 
 
-export { 
+const makeSelectTourSimulasi = () => createSelector(selectFormSubmissionStepDomain,
+  substate => substate.data.tour_simulasi); 
+
+const makeSelectFormSubmitted = () => createSelector(selectFormSubmissionStepDomain, 
+  substate => substate.formSubmitted);
+
+  export { 
   makeSelectCompletedStep,
   makeSelectActiveStep,
   makeSelectStepProgress,
@@ -116,5 +122,7 @@ export {
   makeSelectUploadedFiles,
   makeSelectOpsiJenisPengajuan,
   makeSelectCifData,
-  makeSelectFinanceData
+  makeSelectFinanceData,
+  makeSelectTourSimulasi,
+  makeSelectFormSubmitted
 };

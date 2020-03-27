@@ -17,27 +17,6 @@ import {
   makeSelectCredential
 } from '../Login/selectors';
 
-export function* getNomrek(nobase){
-  try {
-    const endpoint = `${api.host}/api/getNomrek/${nobase}`;
-    const token = yield select(makeSelectAuthToken());
-    const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':token
-      }
-    };    
-    const response = yield call(request, endpoint, requestOpt);
-    if(response.status){
-      return response.data[0].NOMREK;
-    }
-
-  } catch(err){
-    return "";
-  }
-}
-
 export function* cekPengajuan(nomrek){
   try {
     const token = yield select(makeSelectAuthToken());
@@ -57,26 +36,51 @@ export function* cekPengajuan(nomrek){
   }
 }
 
-export function* cekStatusAplikasi(){
+export function* getNomrek(nobase){
   try {
+    const endpoint = `${api.host}/api/getNomrek/${nobase}`;
+    const token = yield select(makeSelectAuthToken());
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':token
+      }
+    };    
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      return response.data[0].NOMREK;
+    }
+
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* cekStatusAplikasi(){
+  
+  try {
+    
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
-    const dt_pengajuan = yield call(cekPengajuan, nomrek);
+    if(nomrek){
+      const dt_pengajuan = yield call(cekPengajuan, nomrek);
+      
+      if(dt_pengajuan.length > 0){
+        const status_aplikasi = dt_pengajuan.map((item,i)=>{
+          if(item.NOMREK && item.STSAPP){
+            return 2; // user sudah mengisi form tahap 1 & 2 atau sdh diapprove
+          } else if(item.NOMREK || !!item.STSAPP){
+            console.log(!!item.STSAPP);
+            return 1; // user sudah melakukan pengajuan
+          }
+          return 0; // user belum mengajukan pinjaman
+        });
+        yield put(cekSp3SuccessAction(status_aplikasi[0]));
+      }
 
-    if(dt_pengajuan.length > 0){
-      const status_aplikasi = dt_pengajuan.map((item,i)=>{
-        if(item.NOMREK && item.STSAPP){
-          return 2; // user sudah mengisi form tahap 1 & 2 atau sdh diapprove
-          console.log(item.STSAPP);
-        } else if(item.NOMREK || !!item.STSAPP){
-          console.log(!!item.STSAPP);
-          return 1; // user sudah melakukan pengajuan
-        }
-        return 0; // user belum mengajukan pinjaman
-      });
-      yield put(cekSp3SuccessAction(status_aplikasi[0]));
-      // console.log('status aplikasi ', status_aplikasi[0]);
     }
+
 
   } catch(err){
     console.log(err);

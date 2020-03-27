@@ -363,7 +363,7 @@ export function* mapPengajuan(){
     const pengajuan = yield select(makeSelectPengajuan()); // tujuan pemanfaatan
     const files = yield select(makeSelectUploadedFiles()); // dokumen
     
-    yield put(submitPengajuanAction());
+    yield put(submitPengajuanAction()); // formSubmitted = true
     yield put(mapPengajuanSuccessAction({ nobase, nasabah, work, finance, pengajuan, files }));
 
     const cifData = yield select(makeSelectCifData());
@@ -385,7 +385,7 @@ export function* mapPengajuan(){
         return call(uploadFiles, {...item, nomrek })
       }));      
       
-      yield put(submitPengajuanSuccessAction());
+      yield put(submitPengajuanSuccessAction()); // formSubmitted = false
       yield put(resetFormSuccessAction(initialState));
       yield put(replace('/summary'));
       

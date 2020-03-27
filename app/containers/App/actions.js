@@ -19,7 +19,9 @@ import {
   SET_AUTH_TOKEN_ACTION,
   REMOVE_AUTH_TOKEN_ACTION,
   SET_TOKEN_VERIFIKASI_ACTION,
-  REMOVE_TOKEN_VERIFIKASI_ACTION
+  REMOVE_TOKEN_VERIFIKASI_ACTION,
+  SET_NIK_ACTION,
+  SET_EMAIL_ACTION
 } from './constants';
 
 
@@ -46,5 +48,19 @@ export function setTokenVerifikasiAction(token){
 export function removeTokenVerifikasiAction(){
   return {
     type:REMOVE_TOKEN_VERIFIKASI_ACTION
+  }
+}
+
+export function setNikAction(nik){
+  return {
+    type:SET_NIK_ACTION,
+    payload:nik
+  }
+}
+
+export function setEmailAction(email){
+  return {
+    type:SET_EMAIL_ACTION,
+    payload:email
   }
 }

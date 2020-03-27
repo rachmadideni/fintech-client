@@ -20,8 +20,15 @@ import {
 } from '@material-ui/icons';
 
 function BackdropMessage(props) {
-  const { open, onClick, messages, type, ...otherProps } = props;
-  return (
+  
+  const { 
+    open, 
+    onClick, 
+    messages, 
+    type, 
+    ...otherProps } = props;
+  
+    return (
     <Backdrop 
       open={open}
       onClick={onClick}

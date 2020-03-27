@@ -8,13 +8,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-
 import StepBackButton from './StepBackButton';
 import StepNextButton from './StepNextButton';
 import StepCircularProgress from './StepCircularProgress';
 import StepContentComp from './StepContentComp';
 import { check_max_installment } from '../../containers/PerhitunganAngsuran/helpers';
-
 
 function FormStepper(props) {
   const {
@@ -34,7 +32,8 @@ function FormStepper(props) {
     nasabah,
     work,
     documents,
-    pengajuan
+    pengajuan,
+    tour_simulasi
   } = props;
 
   let currstep = completedStep[activeStep].number;
@@ -72,6 +71,25 @@ function FormStepper(props) {
     return true;
   }
 
+  // setStepSimulasiTourOpen = (bool) => {
+  //   if(!!bool){
+  //     // action set 
+  //     // draft.data.tour_simulasi.open = true;
+  //     // draft.data.tour_simulasi.count += 1; 
+  //   }
+  // }
+
+  const isNextStepDisabled = () => {
+    if(gaji < 1 || check_max_installment(limitAngsuran,plafon,margin,tenor)){
+      console.log(true);
+      // props.setSimulasiTour(true, 1);
+      return true;
+    }
+    console.log(false);
+    props.setSimulasiTour(false, 0);
+    return false;
+  }
+
   return (
     <Grid 
       container 
@@ -79,7 +97,11 @@ function FormStepper(props) {
       style={{
         marginBottom:10
       }}>
-        { activeStep > 0 && <StepBackButton active={true} onClickBack={onClickBack} /> }
+        { 
+          activeStep > 0 && 
+          <StepBackButton active={true} onClickBack={onClickBack} />
+        }
+        
         <StepCircularProgress 
           stepvalue={stepProgress}
           currentstep={currstep}
@@ -89,11 +111,11 @@ function FormStepper(props) {
           title={title}
           subtitle={subtitle} />
         
-        { activeStep === 0 ? 
-          <StepNextButton 
+        {
+          activeStep === 0 ? 
+          <StepNextButton             
             onClickNext={onClickNext}
-            isDisabled={ 
-              gaji < 1 || check_max_installment(limitAngsuran,plafon,margin,tenor) } /> : null
+            isDisabled={ gaji < 1 || check_max_installment(limitAngsuran, plafon, margin, tenor) } /> : null
         }
         { activeStep === 1 ? 
           <StepNextButton 

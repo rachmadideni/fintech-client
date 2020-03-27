@@ -39,10 +39,10 @@ export default function App() {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - Mitra Pembiayaan Syariah"
-        defaultTitle="Mitra Pembiayaan Syariah"
+        titleTemplate="%s - Pembiayaan Amanah"
+        defaultTitle="Pembiayaan Amanah"
       >
-        <meta name="description" content="Aplikasi Mitra Pembiayaan Syariah" />
+        <meta name="description" content="Aplikasi Pembiayaan Amanah" />
       </Helmet>
       <Switch>
         
@@ -133,17 +133,7 @@ export default function App() {
             <AuthGuard>
               <Dashboard {...routeProps} />
             </AuthGuard>
-          )} />
-
-        
-        
-        {/* Disable sementara */}
-        {/* <Route           
-          path="/pinjaman/:section(step|angsuran|pengajuan)" 
-          render={routeProps=>(
-            <Dashboard {...routeProps} />
-          )} /> */}
-                
+          )} />                
 
         <Route path="" component={NotFoundPage} />
       </Switch>

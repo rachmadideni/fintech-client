@@ -27,6 +27,10 @@ import {
   getParamAction  
 } from './actions';
 
+import {
+  setSimulasiTourAction
+} from '../FormSubmissionStep/actions'
+
 import messages from './messages';
 
 // helpers function
@@ -48,7 +52,10 @@ const valueText = value => 'test'
 
 class PerhitunganAngsuran extends React.Component {
   constructor(props){
-    super(props);    
+    super(props);
+    this.state = {
+      isOpen:false
+    }    
   }
   
   componentDidMount(){
@@ -62,8 +69,9 @@ class PerhitunganAngsuran extends React.Component {
     }
   }
 
-  hitungAngsuran = (plafon,margin,tenor) => {
-    let angsuran = calc_installment(plafon,margin,tenor);
+  hitungAngsuran = (plafon, margin, tenor) => {
+    let angsuran = calc_installment(plafon, margin, tenor);
+    // this.props.setSimulasiTour(open, 1);
     return this.props.changeAngsuran(angsuran);
   }  
 
@@ -107,6 +115,12 @@ class PerhitunganAngsuran extends React.Component {
   //   return history.replace('/pinjaman/pengajuan');
   // }
 
+  // handleTour = () => {
+  //   this.setState({
+  //     isOpen:!isOpen
+  //   })
+  // }
+
   render(){
     const { 
       intl,
@@ -114,7 +128,7 @@ class PerhitunganAngsuran extends React.Component {
     } = this.props;
     
     return (
-      <Grid 
+      <Grid         
         container 
         wrap="nowrap"
         direction="column"
@@ -124,13 +138,7 @@ class PerhitunganAngsuran extends React.Component {
               marginTop:20
           }}>
 
-          {/* <Tour 
-            isOpen={true}
-            steps={TOUR_STEPS}
-            showCloseButton={false} 
-            onRequestClose={()=>console.log('close')} /> */}
-
-          <Grid 
+          <Grid             
             container 
             wrap="nowrap"
             direction="column">
@@ -153,7 +161,7 @@ class PerhitunganAngsuran extends React.Component {
                 }} />
           </Grid>
 
-            <Grid 
+            <Grid               
               container 
               wrap="nowrap"
               justify="center"
@@ -180,7 +188,7 @@ class PerhitunganAngsuran extends React.Component {
               value={this.props.plafon}
               min={parameter ? parameter.MIN_PLAFON : 10000000}
               max={parameter ? parameter.MAX_PLAFON : 50000000}
-              step={5000000}
+              step={parameter ? parameter.STEP_PLAFON : 5000000}
               valueLabelDisplay="off"
               getAriaValueText={valueText}
               marks={false}
@@ -208,12 +216,12 @@ class PerhitunganAngsuran extends React.Component {
                 </Grid>
             </Grid>
 
-            <InstallmentSlider
+            <InstallmentSlider              
               color="secondary"                             
               value={this.props.tenor}                           
               min={parameter ? parameter.MIN_TENOR : 12}
               max={parameter ? parameter.MAX_TENOR : 36}
-              step={12}
+              step={parameter ? parameter.STEP_TENOR : 12}
               valueLabelDisplay="off"
               getAriaValueText={valueText}
               marks={false}
@@ -261,7 +269,8 @@ function mapDispatchToProps(dispatch) {
     changePlafon: value => dispatch(changePlafonAction(value)),
     changeTenor: value => dispatch(changeTenorAction(value)),
     changeAngsuran: value => dispatch(changeAngsuranAction(value)),
-    getParam: () => dispatch(getParamAction())    
+    getParam: () => dispatch(getParamAction()),
+    setSimulasiTour: (open, count) => dispatch(setSimulasiTourAction(open, count))
   };
 }
 

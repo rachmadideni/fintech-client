@@ -41,3 +41,7 @@ export const SUBMIT_PENGAJUAN_SUCCESS_ACTION = 'app/FormSubmissionStep/SUBMIT_PE
 
 export const RESET_FORM_ACTION = 'app/FormSubmissionStep/RESET_FORM_ACTION';
 export const RESET_FORM_SUCCESS_ACTION = 'app/FormSubmissionStep/RESET_FORM_SUCCESS_ACTION';
+
+// action disable/enable step simulasi
+export const SET_SIMULASI_TOUR_ACTION = 'app/FormSubmissionStep/SET_SIMULASI_TOUR_ACTION';
+

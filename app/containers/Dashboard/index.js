@@ -125,9 +125,7 @@ class Dashboard extends React.Component {
         direction="column" 
         alignItems="center">
         
-          <Grid 
-            item
-            xs
+          <Grid item xs
             style={{ 
               flexShrink:0,
             }}>            
@@ -139,10 +137,11 @@ class Dashboard extends React.Component {
                 avatarProps={
                   <ButtonAvatar                   
                     iconProps={<UserAvatarIcon title="" />} />}
-                    onClick={()=>console.log(1)} />
-            </Grid>
+                    onClick={ () => console.log(1) } />
+          </Grid>
 
-            {/*                     
+            {
+              /*                     
               app.mps.com/dashboard => UserDashboard
               app.mps.com/customer
               app.mps.com/application-form/step/customer/installment => PerhitunganAngsuran
@@ -150,7 +149,8 @@ class Dashboard extends React.Component {
               app.mps.com/application-form/step/customer/work-history
               app.mps.com/application-form/step/customer/documents
               app.mps.com/application-form/step/customer/summary                    
-            */}
+              */
+           }
 
             <PageContent 
               container 
@@ -165,7 +165,7 @@ class Dashboard extends React.Component {
 
                     <Route                       
                       path="/application-form/step/customer"
-                      render={routeProps=>(
+                      render={ routeProps => (
                         <FormSubmissionStep 
                           history={history} 
                           {...routeProps} />
@@ -173,44 +173,55 @@ class Dashboard extends React.Component {
                    
                     <Route                       
                       path="/application-form/step/customer/section:(installment|personal-details|work-history|documents|summary)"
-                      render={routeProps=>(
-                        <FormSubmissionStep history={history} {...routeProps} />
+                      render={ routeProps => (
+                        <FormSubmissionStep 
+                          history={history} 
+                          {...routeProps} />
                       )} />
                     
                     <Route 
                       path="/summary"
-                      render={routeProps=>(
-                        <FormSummary history={history} {...routeProps} />
+                      render={ routeProps => (
+                        <FormSummary 
+                          history={history} 
+                          {...routeProps} />
                       )} />
                     
                     <Route 
                       path="/akad"
-                      render={routeProps=>(
-                        <FormAkadStep history={history} {...routeProps} />
+                      render={ routeProps => (
+                        <FormAkadStep 
+                          history={history} 
+                          {...routeProps} />
                       )} />
                     
-
                     <Route 
                       path="/profil"
-                      render={routeProps=>(
-                        <UserProfile history={history} {...routeProps} />
+                      render={ routeProps => (
+                        <UserProfile 
+                          history={history} 
+                          {...routeProps} />
                       )} />
                     
                     <Route 
                       path="/inbox"
-                      render={routeProps=>(
-                        <UserInbox history={history} {...routeProps} />
+                      render={ routeProps => (
+                        <UserInbox 
+                          history={history} 
+                          {...routeProps} />
                       )} />
                     
                     <Route 
                       path="/changePassword"
-                      render={routeProps=>(
-                        <ChangePasswordPage history={history} {...routeProps} />
-                      )} />
+                      render={ routeProps => (
+                        <ChangePasswordPage 
+                          history={history} 
+                          {...routeProps} />
+                      )} />                    
+
+                    {/*
                     
-
-
-                    {/* <Route 
+                    <Route 
                       path="/application-form/step/customer/installment"
                       render={routeProps=>(
                         <Pinjaman {...routeProps} />
@@ -247,12 +258,14 @@ class Dashboard extends React.Component {
                   </Switch>
             </PageContent>                              
             
-            <PageFooter item navigationProp={
+            <PageFooter 
+              item 
+              navigationProp = {
               <BottomTabNavigation               
                 tabs={this.getBottomTabs()}
                 bottomTabValue={this.state.bottomTabValue}
                 handleBottomTabChange={this.handleBottomTabChange} />
-            }/>
+            } />
       
       </PageContainer>
     );

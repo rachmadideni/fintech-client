@@ -13,7 +13,11 @@ import {
 import {
   makeSelectCredential
 } from '../Login/selectors';
-import { setAuthTokenAction, removeAuthTokenAction } from '../App/actions';
+import { 
+  setAuthTokenAction, 
+  removeAuthTokenAction,
+  setNikAction
+} from '../App/actions';
 import {
   loginSuccessAction,
   loginErrorAction
@@ -43,7 +47,7 @@ export function* login(){
       },
       body: JSON.stringify({
         nik,
-        password,        
+        password,
         metadata
       })
     };
@@ -54,8 +58,10 @@ export function* login(){
     if(response.status){
       yield call(setTokenInStorage, response.token);// store token di local storage
       yield put(setAuthTokenAction(response.token));// store token di state
+      yield put(setNikAction(nik));
       yield put(loginSuccessAction()); // beritahu store 
     } else {
+      // jika response status false
       let errorMsg = messages.user_not_exists.defaultMessage;
       yield put(loginErrorAction(errorMsg));
     }

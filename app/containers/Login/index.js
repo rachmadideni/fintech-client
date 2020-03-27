@@ -57,6 +57,9 @@ import styled from 'styled-components';
 import { color, typography } from 'styles/constants';
 import bggreen01 from '../../images/bg_green_1.png';
 
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const Wrapper = styled(Grid)`
 && {
   flex:1;
@@ -83,8 +86,46 @@ const Wrapper = styled(Grid)`
     // background-image: linear-gradient(to right, ${color.lightGrey} 100%, ${color.lightGrey} 40%);
     opacity: 1;
   }  
+}`;
+
+// hal 387
+const LoginButton = styled(Button)`
+&& {
+  margin-top:10px;
+  font-family:${typography.fontFamily}; 
+  font-weight:bold;
+  text-transform:capitalize;
+  box-shadow:none;
+}`;
+
+// hal 436
+const ResetPasswordButton = styled(Button)`
+  && {
+    font-family:${typography.fontFamily};
+    text-transform:capitalize;
+    margin-top:0pz;
+  }
+`;
+
+// hal 459
+const VerificationButton = styled(Button)`
+  && {
+    font-family:${typography.fontFamily};
+    font-weight:bold;
+    text-transform:capitalize;
+    margin-top:0px;
+  }
+`;
+
+const AppTitle = styled(Typography)`
+&& {
+  font-family:${typography.fontFamily};
+  font-size:16px;
+  font-weight:bold;
+  color:${color.white};
+  text-transform:capitalize;
 }
-`
+`;
 
 class Login extends React.Component {
   constructor(props){
@@ -179,7 +220,6 @@ class Login extends React.Component {
     }));
 
     if(this.validateNik(credential.nik) && this.validatePassword(credential.password)){
-      console.log('validated ok. now youre login');
       return this.props.login();
     }
     return false;
@@ -215,22 +255,22 @@ class Login extends React.Component {
               boxShadow:'none'
           }}>
             <Toolbar>
-              <div style={{ flexGrow:1 }} />
-              <Typography                  
-                  gutterBottom
-                  style={{
-                    fontFamily:typography.fontFamily,
-                    fontSize:16,
-                    fontWeight:'bold',
-                    color:color.white,
-                    textTransform:'capitalize'
-                  }}>
-                  Amanah Finance
-              </Typography>
+              <div style={{ flexGrow:1 }} />              
+              <AppTitle gutterBottom>
+                pembiayaan Amanah
+              </AppTitle>
               <div style={{ flexGrow:1 }} />
             </Toolbar>
           </AppBar>
           
+          <Backdrop 
+            open={this.props.isLoading}            
+            style={{
+              zIndex:3000,
+              color:color.white
+            }}>
+              <CircularProgress color="inherit" />
+          </Backdrop>
           
           <Grid 
             item xs>
@@ -380,24 +420,19 @@ class Login extends React.Component {
                                 error={!!this.state.error.password}
                                 helperText={this.state.error.password} />
                             </FormControl>
-                            <Button 
+                            
+                            <LoginButton
                               fullWidth 
                               variant="contained" 
                               color="primary"
                               disabled={!!this.props.errorMessage}
-                              onClick={this.handleSubmit}
-                              style={{
-                                marginTop:10,
-                                fontFamily:typography.fontFamily, 
-                                fontWeight:'bold',
-                                textTransform:'capitalize',
-                                boxShadow:'none'
-                              }}>
-                              {intl.formatMessage(messages.loginButton)}
-                            </Button>
+                              onClick={this.handleSubmit}>
+                                {intl.formatMessage(messages.loginButton)}
+                            </LoginButton>
+                            
                             <div style={{ flexGrow:1, marginTop:20 }} />
                             
-                            <Typography 
+                            {/* <Typography 
                               align="center"
                               gutterBottom 
                               style={{
@@ -408,42 +443,26 @@ class Login extends React.Component {
                                 padding:5
                             }}>
                               {intl.formatMessage(messages.forgotPasswordText)}
-                          </Typography>
-                            <Button 
+                            </Typography>                             */}
+
+                                                        
+                            <VerificationButton
                               fullWidth 
                               variant="outlined" 
                               color="primary"
-                              style={{ 
-                                fontFamily:typography.fontFamily,
-                                textTransform:'capitalize',
-                                marginTop:0 }}>
-                                {intl.formatMessage(messages.resetPasswordButton)}                      
-                            </Button>
-                            <div style={{ flexGrow:1, marginTop:10 }} />
-                            {/* <Typography 
-                              align="center"
-                              gutterBottom 
-                              style={{
-                                fontFamily:typography.fontFamily,
-                                fontSize:12,
-                                fontWeight:'bold',
-                                padding:5
-                            }}>
-                              {intl.formatMessage(messages.accountNotVerified)}
-                            </Typography> */}
+                              onClick={this.handleVerification}>
+                              {intl.formatMessage(messages.verificationButton)}
+                            </VerificationButton>
                             
-                            <Button 
-                              onClick={this.handleVerification}
+                            <div style={{ flexGrow:1, marginTop:10 }} />
+                            
+                            <ResetPasswordButton
                               fullWidth 
                               variant="outlined" 
-                              color="primary"
-                              style={{ 
-                                fontFamily:typography.fontFamily,
-                                fontWeight:'bold',
-                                textTransform:'capitalize',
-                                marginTop:0 }}>
-                                {intl.formatMessage(messages.verificationButton)}                      
-                            </Button>
+                              color="primary">
+                                {intl.formatMessage(messages.resetPasswordButton)}
+                            </ResetPasswordButton>
+
                           </Grid>                      
                         </Grid>                    
                         <NotificationSnackbar 

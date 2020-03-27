@@ -14,7 +14,8 @@ import { compose } from 'redux';
 import {
   makeSelectPengajuan,
   makeSelectOpsiJenisPengajuan,
-  makeSelectNasabah
+  makeSelectNasabah,
+  makeSelectFormSubmitted
 } from '../FormSubmissionStep/selectors';
 
 import messages from './messages';
@@ -45,6 +46,9 @@ import {
   mapPengajuanAction
 } from '../FormSubmissionStep/actions';
 
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const Wrapper = styled(props=>{
   return (
     <Grid {...props} />
@@ -74,8 +78,7 @@ class FormPengajuan extends React.Component {
     const { opsiJenisPengajuan } = this.props;    
     let filteredSub = jenis === 1 ? opsiJenisPengajuan.filter(item => item.KDPRDK === 1) : opsiJenisPengajuan.filter(item => item.KDPRDK === 2);          
     
-
-    const menuItem = filteredSub.map( (item,i) => {      
+    const menuItem = filteredSub.map((item,i) => {      
       return (
         <MenuItem 
           key={`item-${i}`}
@@ -83,7 +86,8 @@ class FormPengajuan extends React.Component {
           style={{ fontSize:14 }}>
           {item.NMTUJU}
         </MenuItem>);      
-    });    
+    });
+
     return menuItem;
   }
 
@@ -129,7 +133,8 @@ class FormPengajuan extends React.Component {
       intl,
       pengajuan,
       changeJenisPengajuan,      
-      changePemanfaatanLain
+      changePemanfaatanLain,
+      formSubmitted
     } = this.props;    
 
     return (
@@ -137,7 +142,17 @@ class FormPengajuan extends React.Component {
         container 
         wrap="nowrap"
         direction="column"
-        alignItems="center">
+        alignItems="center">          
+          
+          <Backdrop 
+            open={formSubmitted}            
+            style={{
+              zIndex:3000,
+              color:color.white
+            }}>
+              <CircularProgress color="inherit" />
+          </Backdrop>
+
           <Grid item style={{ width:'100%' }}>
             <form autoComplete="off">
                                     
@@ -187,7 +202,6 @@ class FormPengajuan extends React.Component {
                 color="secondary" 
                 shrink>
                   {intl.formatMessage(messages.pemanfaatan)}
-                  {intl.formatMessage(messages.pemanfaatan).length}
               </InputLabel>
               <Select 
                 id="subpeng" 
@@ -259,7 +273,8 @@ class FormPengajuan extends React.Component {
 const mapStateToProps = createStructuredSelector({
   pengajuan: makeSelectPengajuan(),
   opsiJenisPengajuan: makeSelectOpsiJenisPengajuan(),
-  nasabah: makeSelectNasabah()
+  nasabah: makeSelectNasabah(),
+  formSubmitted: makeSelectFormSubmitted()
 });
 
 function mapDispatchToProps(dispatch) {

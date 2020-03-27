@@ -13,7 +13,8 @@ import {
   MAP_PENGAJUAN_SUCCESS_ACTION,
   SUBMIT_PENGAJUAN_ACTION,
   SUBMIT_PENGAJUAN_SUCCESS_ACTION,
-  RESET_FORM_SUCCESS_ACTION
+  RESET_FORM_SUCCESS_ACTION,
+  SET_SIMULASI_TOUR_ACTION
 } from './constants';
 
 import {
@@ -126,7 +127,11 @@ export const initialState = {
       validated:false,
     }
   ],
-  data:{    
+  data:{
+    tour_simulasi:{
+      open:false,
+      count:0
+    },    
     angsuran:{
       pendapatan:0,
       plafon:Math.min(...PLAFON),
@@ -191,6 +196,13 @@ const formSubmissionStepReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
 
+      case SET_SIMULASI_TOUR_ACTION:{
+        draft.data.tour_simulasi.open = action.payload.open;
+        if(draft.data.tour_simulasi.open < 2){
+          draft.data.tour_simulasi.count = action.payload.count;
+        }
+        return draft;
+      }
       case RESET_FORM_SUCCESS_ACTION:{
         draft = action.payload;
         // draft.data = action.payload.data;

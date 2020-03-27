@@ -31,19 +31,24 @@ import {
   makeSelectNasabah,
   makeSelectWorkData,
   makeSelectDocuments,
-  makeSelectPengajuan
+  makeSelectPengajuan,
+  makeSelectTourSimulasi
 } from './selectors';
 
 import reducer from './reducer';
 import saga from './saga';
 import { 
   setCompletedStepAction,
-  setActiveStepAction 
+  setActiveStepAction,
+  setSimulasiTourAction 
 } from './actions';
 
 // MUI 
 import Grid from '@material-ui/core/Grid';
-
+import Tour from 'reactour';
+import {
+  TOUR_STEPS
+} from '../PerhitunganAngsuran/constants';
 // PAGES
 import PerhitunganAngsuran from 'containers/PerhitunganAngsuran/Loadable';
 import FormNasabah from 'containers/FormNasabah/Loadable';
@@ -73,9 +78,38 @@ const Wrapper = styled(props=>{
   }
 `;
 
+const STEPS = [{
+  step:0,
+  url:'/application-form/step/customer/installment',
+  item:PerhitunganAngsuran
+},{
+  step:1,
+  url:'/application-form/step/customer/personal-details',
+  item:FormNasabah
+},{
+  step:2,
+  url:'/application-form/step/customer/work-related',
+  item:FormPekerjaan
+},{
+  step:3,
+  url:'/application-form/step/customer/documents',
+  item:FormDocument
+},{
+  step:4,
+  url:'/application-form/step/customer/pengajuan',
+  item:FormPengajuan
+},{
+  step:5,
+  url:'/application-form/step/customer/summary',
+  item:FormSummary
+}];
+
 class FormSubmissionStep extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      isTourOpen:true
+    }
   }
   
   componentDidUpdate(prevProps, prevState){
@@ -127,6 +161,13 @@ class FormSubmissionStep extends React.Component {
     }
   }
 
+  handleTour = () => {
+    this.setState(state=>({
+      ...state,
+      isTourOpen:!isTourOpen
+    }))
+  }
+
   render(){
     const {
       intl, 
@@ -139,8 +180,10 @@ class FormSubmissionStep extends React.Component {
     return (
       <Wrapper>       
         {
-          activeStep < completedStep.length &&         
-          <FormStepper
+          activeStep < completedStep.length ?  
+                  
+          <FormStepper            
+            data-tour="first-step"
             activeStep={activeStep}
             stepProgress={stepProgress}
             completedStep={completedStep}                        
@@ -157,10 +200,14 @@ class FormSubmissionStep extends React.Component {
             nasabah={this.props.nasabah}
             work={this.props.work}
             documents={this.props.documents}
-            pengajuan={this.props.pengajuan} />
-        }
+            pengajuan={this.props.pengajuan}
+            tour_simulasi={this.props.tour_simulasi}
+            setSimulasiTour={this.props.setSimulasiTour} />
+             : null
+        }            
+            
             <Switch>
-              <Route                 
+              {/* <Route                 
                 path="/application-form/step/customer/installment"
                 render={routeProps=>(
                   <PerhitunganAngsuran history={history} {...routeProps} />
@@ -189,7 +236,19 @@ class FormSubmissionStep extends React.Component {
                 path="/application-form/step/customer/pengajuan"
                 render={routeProps=>(
                   <FormPengajuan history={history} {...routeProps} />
-                )} />
+                )} /> */}
+
+                {
+                  STEPS.map((route,i)=>{
+                    return (
+                      <Route 
+                        path={route.url}
+                        render={routeProps => (
+                          <route.item history={history} {...routeProps} />
+                        )} />
+                    );
+                  })
+                }
               
             </Switch>              
       </Wrapper>
@@ -213,13 +272,15 @@ const mapStateToProps = createStructuredSelector({
   nasabah: makeSelectNasabah(),
   work: makeSelectWorkData(),
   documents: makeSelectDocuments(),
-  pengajuan: makeSelectPengajuan()
+  pengajuan: makeSelectPengajuan(),
+  tour_simulasi:makeSelectTourSimulasi()
 });
 
 function mapDispatchToProps(dispatch) {
   return {    
     setCompletedStep: (step,value,stepValue) => dispatch(setCompletedStepAction(step,value,stepValue)),
-    setActiveStep: (step) => dispatch(setActiveStepAction(step))
+    setActiveStep: (step) => dispatch(setActiveStepAction(step)),
+    setSimulasiTour: (open, count) => dispatch(setSimulasiTourAction(open, count)) 
   };
 }
 

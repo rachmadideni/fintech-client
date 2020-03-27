@@ -28,6 +28,9 @@ export const GET_PARAM_SUCCESS_ACTION = 'app/PerhitunganAngsuran/GET_PARAM_SUCCE
 
 
 export const TOUR_STEPS = [{
-    selector:'.satu',
-    content:'tour pertama'
+    selector:'data-tour="first-step"',
+    content:'tombol warna hijau berarti bisa lanjut ke step selanjutnya'
+},{
+    selector:'data-tour="second-step"',
+    content:'gunakan tombol sebelah kiri untuk kembali ke halaman selanjutnya'
 }]
