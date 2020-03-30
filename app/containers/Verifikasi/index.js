@@ -49,6 +49,8 @@ import styled from 'styled-components';
 import bggreen01 from '../../images/bg_green_1.png';
 
 import LoadingPage from 'components/LoadingPage';
+import NotificationSnackbar from 'components/NotificationSnackbar';
+import { Detector, Offline, Online } from 'react-detect-offline';
 
 import {
   AppBar,
@@ -101,6 +103,7 @@ class Verifikasi extends React.Component {
         nomorTelpon:null
       },
       isSubmitTriggered:false,
+      isNotificationOpen:false
     }
     // reference to the DOM node
     this.paperElement = null;
@@ -109,7 +112,9 @@ class Verifikasi extends React.Component {
   }
 
   componentDidMount(){
-    this.myPaperTween = TweenLite.to(this.paperElement, 0.3, { y:25 })
+    this.myPaperTween = TweenLite.to(this.paperElement, 0.3, { y:25 });
+    // check if user is offline
+    // this.checkOffline();  
   }
 
   validateNik = nik => {
@@ -211,6 +216,19 @@ class Verifikasi extends React.Component {
     return history.replace('/login');
   }
 
+  handleNotification = () => {
+    console.log('handleNotification is called!');
+    this.setState({
+      isNotificationOpen:!isNotificationOpen
+    })
+  }
+
+  checkOffline = () => {
+    <Offline>
+      {this.handleNotification}
+    </Offline>
+  }
+
   render(){
     const { 
       intl,
@@ -251,43 +269,8 @@ class Verifikasi extends React.Component {
                 Login
               </Typography>
             </Toolbar>
-          </AppBar>          
-          {/* 
-          <Grid item xs>
-            <Backdrop 
-              open={isLoading} 
-              onClick={()=>console.log('backdrop is clicked!')}
-              style={{
-                zIndex:1000,
-                color:'#FFFFFF'
-              }}>
-                <Grid 
-                  container 
-                  wrap="nowrap" 
-                  direction="column"
-                  justify="center"
-                  alignItems="center"
-                  style={{
-                    justifyContent:'flex-start',
-                    alignItems:'flex-start',
-                    width:150,
-                    backgroundColor:'purple'                    
-                  }}>
-                  <Typography 
-                    variant="body2"
-                    align="center"
-                    gutterBottom
-                    style={{
-                      fontFamily:typography.fontFamily,
-                      marginBottom:20
-                    }}>
-                      <FormattedMessage {...messages.pleaseWaitIsLoading} />                                           
-                  </Typography>
-                  <CircularProgress 
-                    color="inherit" />
-                </Grid>
-            </Backdrop>
-          </Grid> */}
+          </AppBar>
+
           <Grid
             item xs>
               <Grid 
@@ -299,6 +282,7 @@ class Verifikasi extends React.Component {
                   justifyContent:'flex-start',
                   alignItems:'flex-start'
                 }}>
+                  
                   <Paper
                     ref={ paper => this.paperElement = paper}
                     elevation={0} 
@@ -314,11 +298,9 @@ class Verifikasi extends React.Component {
                     style={{
                       justifyContent:'center',
                       alignItems:'center'
-                    }}>
-                      
+                    }}>                      
                     <form 
-                      autoComplete="off"
-                     >
+                      autoComplete="off">
                         <Grid 
                           container 
                           wrap="nowrap"
@@ -348,7 +330,7 @@ class Verifikasi extends React.Component {
                                   color:color.subtleBlack,
                                   // paddingLeft:10
                                 }}>
-                                proses verifikasi user  
+                                proses verifikasi akun user  
                                 </Typography>
 
                                 <div style={{ marginTop:20 }} />
@@ -450,25 +432,25 @@ class Verifikasi extends React.Component {
                                     }}>
                                       {intl.formatMessage(messages.btnVerifikasi)}
                                   </Button>
-                                  {/* <Button
-                                    fullWidth
-                                    variant="outlined"
-                                    color="primary"                                    
-                                    onClick={()=>console.log('cancel')}
-                                    style={{
-                                      marginTop:10,
-                                      fontFamily:typography.fontFamily,
-                                      textTransform:'capitalize'
-                                    }}>
-                                      {intl.formatMessage(messages.btnCancel)}
-                                  </Button> */}
+                                                
+                                  
                             </Grid>
-                        </Grid>                        
+                        </Grid>
                     </form>
                   </Grid>
                   </Paper>
                 </Grid>
             </Grid>
+            {/* <Detector
+              render={({ online }) => (
+                online ? 
+                <NotificationSnackbar 
+                  verticalPos="bottom"
+                  open={this.state.isNotificationOpen}
+                  onClose={this.handleNotification}
+                  hideDuration={3000}
+                  message={'contoh pesan'} /> : null                
+               )} />              */}
         </Wrapper>
     )
   }

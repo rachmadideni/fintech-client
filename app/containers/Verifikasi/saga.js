@@ -51,7 +51,7 @@ export function* requestVerifikasi(){
     
     const response = yield call(request, endpoint, requestOpt);
     // console.log(response);
-    if(response.status && response.data > 1){
+    if(response.status && response.data > 0){
       yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
       yield put(setEmailAction(email));
       yield call(setTokenVerifikasi, response.token_verifikasi);

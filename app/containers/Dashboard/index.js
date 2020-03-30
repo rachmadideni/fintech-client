@@ -36,6 +36,7 @@ import { Switch, Route } from 'react-router-dom';
 // Pages
 import Pinjaman from '../Pinjaman/Loadable';
 import FormPengajuan from '../FormPengajuan/Loadable';
+
 import UserDashboard from 'containers/UserDashboard/Loadable';
 import FormSubmissionStep from 'containers/FormSubmissionStep';
 import FormSummary from 'containers/FormSummary/Loadable';
@@ -46,6 +47,8 @@ import FormAkadStep from 'containers/FormAkadStep/Loadable';
 // import ProductSelection from 'containers/ProductSelection/Loadable';
 // import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
+import MainPage from 'containers/MainPage/Loadable';
+
 // components
 import PageContainer from 'components/PageContainer';
 import PageHeader from 'components/PageHeader';
@@ -55,6 +58,7 @@ import PageFooter from 'components/PageFooter';
 import BottomTabNavigation from 'components/BottomTabNavigation';
 import ButtonAvatar from 'components/ButtonAvatar';
 import UserAvatarIcon from 'components/UserAvatarIcon';
+import Paper from '@material-ui/core/Paper';
 
 class Dashboard extends React.Component {
   constructor(props){
@@ -122,151 +126,120 @@ class Dashboard extends React.Component {
       <PageContainer 
         container 
         wrap="nowrap" 
-        direction="column" 
-        alignItems="center">
+        direction="column">
+          
+          <PageHeader 
+            titleProps={
+              <PageTitle 
+                gutterBottom
+                title={intl.formatMessage(messages.pageTitle)} 
+                color="primary" />} 
+            avatarProps={
+              <ButtonAvatar                   
+                iconProps={<UserAvatarIcon title="" />} />}
+                onClick={ () => console.log(1) } />
         
-          <Grid item xs
-            style={{ 
-              flexShrink:0,
-            }}>            
-              <PageHeader 
-                titleProps={
-                  <PageTitle 
-                    title={intl.formatMessage(messages.pageTitle)} 
-                    color="primary" />} 
-                avatarProps={
-                  <ButtonAvatar                   
-                    iconProps={<UserAvatarIcon title="" />} />}
-                    onClick={ () => console.log(1) } />
-          </Grid>
+            <Grid 
+              item xs>
 
-            {
-              /*                     
-              app.mps.com/dashboard => UserDashboard
-              app.mps.com/customer
-              app.mps.com/application-form/step/customer/installment => PerhitunganAngsuran
-              app.mps.com/application-form/step/customer/personal-details => FormPengajuan
-              app.mps.com/application-form/step/customer/work-history
-              app.mps.com/application-form/step/customer/documents
-              app.mps.com/application-form/step/customer/summary                    
-              */
-           }
+              <PageContent 
+                container 
+                wrap="nowrap">
+                  <Paper
+                    ref={ paper => this.paperElement = paper}
+                    elevation={0} 
+                    style={{
+                      height:'80vh',
+                      backgroundColor:color.white,
+                      borderRadius:12,
+                      paddingBottom:20,
+                       }}>
+                    
+                    <Switch>
+                        
+                        <Route                                                    
+                          path="/dashboard"
+                          render={routeProps => (                       
+                            <MainPage 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
 
-            <PageContent 
-              container 
-              wrap="nowrap">
-                <Switch>
-                    <Route
-                      exact
-                      path="/dashboard"
-                      render={() => (                       
-                        <UserDashboard history={history} />
-                      )} />
+                        <Route                          
+                          path="/dashboard/section:(pinjaman|informasi)"
+                          render={routeProps => (                       
+                            <MainPage 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
 
-                    <Route                       
-                      path="/application-form/step/customer"
-                      render={ routeProps => (
-                        <FormSubmissionStep 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                   
-                    <Route                       
-                      path="/application-form/step/customer/section:(installment|personal-details|work-history|documents|summary)"
-                      render={ routeProps => (
-                        <FormSubmissionStep 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/summary"
-                      render={ routeProps => (
-                        <FormSummary 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/akad"
-                      render={ routeProps => (
-                        <FormAkadStep 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/profil"
-                      render={ routeProps => (
-                        <UserProfile 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/inbox"
-                      render={ routeProps => (
-                        <UserInbox 
-                          history={history} 
-                          {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/changePassword"
-                      render={ routeProps => (
-                        <ChangePasswordPage 
-                          history={history} 
-                          {...routeProps} />
-                      )} />                    
-
-                    {/*
-                    
-                    <Route 
-                      path="/application-form/step/customer/installment"
-                      render={routeProps=>(
-                        <Pinjaman {...routeProps} />
-                      )} />
-                    
-                    <Route 
-                      path="/application-form/step/customer/personal-details"
-                      render={routeProps=>(
-                        <FormPengajuan {...routeProps} />
-                      )} /> */}
-
-                    {/* 
-                    <Route                      
-                      path="/pinjaman/step"
-                      render={() => (                       
-                        <FormSubmissionStep history={history} />
-                      )} />
-                    */}
-                                                            
-                    {/*
-                    <Route                  
-                      path="/pinjaman/angsuran"
-                      render={routeProps => (
-                        <Pinjaman {...routeProps} />
-                      )} />                
-                    
-                    <Route                  
-                      path="/pinjaman/pengajuan"
-                      render={routeProps => (
-                        <FormPengajuan {...routeProps} />
-                      )} />
-                    */}
-
-                  </Switch>
-            </PageContent>                              
-            
-            <PageFooter 
-              item 
-              navigationProp = {
-              <BottomTabNavigation               
-                tabs={this.getBottomTabs()}
-                bottomTabValue={this.state.bottomTabValue}
-                handleBottomTabChange={this.handleBottomTabChange} />
-            } />
-      
+                        <Route                       
+                          path="/application-form/step/customer"
+                          render={ routeProps => (
+                            <FormSubmissionStep 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                      
+                        <Route                       
+                          path="/application-form/step/customer/section:(installment|personal-details|work-history|documents|summary)"
+                          render={ routeProps => (
+                            <FormSubmissionStep 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                        
+                        <Route 
+                          path="/summary"
+                          render={ routeProps => (
+                            <FormSummary 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                        
+                        <Route 
+                          path="/akad"
+                          render={ routeProps => (
+                            <FormAkadStep 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                        
+                        <Route 
+                          path="/profil"
+                          render={ routeProps => (
+                            <UserProfile 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                        
+                        <Route 
+                          path="/inbox"
+                          render={ routeProps => (
+                            <UserInbox 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                        
+                        <Route 
+                          path="/changePassword"
+                          render={ routeProps => (
+                            <ChangePasswordPage 
+                              history={history} 
+                              {...routeProps} />
+                          )} />
+                      </Switch>
+                    </Paper>
+              </PageContent>                                                      
+              <PageFooter                              
+                item              
+                navigationProp = {
+                <BottomTabNavigation               
+                  tabs={this.getBottomTabs()}
+                  bottomTabValue={this.state.bottomTabValue}
+                  handleBottomTabChange={this.handleBottomTabChange} />
+              } />            
+            </Grid>      
       </PageContainer>
     );
   }

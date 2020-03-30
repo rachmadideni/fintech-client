@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 
 const GridStyled = styled(Grid)`
 && {
+  // flex:1;
   margin-top:10;
   justify-content:center;
   align-items:center;
@@ -20,7 +21,8 @@ const GridStyled = styled(Grid)`
 function PageFooter(props) {
   const { navigationProp, ...gridProps } = props;
   return (
-    <GridStyled {...gridProps}>
+    <GridStyled 
+      {...gridProps}>
       {navigationProp}
     </GridStyled>
   );

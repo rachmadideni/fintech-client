@@ -1,6 +1,7 @@
 import { call, put, select, all, takeLatest, takeEvery } from 'redux-saga/effects';
 import request from 'utils/request';
 import { api } from 'environments';
+import { replace } from 'connected-react-router';
 
 import { initialState } from './reducer';
 import {
@@ -126,6 +127,7 @@ export function* submitFormAkad(){
       }));
       yield put(submitFormAkadSuccessAction());
       yield put(resetFormSuccessAction(initialState.data)); // reset state data
+      yield put(replace('/summary'));
     }
 
   } catch(err){

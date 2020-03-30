@@ -14,7 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 const AppBarStyled = styled(AppBar)`
 && {
-  background-color:white;
+  background-color:transparent;
   box-shadow:none;
 }  
 `
@@ -25,10 +25,11 @@ function PageHeader(props) {
   return (
     <AppBarStyled>
       <Toolbar>
-      {props.brandProps}
+      <div style={{ flexGrow:1 }} />      
       {titleProps}
-      <div style={{ flexGrow:1 }} />
+      <div style={{ flexGrow:1 }} />      
       {avatarProps}
+      {/* <div style={{ flexGrow:1 }} /> */}
       </Toolbar>
     </AppBarStyled>
   );

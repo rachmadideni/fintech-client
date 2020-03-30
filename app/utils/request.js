@@ -42,3 +42,17 @@ export default function request(url, options) {
     .then(checkStatus)
     .then(parseJSON);
 }
+
+function parseBlob(response){
+  return response.blob()
+}
+
+function requestBlob(url, options){
+  return fetch(url, options)
+  .then(checkStatus)
+  .then(parseBlob);
+}
+
+export {
+  requestBlob
+}

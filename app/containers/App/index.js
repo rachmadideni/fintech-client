@@ -17,11 +17,7 @@ import VerifyConfirmPage from 'containers/VerifyConfirmPage';
 import CreatePassword from 'containers/CreatePassword/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-// import ProductSelection from 'containers/ProductSelection/Loadable';
-// import UserDashboard from 'containers/UserDashboard/Loadable';
-
 import AuthGuard from 'containers/AuthGuard';
-
 import GlobalStyle from '../../global-styles';
 
 const AppWrapper = styled.div`
@@ -30,9 +26,6 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color:#FFFFFF;
-  // min-height: 100%;
-  // height:100vh;
-  // padding: 0 16px;
 `;
 
 export default function App() {
@@ -40,8 +33,7 @@ export default function App() {
     <AppWrapper>
       <Helmet
         titleTemplate="%s - Pembiayaan Amanah"
-        defaultTitle="Pembiayaan Amanah"
-      >
+        defaultTitle="Pembiayaan Amanah">
         <meta name="description" content="Aplikasi Pembiayaan Amanah" />
       </Helmet>
       <Switch>
@@ -70,9 +62,17 @@ export default function App() {
           path="/createPassword" 
           component={CreatePassword} />
         
-        <Route 
-          exact          
+        {/* ada exact di path /dashboard */}
+        <Route                               
           path="/dashboard" 
+          render={routeProps=>(
+            <AuthGuard>
+              <Dashboard {...routeProps} />
+            </AuthGuard>
+          )} />
+        
+        <Route                               
+          path="/dashboard/section:(pinjaman|informasi)" 
           render={routeProps=>(
             <AuthGuard>
               <Dashboard {...routeProps} />

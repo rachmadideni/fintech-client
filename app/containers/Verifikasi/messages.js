@@ -11,7 +11,7 @@ export const scope = 'app.containers.Verifikasi';
 export default defineMessages({
   verifikasi: {
     id: `${scope}.header`,
-    defaultMessage: 'Verifikasi user',
+    defaultMessage: 'Verifikasi akun',
   },
   nik:{
     id:`${scope}.nik`,

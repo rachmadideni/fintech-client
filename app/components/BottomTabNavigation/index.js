@@ -15,8 +15,8 @@ const BottomNavigationStyled = styled(BottomNavigation)`
 && {
   background-color:${color.green};
   position:fixed;
-  width:100%;
-  bottom:0;
+  width:100%;  
+  bottom:0px;
 }`;
 
 const NavigationAction = styled(BottomNavigationAction).attrs({
