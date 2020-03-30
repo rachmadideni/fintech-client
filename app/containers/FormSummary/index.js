@@ -14,8 +14,12 @@ import { compose } from 'redux';
 import {
   makeSelectNasabah,
   makeSelectWorkData,
-  makeSelectDocuments
+  makeSelectDocuments,
 } from '../FormSubmissionStep/selectors';
+
+import {
+  makeSelectStatusAplikasi
+} from '../MainPage/selectors';
 import messages from './messages';
 import {
   color,
@@ -86,7 +90,9 @@ class FormSummary extends React.Component {
                 fontWeight:'bold'
               }}
               gutterBottom>
-              {intl.formatMessage(messages.thankyou)}
+              
+              { this.props.statusAplikasi === 1 && intl.formatMessage(messages.thankyou)}
+              { this.props.statusAplikasi === 2 && intl.formatMessage(messages.successFormTahap2)}
             </Typography>
             <Typography
               align="center" 
@@ -117,7 +123,8 @@ const mapStateToProps = createStructuredSelector({
   // formSummary: makeSelectFormSummary(),
   nasabah: makeSelectNasabah(),
   work: makeSelectWorkData(),
-  documents:makeSelectDocuments()
+  documents:makeSelectDocuments(),
+  statusAplikasi: makeSelectStatusAplikasi()
 });
 
 function mapDispatchToProps(dispatch) {

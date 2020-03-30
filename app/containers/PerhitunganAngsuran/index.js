@@ -16,7 +16,8 @@ import {
   makeSelectTenor,
   makeSelectMargin,
   makeSelectAngsuran,
-  makeSelectParameter
+  makeSelectParameter,
+  makeSelectStepProgress
 } from 'containers/FormSubmissionStep/selectors';
 
 import {
@@ -37,13 +38,21 @@ import messages from './messages';
 import { calc_installment } from './helpers';
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Backdrop from '@material-ui/core/Backdrop';
 import numeral from 'numeral';
+import {
+  ArrowRightAlt,
+  ArrowRightSharp
+} from '@material-ui/icons';
+
 
 // components
 import NumberInput from '../../components/NumberInput';
 import InstallmentSlider from 'components/InstallmentSlider';
 import { FormItemHeaderText, FormItemText } from './components';
 
+import { color, typography } from '../../styles/constants';
 // Tour 
 import { TOUR_STEPS } from './constants';
 import Tour from 'reactour';
@@ -54,19 +63,42 @@ class PerhitunganAngsuran extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      isOpen:false
+      isOpen:true
     }    
   }
   
   componentDidMount(){
     this.props.getParam();
     this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
+    // this.showBackDrop();
   }
 
   componentDidUpdate(prevProps){
     if(prevProps.plafon !== this.props.plafon || prevProps.tenor !== this.props.tenor){
       this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
     }
+  }
+
+  showBackDrop = () => {
+    console.log('showBackdrop is called!');
+    return (
+      <Backdrop 
+        open={this.state.isOpen} 
+        onClick={this.handleBackdrop}>
+          <Typography
+            align="center">
+              gunakan tombol panah di sebelah kanan atas untuk berpindah layar berikutnya dan 
+              tombol panah sebelah kiri untuk kembali ke layar sebelumnya 
+          </Typography>
+      </Backdrop>
+    )
+  }
+
+  handleBackdrop = () => {
+    this.setState(state=>({
+      ...state,
+      isOpen:!state.isOpen
+    }))
   }
 
   hitungAngsuran = (plafon, margin, tenor) => {
@@ -133,11 +165,59 @@ class PerhitunganAngsuran extends React.Component {
         wrap="nowrap"
         direction="column"
         alignItems="center">
+          {
+            this.props.stepProgress === 0 ? 
+            <Backdrop 
+              open={this.state.isOpen}             
+              onClick={this.handleBackdrop}
+              style={{
+                zIndex:50000,
+                backgroundColor:color.subtleBlack,
+                opacity:0.9
+              }}>
+                <Grid 
+                  container 
+                  wrap="nowrap"               
+                  justify="center"
+                  alignItems="flex-start">                 
+                    <Grid item style={{
+                      width:'200px',
+                      position:'absolute',
+                      top:100
+                    }}>                    
+                      <Typography
+                        align="center"
+                        style={{
+                          fontFamily:typography.fontFamily,
+                          fontWeight:'bold',
+                          fontSize:12,
+                          color:color.white
+                        }}>
+                          {`gunakan tombol panah sebelah kanan dan kiri atas untuk berpindah layar`}
+                      </Typography>
+                  </Grid>
+                  
+                  <Grid item>
+                    <Typography
+                      align="center"
+                      style={{
+                        fontFamily:typography.fontFamily,
+                        fontWeight:'normal',
+                        fontSize:10,
+                        color:color.white
+                      }}>
+                        klik sembarang untuk menutup pesan ini
+                    </Typography>
+                  </Grid>
+                </Grid>
+            </Backdrop>            
+            : null
+          }
+
           <Grid item xs 
             style={{ 
               marginTop:20
           }}>
-
           <Grid             
             container 
             wrap="nowrap"
@@ -249,6 +329,7 @@ class PerhitunganAngsuran extends React.Component {
                 </Grid>
             </Grid>
           </Grid>
+          
       </Grid>
     );
   }
@@ -260,7 +341,8 @@ const mapStateToProps = createStructuredSelector({
   tenor: makeSelectTenor(),
   margin: makeSelectMargin(),
   angsuran: makeSelectAngsuran(),
-  parameter: makeSelectParameter()  
+  parameter: makeSelectParameter(),
+  stepProgress: makeSelectStepProgress()  
 });
 
 function mapDispatchToProps(dispatch) {

@@ -24,5 +24,9 @@ export default defineMessages({
   summary:{
     id: `${scope}.summary`,
     defaultMessage: 'Summary',
+  },
+  successFormTahap2:{
+    id:`${scope}.successFormTahap2`,
+    defaultMessage:'Terima kasih telah menyelesaikan kelengkapan data anda'
   }
 });

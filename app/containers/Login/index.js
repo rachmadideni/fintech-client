@@ -456,12 +456,12 @@ class Login extends React.Component {
                             
                             <div style={{ flexGrow:1, marginTop:10 }} />
                             
-                            <ResetPasswordButton
+                            {/* <ResetPasswordButton
                               fullWidth 
                               variant="outlined" 
                               color="primary">
                                 {intl.formatMessage(messages.resetPasswordButton)}
-                            </ResetPasswordButton>
+                            </ResetPasswordButton> */}
 
                           </Grid>                      
                         </Grid>                    

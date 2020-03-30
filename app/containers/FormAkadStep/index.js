@@ -370,7 +370,8 @@ class FormAkadStep extends React.Component {
               margin="dense" 
               fullWidth>
                 {this.props.opsi_dokumen.map((item,i)=>(
-                <Button                   
+                <Button
+                  key={`dok-${i}`}                   
                   color="primary"
                   fullWidth
                   variant="outlined" 
@@ -391,7 +392,7 @@ class FormAkadStep extends React.Component {
               <Grid style={{ marginTop:5, width:'70px',height:'60px'}}>
                 <Card raised={false}>
                   <CardActionArea>
-                    <CardMedia image={`${item.objectURL}`} style={{ height:'60px' }}/>                    
+                    <CardMedia key={`img-${i}`} image={`${item.objectURL}`} style={{ height:'60px' }}/>                    
                   </CardActionArea>
                 </Card>
               </Grid>

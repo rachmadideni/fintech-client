@@ -27,16 +27,15 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-// import Button from '@material-ui/core/Button';
-// import Avatar from '@material-ui/core/Avatar';
-// import { ArrowForwardSharp } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
+import {
+  Card,
+  CardContent,
+  CardActions
+} from '@material-ui/core';
 
 // Component
 import DashboardWelcomeUser from '../../components/DashboardWelcomeUser';
-
-// import DashboardContainer from 'components/DashboardContainer';
-// import DashboardProduct from 'components/DashboardProduct';
-// import DashboardButton from 'components/DashboardButton';
 
 import BookIcon from '@material-ui/icons/Book';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -196,8 +195,7 @@ class UserDashboard extends React.Component {
       
           <DashboardWelcomeUser 
             imgProps={demimoore} 
-            welcomeText={`Selamat datang di \nAplikasi Pembiayaan`} />
-          
+            welcomeText={`Selamat datang di \nAplikasi Pembiayaan`} />          
           
           <Grid 
             item
@@ -251,7 +249,87 @@ class UserDashboard extends React.Component {
                 orientation="vertical"
                 value={this.state.MenuTabValue}
                 onChange={this.handleMenuTabChange} 
-                tabs={this.getTabs()} />          
+                tabs={this.getTabs()} />
+              
+              <Grid 
+                container
+                wrap="nowrap"
+                direction="column"
+                style={{
+                  justifyContent:'space-around',
+                  alignItems:'space-around'
+                }}>
+                  <Grid item>
+                    <Card 
+                      variant="outlined"
+                      style={{ paddingTop:5 }}>
+                      <CardContent>
+                      {
+                          this.props.status_sp3 === 1 && 
+                          <Typography 
+                            variant="body2"
+                            align="center"
+                            style={{
+                              fontSize:12
+                            }}>
+                          {`anda belum memiliki aplikasi. \n klik tombol di bawah untuk memulai`}
+                          </Typography>
+                      }                  
+                      </CardContent>
+                      <CardActions>
+                        <Button 
+                          variant="contained" 
+                          color="primary" 
+                          fullWidth>
+                            <Typography
+                              style={{
+                                fontFamily:typography.fontFamily,
+                                fontSize:12,
+                                fontWeight:'bold',
+                                textTransform:'capitalize'                    
+                              }}>
+                              saya ingin mengajukan aplikasi
+                            </Typography>
+                        </Button>
+                      </CardActions>
+                    </Card>
+                </Grid>
+                <Grid item style={{ marginTop:5 }}>              
+                    <Card 
+                      variant="outlined"
+                      style={{ paddingTop:5 }}>
+                      <CardContent>
+                      {
+                          this.props.status_sp3 === 0 && 
+                          <Typography 
+                            variant="body2"
+                            align="center"
+                            style={{
+                              fontSize:12
+                            }}>
+                          {`anda sudah memiliki aplikasi pengajuan `}
+                          </Typography>
+                      }                  
+                      </CardContent>
+                      <CardActions>
+                        <Button 
+                          variant="contained" 
+                          color="primary" 
+                          fullWidth>
+                            <Typography
+                              style={{
+                                fontFamily:typography.fontFamily,
+                                fontSize:12,
+                                fontWeight:'bold',
+                                textTransform:'capitalize'                    
+                              }}>
+                              Pengisian Form Tahap 2
+                            </Typography>
+                        </Button>
+                      </CardActions>
+                    </Card>
+                </Grid>
+              </Grid>
           </Grid>                    
       </Wrapper>
     );

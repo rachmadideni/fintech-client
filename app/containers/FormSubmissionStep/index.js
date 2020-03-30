@@ -45,6 +45,8 @@ import {
 
 // MUI 
 import Grid from '@material-ui/core/Grid';
+import Backdrop from '@material-ui/core/Backdrop';
+import Typography from '@material-ui/core/Typography';
 import Tour from 'reactour';
 import {
   TOUR_STEPS
@@ -178,7 +180,8 @@ class FormSubmissionStep extends React.Component {
     } = this.props;
 
     return (
-      <Wrapper>       
+      <Wrapper>
+               
         {
           activeStep < completedStep.length ?  
                   
