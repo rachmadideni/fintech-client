@@ -7,12 +7,16 @@ import { api } from 'environments';
 import { 
   CEK_PINJAMAN_ACTION,
   DOWNLOAD_AKAD_ACTION,
-  DOWNLOAD_SPN_ACTION
+  DOWNLOAD_SPN_ACTION,
+  DOWNLOAD_SRP_ACTION,
+  DOWNLOAD_SPGK_ACTION
 } from './constants';
 import { 
   cekPinjamanSuccessAction,
   downloadAKadSuccessAction,
-  downloadSpnSuccessAction
+  downloadSpnSuccessAction,
+  downloadSrpSuccessAction,
+  downloadSpgkSuccessAction
 } from './actions'
 import { makeSelectAuthToken } from '../App/selectors';
 import { makeSelectCredential } from '../Login/selectors'
@@ -135,10 +139,60 @@ export function* downloadSpn(){
   }
 }
 
+export function* downloadSrp(){
+  try {
+    const credential = yield select(makeSelectCredential());
+    const nomrek = yield call(getNomrek, credential.nik);
+    const endpoint = `${api.host}/api/download_srp/nomrek/${nomrek}`;
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/pdf',
+      },
+      responseType:'blob'
+    };    
+
+    // response is returning blob
+    const response = yield call(requestBlob, endpoint, requestOpt);
+    const file = new Blob([response], {type: 'application/pdf'});
+    const fileURL = URL.createObjectURL(file);
+    yield put(downloadSrpSuccessAction(fileURL));
+    window.open(fileURL);
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* downloadSpgk(){
+  try {
+    const credential = yield select(makeSelectCredential());
+    const nomrek = yield call(getNomrek, credential.nik);
+    const endpoint = `${api.host}/api/download_spgk/nomrek/${nomrek}`;
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/pdf',
+      },
+      responseType:'blob'
+    };    
+
+    // response is returning blob
+    const response = yield call(requestBlob, endpoint, requestOpt);
+    const file = new Blob([response], {type: 'application/pdf'});
+    const fileURL = URL.createObjectURL(file);
+    yield put(downloadSpgkSuccessAction(fileURL));
+    window.open(fileURL);
+  } catch(err){
+    console.log(err);
+  }
+}
+
 export default function* mainPageSaga() {
   yield all([
     takeLatest(CEK_PINJAMAN_ACTION, cekPinjaman),
     takeLatest(DOWNLOAD_AKAD_ACTION, downloadAkad),
-    takeLatest(DOWNLOAD_SPN_ACTION, downloadSpn)
+    takeLatest(DOWNLOAD_SPN_ACTION, downloadSpn),
+    takeLatest(DOWNLOAD_SRP_ACTION, downloadSrp),
+    takeLatest(DOWNLOAD_SPGK_ACTION, downloadSpgk)
   ])
 }

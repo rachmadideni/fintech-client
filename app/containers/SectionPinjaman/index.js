@@ -14,9 +14,7 @@ import makeSelectSectionPinjaman from './selectors';
 import { makeSelectStatusAplikasi } from '../MainPage/selectors';
 import messages from './messages';
 import Grid from '@material-ui/core/Grid';
-import {
-  FileCopySharp
-} from '@material-ui/icons';
+
 import { 
   HeaderText,
   GridWrapper,
@@ -29,7 +27,9 @@ import {
 
 import {
   downloadAKadAction,
-  downloadSpnAction
+  downloadSpnAction,
+  downloadSrpAction,
+  downloadSpgkAction
 } from '../MainPage/actions';
 
 class SectionPinjaman extends React.Component {
@@ -41,8 +41,7 @@ class SectionPinjaman extends React.Component {
       statusAplikasi
     } = this.props;
 
-    if(statusAplikasi === 0){
-      // return history.replace('/akad');
+    if(statusAplikasi === 0){      
       return history.replace('/application-form/step/customer/installment');
     }
   }
@@ -58,14 +57,16 @@ class SectionPinjaman extends React.Component {
     }
   }
 
-  handleDownloadDokumen = (type) => {
-    console.log(type);
+  handleDownloadDokumen = (type) => {    
     if(type === "akad"){
       this.props.downloadAKad();
     } else if(type ==="spn"){
       this.props.downloadSpn();
+    } else if(type === "srp"){
+      this.props.downloadSrp();    
+    } else if(type === "spgk"){
+      this.props.downloadSpgk();
     }
-
   }
 
   render(){
@@ -189,9 +190,10 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    // dispatch,
     downloadAKad: () => dispatch(downloadAKadAction()),
-    downloadSpn: () => dispatch(downloadSpnAction())
+    downloadSpn: () => dispatch(downloadSpnAction()),
+    downloadSrp: () => dispatch(downloadSrpAction()),
+    downloadSpgk: () => dispatch(downloadSpgkAction())
   };
 }
 

@@ -19,6 +19,12 @@ export const DOWNLOAD_AKAD_SUCCESS_ACTION = 'app/MainPage/DOWNLOAD_AKAD_SUCCESS_
 export const DOWNLOAD_SPN_ACTION = 'app/MainPage/DOWNLOAD_SPN_ACTION';
 export const DOWNLOAD_SPN_SUCCESS_ACTION = 'app/MainPage/DOWNLOAD_SPN_SUCCESS_ACTION';
 
+export const DOWNLOAD_SRP_ACTION = 'app/MainPage/DOWNLOAD_SRP_ACTION';
+export const DOWNLOAD_SRP_SUCCESS_ACTION = 'app/MainPage/DOWNLOAD_SRP_SUCCESS_ACTION';
+
+export const DOWNLOAD_SPGK_ACTION = 'app/MainPage/DOWNLOAD_SPGK_ACTION';
+export const DOWNLOAD_SPGK_SUCCESS_ACTION = 'app/MainPage/DOWNLOAD_SPGK_SUCCESS_ACTION';
+
 export const ITEMS = [{
     'step':1,
     'name':'pinjaman',

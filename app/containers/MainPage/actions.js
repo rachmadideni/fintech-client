@@ -12,7 +12,11 @@ import {
   DOWNLOAD_AKAD_ACTION,
   DOWNLOAD_AKAD_SUCCESS_ACTION,
   DOWNLOAD_SPN_ACTION,
-  DOWNLOAD_SPN_SUCCESS_ACTION
+  DOWNLOAD_SPN_SUCCESS_ACTION,
+  DOWNLOAD_SRP_ACTION,
+  DOWNLOAD_SRP_SUCCESS_ACTION,
+  DOWNLOAD_SPGK_ACTION,
+  DOWNLOAD_SPGK_SUCCESS_ACTION
 } from './constants';
 
 export function defaultAction() {
@@ -64,6 +68,32 @@ export function downloadSpnAction() {
 export function downloadSpnSuccessAction(data) {
   return {
     type: DOWNLOAD_SPN_SUCCESS_ACTION,
+    payload:data
+  };
+}
+
+export function downloadSrpAction() {
+  return {
+    type: DOWNLOAD_SRP_ACTION,
+  };
+}
+
+export function downloadSrpSuccessAction(data) {
+  return {
+    type: DOWNLOAD_SRP_SUCCESS_ACTION,
+    payload:data
+  };
+}
+
+export function downloadSpgkAction() {
+  return {
+    type: DOWNLOAD_SPGK_ACTION,
+  };
+}
+
+export function downloadSpgkSuccessAction(data) {
+  return {
+    type: DOWNLOAD_SPGK_SUCCESS_ACTION,
     payload:data
   };
 }

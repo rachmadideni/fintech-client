@@ -9,7 +9,9 @@ import {
   CEK_PINJAMAN_ACTION,
   CEK_PINJAMAN_SUCCESS_ACTION,
   DOWNLOAD_AKAD_SUCCESS_ACTION,
-  DOWNLOAD_SPN_SUCCESS_ACTION
+  DOWNLOAD_SPN_SUCCESS_ACTION,
+  DOWNLOAD_SRP_SUCCESS_ACTION,
+  DOWNLOAD_SPGK_SUCCESS_ACTION
 } from './constants';
 
 export const initialState = {
@@ -17,7 +19,9 @@ export const initialState = {
   status_aplikasi:0,
   dokumen:{
     akad:null,
-    spn:null
+    spn:null,
+    srp:null,
+    spgk:null
   }  
 };
 
@@ -42,6 +46,16 @@ const mainPageReducer = (state = initialState, action) =>
 
       case DOWNLOAD_SPN_SUCCESS_ACTION:{
         draft.dokumen.spn = action.payload;
+        return draft;
+      }
+      
+      case DOWNLOAD_SRP_SUCCESS_ACTION:{
+        draft.dokumen.srp = action.payload;
+        return draft;
+      }
+      
+      case DOWNLOAD_SPGK_SUCCESS_ACTION:{
+        draft.dokumen.spgk = action.payload;
         return draft;
       }
     }
