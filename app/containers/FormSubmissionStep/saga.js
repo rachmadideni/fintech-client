@@ -316,7 +316,7 @@ export function* uploadFiles(files){
     // }
 
     formData.append('file', files.file, files.file.name);//file.name
-    formData.append('DOK_ID',files.idberk);    
+    formData.append('DOK_ID', files.idberk);    
     formData.append('nomrek', files.nomrek);
     
     const requestOpt = {

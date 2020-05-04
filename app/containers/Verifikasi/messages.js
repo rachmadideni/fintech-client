@@ -13,6 +13,10 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'Verifikasi akun',
   },
+  paperSubtitle:{
+    id:`${scope}.paperSubtitle`,
+    defaultMessage:'proses verifikasi akun user'
+  },
   nik:{
     id:`${scope}.nik`,
     defaultMessage:'NIK'

@@ -172,7 +172,7 @@ class FormDocument extends React.Component{
                       }>
                     {item.NMBERK}
                     <input 
-                      id={item.IDBERK} 
+                      id={item.IDBERK}
                       name={item.NMBERK} 
                       type="file"
                       multiple 

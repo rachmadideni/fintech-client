@@ -13,8 +13,7 @@ import {
 } from '../Login/helpers';
 
 import {
-  makeSelectUser,
-  makeSelectTokenVerifikasi
+  makeSelectUser  
 } from './selectors'
 
 import {
@@ -23,17 +22,13 @@ import {
 } from './actions';
 
 import {
-  setEmailAction
+  setEmailAction,
+  setNikAction
 } from '../App/actions';
 
 export function* requestVerifikasi(){
   
   const { nik, email, nomtel } = yield select(makeSelectUser());
-
-  // const metaData = JSON.stringify({
-  //   userAgent: navigator.userAgent
-  // });
-
   const endpoint = `${api.host}/api/verifikasi_user`
   const requestOpt = {
     method:'POST',
@@ -50,15 +45,19 @@ export function* requestVerifikasi(){
   try {
     
     const response = yield call(request, endpoint, requestOpt);
-    // console.log(response);
     if(response.status && response.data > 0){
+      
       yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
       yield put(setEmailAction(email));
+      yield put(setNikAction(nik));
       yield call(setTokenVerifikasi, response.token_verifikasi);
-      yield put(replace('/verifikasi/confirm'));// jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode     
+      yield put(replace('/verifikasi/confirm')); // jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode     
+    
     } else {
+      
       yield put(setEmailAction(email));
       yield put(replace('/login'));
+    
     }
     
   } catch(err){
@@ -68,7 +67,7 @@ export function* requestVerifikasi(){
   }
 }
 
-export default function* verifikasiSaga() {
+export default function* verifikasiSaga(){
   yield all([
     takeLatest(VERIFIKASI_ACTION, requestVerifikasi),
   ]);

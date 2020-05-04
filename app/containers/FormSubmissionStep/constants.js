@@ -8,19 +8,19 @@ export const DEFAULT_ACTION = 'app/FormSubmissionStep/DEFAULT_ACTION';
 export const FORM_STEPS = [
     {        
         title:'simulasi cicilan',
-        subtitle:'inputan sesuai kondisi pada saat pengajuan pinjaman'
+        subtitle:'data perhitungan angsuran'
     },
     {
         title:'Personal Details',
-        subtitle:'isi ki form utk data personal ta'
+        subtitle:'data pribadi'
     },
     {
         title:'Work',
-        subtitle:'isiki form data pekerjaan ta'
+        subtitle:'data pekerjaan'
     },
     {
         title:'Dokumen',
-        subtitle:'upload ki dokumen / foto ta'
+        subtitle:'upload kelengkapan dokumen'
     }
 ]
 

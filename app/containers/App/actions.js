@@ -21,7 +21,8 @@ import {
   SET_TOKEN_VERIFIKASI_ACTION,
   REMOVE_TOKEN_VERIFIKASI_ACTION,
   SET_NIK_ACTION,
-  SET_EMAIL_ACTION
+  SET_EMAIL_ACTION,
+  SET_NOTELP_ACTION
 } from './constants';
 
 
@@ -62,5 +63,12 @@ export function setEmailAction(email){
   return {
     type:SET_EMAIL_ACTION,
     payload:email
+  }
+}
+
+export function setNotelpAction(notelp){
+  return {
+    type:SET_NOTELP_ACTION,
+    payload:notelp
   }
 }

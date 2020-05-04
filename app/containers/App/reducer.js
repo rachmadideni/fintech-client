@@ -12,7 +12,8 @@ import {
   SET_AUTH_TOKEN_ACTION,
   REMOVE_AUTH_TOKEN_ACTION,
   SET_NIK_ACTION,
-  SET_EMAIL_ACTION
+  SET_EMAIL_ACTION,
+  SET_NOTELP_ACTION
  } from './constants';
 
 // The initial state of the App
@@ -21,7 +22,8 @@ export const initialState = {
   auth:{
     token:null,
     nik:null,
-    email:null
+    email:null,
+    notelp:null
   }
 };
 
@@ -43,6 +45,10 @@ const appReducer = (state = initialState, action) =>
       }
       case SET_EMAIL_ACTION:{
         draft.auth.email = action.payload;
+        return draft;
+      }
+      case SET_NOTELP_ACTION:{
+        draft.auth.notelp = action.payload;
         return draft;
       }
     }

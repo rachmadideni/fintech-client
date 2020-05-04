@@ -16,7 +16,9 @@ import {
 import { 
   setAuthTokenAction, 
   removeAuthTokenAction,
-  setNikAction
+  setNikAction,
+  setEmailAction,
+  setNotelpAction
 } from '../App/actions';
 import {
   loginSuccessAction,
@@ -59,6 +61,8 @@ export function* login(){
       yield call(setTokenInStorage, response.token);// store token di local storage
       yield put(setAuthTokenAction(response.token));// store token di state
       yield put(setNikAction(nik));
+      yield put(setEmailAction(response.email));
+      yield put(setNotelpAction(response.notelp));
       yield put(loginSuccessAction()); // beritahu store 
     } else {
       // jika response status false

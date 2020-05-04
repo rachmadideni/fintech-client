@@ -31,25 +31,31 @@ export const initialState = {
 const verifikasiReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {      
-      case CHANGE_NIK_ACTION:
+      
+        case CHANGE_NIK_ACTION:
         draft.user.nik = action.payload;
         return draft;
-      case CHANGE_EMAIL_ACTION:
+      
+        case CHANGE_EMAIL_ACTION:
         draft.user.email = action.payload;
         return draft;
-      case CHANGE_TELEPON_ACTION:
+      
+        case CHANGE_TELEPON_ACTION:
         draft.user.nomtel = action.payload;
         return draft;
-      case VERIFIKASI_ACTION:
+      
+        case VERIFIKASI_ACTION:
         draft.isLoading = true;
         draft.error.message = null;
         return draft;
-      case VERIFIKASI_SUCCESS_ACTION:
+      
+        case VERIFIKASI_SUCCESS_ACTION:
         draft.user.token_verifikasi = action.payload.token;
         draft.user.kode_verifikasi = action.payload.kode;
         draft.isLoading = action.payload.isLoading;
         return draft;
-      case VERIFIKASI_ERROR_ACTION:
+      
+        case VERIFIKASI_ERROR_ACTION:
         draft.isLoading = false;
         draft.error.message = action.payload.error;
         return draft;      

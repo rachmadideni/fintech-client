@@ -12,6 +12,11 @@ import injectSaga from 'utils/injectSaga';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import makeSelectUserProfile from './selectors';
+import {
+  makeSelectEmail,
+  makeSelectNik,
+  makeSelectNotelp
+} from '../App/selectors';
 import messages from './messages';
 
 import {
@@ -107,8 +112,8 @@ class UserProfile extends React.Component {
                     </Grid>
                     <Grid item style={{ marginBottom:20,textAlign:'center' }}>
                       <StyledText>MIA</StyledText>
-                      <StyledText size={12}>user@gmail.com</StyledText>
-                      <StyledText size={12}>085242068765</StyledText>
+                      <StyledText size={12}>{this.props.email}</StyledText>
+                      <StyledText size={12}>{this.props.notelp}</StyledText>
                     </Grid>
                     <StyledButton 
                       variant="outlined"
@@ -136,6 +141,8 @@ class UserProfile extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   userProfile: makeSelectUserProfile(),
+  email: makeSelectEmail(),
+  notelp: makeSelectNotelp()  
 });
 
 function mapDispatchToProps(dispatch) {

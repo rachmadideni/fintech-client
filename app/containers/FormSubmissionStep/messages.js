@@ -19,7 +19,7 @@ export default defineMessages({
   },
   step1Subtitle:{
     id:`${scope}.step1Subtitle`,
-    defaultMessage:'data sesuai kondisi pada saat pengajuan pinjaman'
+    defaultMessage:'data perhitungan angsuran'
   },
   step2Title:{
     id:`${scope}.step2Title`,
