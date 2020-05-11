@@ -87,13 +87,11 @@
     "ip": "1.1.5",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
-    "minimist": "1.2.0",
+    "minimist": "^1.2.5",
     "numeral": "^2.0.6",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-code-input": "^3.9.0",
-    "react-custom-scrollbars": "^4.2.1",
-    "react-detect-offline": "^2.4.0",
     "react-dom": "16.8.6",
     "react-helmet": "6.0.0-beta",
     "react-intl": "2.8.0",
@@ -178,10 +176,10 @@
     "terser-webpack-plugin": "1.2.3",
     "url-loader": "1.1.2",
     "webpack": "4.30.0",
-    "webpack-cli": "3.3.0",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "3.6.2",
     "webpack-hot-middleware": "2.24.3",
-    "webpack-pwa-manifest": "4.0.0",
+    "webpack-pwa-manifest": "^4.2.0",
     "whatwg-fetch": "3.0.0"
   }
 }
