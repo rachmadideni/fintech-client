@@ -5,7 +5,6 @@
  */
 
 import React, { memo } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
@@ -23,8 +22,6 @@ import {
 } from './actions';
 
 import messages from './messages';
-import { GROUP_COMPANY } from './constants';
-
 import styled from 'styled-components';
 import validate from 'validate.js';
 
@@ -35,6 +32,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
+
+import { map } from 'lodash/collection';
 
 const Wrapper = styled(props=>{
   return (
@@ -100,6 +99,17 @@ class FormPekerjaan extends React.Component {
     return !isError;
   }
 
+  checkJenisProduk = (companyId) => {    
+    const { opsiSbu, changeCompany } = this.props;    
+    let f = opsiSbu.filter((item,i) => item.IDSBU === companyId);
+    if(f){      
+      let jenisProduk = f[0].QARDH === 1 ? 3 : 2;
+      return changeCompany(companyId, jenisProduk);
+    } else {
+      return false;
+    }
+  }
+
   handleSubmit = evt => {
     evt.preventDefault();
     const {company,companyJoinDate} = this.state;
@@ -146,12 +156,8 @@ class FormPekerjaan extends React.Component {
                     name="company"
                     value={work.company}                    
                     fullWidth
-                    onChange={evt=>{
-                      // if(isSubmitTriggered){
-                      //   this.validateInput(evt.target.value,'company')
-                      // }
-                      // return this.onInputChange(evt.target.value,'company')
-                      return changeCompany(evt.target.value);
+                    onChange={evt=>{                      
+                      this.checkJenisProduk(evt.target.value);                      
                     }}
                     error={!!this.state.error.company}
                     helpertext={this.state.error.company}
@@ -161,8 +167,7 @@ class FormPekerjaan extends React.Component {
                     labelWidth={110}
                     style={{
                       textTransform:'lowercase'
-                    }}>
-                      {/* {GROUP_COMPANY.map((company,i)=><MenuItem key={`${company.title}-${i}`} value={company.value}>{company.title}</MenuItem>)}                       */}
+                    }}>                      
                       {opsiSbu.map((sbu,i) => 
                         <MenuItem 
                           key={`${sbu.title}-${i}`} 
@@ -197,16 +202,7 @@ class FormPekerjaan extends React.Component {
                   labelwidth={110} 
                   variant="outlined"                               
                   margin="dense" />
-              </FormControl>
-              {/* <FormControl variant="outlined" fullWidth>
-                <Button 
-                  variant="contained" 
-                  color="primary"
-                  fullWidth
-                  onClick={this.handleSubmit}>
-                  submit
-                </Button>
-              </FormControl> */}
+              </FormControl>              
             </form>
           </Grid>
       </Wrapper>
@@ -214,20 +210,14 @@ class FormPekerjaan extends React.Component {
   }
 }
 
-// FormPekerjaan.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-// };
-
-const mapStateToProps = createStructuredSelector({
-  // formPekerjaan: makeSelectFormPekerjaan(),
+const mapStateToProps = createStructuredSelector({  
   work: makeSelectWorkData(),
   opsiSbu: makeSelectSbu()
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    // dispatch,
-    changeCompany: value => dispatch(changeCompanyAction(value)),
+  return {    
+    changeCompany: (company,jenisProduk) => dispatch(changeCompanyAction(company,jenisProduk)),
     changeCompanyJoinDate: value => dispatch(changeCompanyJoinDateAction(value)),
     getOpsiSbu: () => dispatch(getOpsiSbuAction())
   };

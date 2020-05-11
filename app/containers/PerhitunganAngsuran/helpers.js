@@ -1,18 +1,17 @@
 export const calc_installment = (plafon, margin, tenor) => {
 
     let tahun_tenor = tenor/12;
-    let tmargin = (plafon+plafon*margin/100)*tahun_tenor;
+    let tmargin = (plafon*margin/100)*tahun_tenor;
     let npokok = plafon/tenor;
     let nmargin = tmargin/tenor;
-    let angsuran = npokok + nmargin;
-    // console.log(angsuran);
+    let angsuran = npokok + nmargin;    
     return angsuran;
     //return (plafon + plafon*margin/100) / tenor; 
 }
 
 export const check_max_installment = (maxInstallment,plafon,margin,tenor) => {
     let tahun_tenor = tenor/12;
-    let tmargin = (plafon+plafon*margin/100)*tahun_tenor;
+    let tmargin = (plafon*margin/100)*tahun_tenor;
     let npokok = plafon/tenor;
     let nmargin = tmargin/tenor;
     let angsuran = npokok + nmargin;
@@ -26,6 +25,12 @@ export const check_max_installment = (maxInstallment,plafon,margin,tenor) => {
         console.log(maxInstallment);
         return false;
     }
+}
+
+export const hitung_nilai_margin = (plafon,margin,tenor) => {
+    let tahun_tenor = tenor/12;
+    let nilai_margin = (plafon*margin/100)*tahun_tenor;
+    return nilai_margin;
 }
 
 // ini bisa disebut juga DSR

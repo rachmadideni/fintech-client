@@ -17,6 +17,11 @@ export default defineMessages({
     id:`${scope}.loginButton`,
     defaultMessage:'Login'
   },
+  HeaderWelcomeMessage:{
+    id:`${scope}.HeaderWelcomeMessage`,
+    defaultMessage:'selamat menggunakan produk multi guna'
+    // defaultMessage:'pastikan akun anda sudah terverifikasi sebelumnya'
+  },
   verificationButton:{
     id:`${scope}.verificationButton`,
     defaultMessage:'Verifikasi akun'

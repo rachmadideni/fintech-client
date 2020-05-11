@@ -12,12 +12,33 @@ import {
   CHANGE_ANGSURAN_ACTION,
   SET_LIMIT_ANGSURAN_ACTION,
   GET_PARAM_ACTION,
-  GET_PARAM_SUCCESS_ACTION
+  GET_PARAM_SUCCESS_ACTION,
+  CHANGE_NMARGIN_ACTION,
+  CHANGE_RATEASS_ACTION,
+  CHANGE_BYAADM_ACTION
 } from './constants';
 
-export function getParamAction(){
+export const changeNmarginAction = (nilai_margin) => ({
+  type: CHANGE_NMARGIN_ACTION,
+  payload: nilai_margin
+});
+
+export const changeRateAssAction = (ratass) => ({
+  type: CHANGE_RATEASS_ACTION,
+  payload: ratass
+});
+
+export const changeByaadmAction = (byaadm) => ({
+  type: CHANGE_BYAADM_ACTION,
+  payload: byaadm
+});
+
+export function getParamAction(idprod){
   return {
-    type:GET_PARAM_ACTION
+    type:GET_PARAM_ACTION,
+    payload:{
+      idprod
+    }
   }
 }
 

@@ -176,9 +176,10 @@ export function* validateInput(action){
   }
 }
 
-export function* getParam(){
+export function* getParam(action){
   try {
-    const endpoint = `${api.host}/api/getParamIjarah`;
+    const idprod = action.payload.idprod;
+    const endpoint = `${api.host}/api/getParamIjarah?idprod=${idprod}`;
     const token = yield select(makeSelectAuthToken());
     const requestOpt = {
       method:'GET',
@@ -369,12 +370,12 @@ export function* mapPengajuan(){
     const cifData = yield select(makeSelectCifData());
     const defaultColumns = {
       "JENCIF":1,
-      "KDPRDK":2
+      "KDPRDK":work.jenisProduk
     }    
     const cifResponse = yield call(sendCif, { ...cifData, ...defaultColumns });    
 
     const financeData = yield select(makeSelectFinanceData());
-    const financeResponse = yield call(sendFinance, { ...financeData });
+    const financeResponse = yield call(sendFinance, { ...financeData, ...defaultColumns });
     
     if(cifResponse.status && financeResponse.status){
       const submittedDataCount = cifResponse.status && financeResponse.status ? 2 : 1;
@@ -385,7 +386,7 @@ export function* mapPengajuan(){
         return call(uploadFiles, {...item, nomrek })
       }));      
       
-      yield put(submitPengajuanSuccessAction()); // formSubmitted = false
+      yield put(submitPengajuanSuccessAction()); // formSubmitted = false      
       yield put(resetFormSuccessAction(initialState));
       yield put(replace('/summary'));
       

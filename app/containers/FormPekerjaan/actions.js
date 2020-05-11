@@ -31,10 +31,20 @@ export function defaultAction() {
   };
 }
 
-export function changeCompanyAction(company) {
+// export function changeCompanyAction(company) {
+//   return {
+//     type: CHANGE_COMPANY_ACTION,
+//     payload:company
+//   };
+// }
+
+export function changeCompanyAction(company,jenisProduk) {
   return {
     type: CHANGE_COMPANY_ACTION,
-    payload:company
+    payload:{
+      company,
+      jenisProduk
+    }
   };
 }
 

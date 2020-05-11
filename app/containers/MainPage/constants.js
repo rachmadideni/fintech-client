@@ -27,7 +27,7 @@ export const DOWNLOAD_SPGK_SUCCESS_ACTION = 'app/MainPage/DOWNLOAD_SPGK_SUCCESS_
 
 export const ITEMS = [{
     'step':1,
-    'name':'pinjaman',
+    'name':'Pembiayaan',
     'icon':AddBoxOutlined,
     'active':true
   },

@@ -1,7 +1,7 @@
 import { map } from 'lodash/collection';
 import _ from 'lodash';
-import readBlob from 'read-blob';
-import blobUtil from 'blob-util';
+// import readBlob from 'read-blob';
+// import blobUtil from 'blob-util';
 
 export function mapCredential(credential){
     const adaptedCredential = map(credential, (item, key) => {
@@ -78,12 +78,7 @@ export function mapGaji(angsuran){
 export function mapAngsuran (angsuran) {
     
     const adaptedAngsuran = map(angsuran, (item, key) => {
-        switch(key){
-            // case 'pendapatan':
-            //     return { 
-            //         'name': 'JMGAJI',
-            //         'value': item 
-            //     };
+        switch(key){            
             case 'plafon':
                 return { 
                     'name': 'HRGOTR',
@@ -91,7 +86,7 @@ export function mapAngsuran (angsuran) {
                 };
             case 'margin':
                 return { 
-                    'name': 'MARGIN',
+                    'name': 'RATMGN',
                     'value': item 
                 };
             case 'tenor':
@@ -103,6 +98,21 @@ export function mapAngsuran (angsuran) {
                 return { 
                     'name': 'TOTANG',
                     'value': item 
+                };
+            case 'nmargin':
+                return {
+                    'name':'MARGIN',
+                    'value': item
+                };
+            case 'byaadm':
+                return {
+                    'name':'BYAADM',
+                    'value': item
+                };
+            case 'ratass':
+                return {
+                    'name':'RATASS',
+                    'value': item
                 };
         }
     });
@@ -123,7 +133,12 @@ export function mapWork(work){
                 return { 
                     'name': 'TGMBKR',
                     'value': item 
-                };            
+                };
+            case 'jenisProduk':
+                return {
+                    'name': 'KDPRDK',
+                    'value': item
+                };
         }
     });
 
@@ -152,23 +167,14 @@ function blobToFile(blob, key){
 }
 
 export function mapUploadedFiles(uploaded){
-    const adaptedFiles = map(uploaded, (item, key) => {
-        // console.log(item);
-        // switch(item){
-        //     case 'file':
-        //     return ({
-        //         'idberk':item.idberk,
-        //         'nmfile':item.file
-        //     })
-        // }
+    const adaptedFiles = map(uploaded, (item, key) => {        
         return [{
             'name':key,
             'value': item
         }]
     });
 
-    const filtered = _.filter(adaptedFiles, undefined); // remove undefined item
-    console.log('filtered :',filtered);
+    const filtered = _.filter(adaptedFiles, undefined); // remove undefined item    
     return _.mapValues(_.keyBy(filtered, 'name'), 'value');
 }
 
@@ -191,29 +197,3 @@ export function mapPengajuan(pengajuan){
     const filtered = _.filter(adaptedPengajuan, undefined); // remove undefined item
     return _.mapValues(_.keyBy(filtered, 'name'), 'value');
 }
-
-
-/*
-data:{
-    nasabah:{
-        fullname:"",
-        address:""
-    }
-}
-
-send:{
-    NMLGKP:"",
-    JENKEL:1/2,
-    TPTLHR:"",
-    TGLLHR:"",
-    ALAMT1:"",
-    NOMHP1:"",
-    STSKWN:"",
-    JMLANK:"",
-    NMPSGN:"",
-    NOKTPP:"",
-    JMGAJI:"",
-    IDSBU:"",
-    TGLHRP:""
-}
-*/

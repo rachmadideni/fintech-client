@@ -257,7 +257,7 @@ class Login extends React.Component {
             <Toolbar>
               <div style={{ flexGrow:1 }} />              
               <AppTitle gutterBottom>
-                pembiayaan Amanah
+                pembiayaan Multi Guna
               </AppTitle>
               <div style={{ flexGrow:1 }} />
             </Toolbar>
@@ -339,7 +339,7 @@ class Login extends React.Component {
                                   fontWeight:'normal',
                                   color:color.subtleBlack                                  
                                 }}>
-                                pastikan akun anda sudah terverifikasi sebelumnya  
+                                  {intl.formatMessage(messages.HeaderWelcomeMessage)}                                
                             </Typography>
 
                             <div style={{ marginTop:20 }} />

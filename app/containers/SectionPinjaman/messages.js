@@ -11,15 +11,15 @@ export const scope = 'app.containers.SectionPinjaman';
 export default defineMessages({
   header: {
     id: `${scope}.header`,
-    defaultMessage: 'Pinjaman',
+    defaultMessage: 'Pembiayaan',
   },
   tidakAdaPinjaman:{
     id:`${scope}.tidakAdaPinjaman`,
-    defaultMessage:'anda belum memiliki pinjaman. klik tombol dibawah untuk mulai mengajukan'
+    defaultMessage:'anda belum memiliki pengajuan saat ini. klik tombol dibawah untuk mulai'
   },
   actionButton:{
     id:`${scope}.actionButton`,
-    defaultMessage:'Pengajuan Pinjaman'
+    defaultMessage:'Pengajuan Pembiayaan'
   },
   actionButtonStep2:{
     id:`${scope}.actionButtonStep2`,

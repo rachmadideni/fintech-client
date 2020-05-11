@@ -10,7 +10,7 @@ const Header = styled(props=>{
     return (
         <Grid item {...props}>
             <HeaderText align="left">
-                quik menu
+                Menu
             </HeaderText>
         </Grid>
     )
@@ -60,8 +60,8 @@ const GridItem = styled(props=>{
   background-repeat: no-repeat;
   background-position: center;
   background-image: ${props => props.active ? "linear-gradient(to bottom, #76b852, #8dc26f)" : color.lightGrey};
-  width:80px;
-  height:70px;
+  width:90px;
+  height:75px;
   margin:5px;
   padding:15px 10px;  
   border-radius:6px;

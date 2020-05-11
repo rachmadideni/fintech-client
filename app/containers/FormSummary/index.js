@@ -5,12 +5,11 @@
  */
 
 import React, { memo } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-// import makeSelectFormSummary from './selectors';
+
 import {
   makeSelectNasabah,
   makeSelectWorkData,
@@ -91,7 +90,8 @@ class FormSummary extends React.Component {
               }}
               gutterBottom>
               
-              { this.props.statusAplikasi === 1 && intl.formatMessage(messages.thankyou)}
+              {/* { this.props.statusAplikasi === 1 && intl.formatMessage(messages.thankyou)} */}
+              { this.props.statusAplikasi < 2 && intl.formatMessage(messages.thankyou)}
               { this.props.statusAplikasi === 2 && intl.formatMessage(messages.successFormTahap2)}
             </Typography>
             <Typography
@@ -115,12 +115,7 @@ class FormSummary extends React.Component {
   }
 }
 
-// FormSummary.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-// };
-
-const mapStateToProps = createStructuredSelector({
-  // formSummary: makeSelectFormSummary(),
+const mapStateToProps = createStructuredSelector({  
   nasabah: makeSelectNasabah(),
   work: makeSelectWorkData(),
   documents:makeSelectDocuments(),

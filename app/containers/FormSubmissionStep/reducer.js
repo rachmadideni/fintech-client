@@ -29,7 +29,10 @@ import {
   CHANGE_TENOR_ACTION,
   CHANGE_ANGSURAN_ACTION,
   SET_LIMIT_ANGSURAN_ACTION,
-  GET_PARAM_SUCCESS_ACTION  
+  GET_PARAM_SUCCESS_ACTION,
+  CHANGE_NMARGIN_ACTION,
+  CHANGE_RATEASS_ACTION,
+  CHANGE_BYAADM_ACTION  
 } from '../PerhitunganAngsuran/constants';
 
 // CONSTANT NASABAH
@@ -135,7 +138,10 @@ export const initialState = {
     angsuran:{
       pendapatan:0,
       plafon:Math.min(...PLAFON),
-      margin:10,
+      margin:10,//rate margin
+      nmargin:0,// nilai margin
+      byaadm:0,// biaya administrasi
+      ratass:0,// rate asuransi
       tenor:Math.min(...TENOR),
       angsuran:0,
       limit_angsuran:0
@@ -165,13 +171,9 @@ export const initialState = {
     work:{
       company:"",
       companyJoinDate:"",
+      jenisProduk:2
     },
-    documents:{
-      // imageKTP:null,
-      // imageIdCard:null,
-      // ktp:null, // file object / Blob ktp untuk display ke client
-      // idcard:null, // file object / Blob id card untuk display ke client
-      // npwp:null, // file object / Blob Npwp untuk display ke client
+    documents:{      
       uploaded:[]
     },
     pengajuan:{
@@ -249,8 +251,7 @@ const formSubmissionStepReducer = (state = initialState, action) =>
         const cif = mapNasabah(action.payload.nasabah); 
         const work = mapWork(action.payload.work); 
         const finance = mapAngsuran(action.payload.finance);
-        const pengajuan = mapPengajuan(action.payload.pengajuan);
-        // const files = mapUploadedFiles(action.payload.files);        
+        const pengajuan = mapPengajuan(action.payload.pengajuan);        
         const nobase = mapCredential(action.payload.nobase);
         const gaji = mapGaji(action.payload.finance);
         draft.send.nasabah = { ...nobase, ...gaji, ...cif, ...work };
@@ -291,6 +292,21 @@ const formSubmissionStepReducer = (state = initialState, action) =>
       
       case SET_LIMIT_ANGSURAN_ACTION:{
         draft.data.angsuran.limit_angsuran = action.payload;
+        break;
+      }
+
+      case CHANGE_NMARGIN_ACTION:{
+        draft.data.angsuran.nmargin = action.payload
+        break;
+      }
+      
+      case CHANGE_RATEASS_ACTION:{
+        draft.data.angsuran.ratass = action.payload
+        break;
+      }
+      
+      case CHANGE_BYAADM_ACTION:{
+        draft.data.angsuran.byaadm = action.payload
         break;
       }
 
@@ -340,7 +356,8 @@ const formSubmissionStepReducer = (state = initialState, action) =>
       }
 
       case CHANGE_COMPANY_ACTION:{
-        draft.data.work.company = action.payload;
+        draft.data.work.company = action.payload.company;// action.payload.company
+        draft.data.work.jenisProduk = action.payload.jenisProduk;//action.payload.jenisProduk
         return draft;
       }
       
@@ -392,7 +409,7 @@ const formSubmissionStepReducer = (state = initialState, action) =>
       case UPLOAD_ACTION:{
         // draft.data.documents.uploaded[action.payload.idberk] = action.payload.file;        
         // draft.data.documents.uploaded = _.set(draft.data.documents.uploaded, idberk, file);
-        console.log(action.payload.file);        
+        // console.log(action.payload.file);        
         const { idberk, file, objectURL } = action.payload;
         let found_index = draft.data.documents.uploaded.findIndex((elem) => elem.idberk === idberk);
         if(found_index > -1)

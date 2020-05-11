@@ -15,19 +15,19 @@ export default defineMessages({
   },
   step1Title:{
     id:`${scope}.step1Title`,
-    defaultMessage:'simulasi cicilan'
+    defaultMessage:'Perhitungan Pembiayaan'
   },
   step1Subtitle:{
     id:`${scope}.step1Subtitle`,
-    defaultMessage:'data perhitungan angsuran'
+    defaultMessage:'perhitungan angsuran yang direncanakan'
   },
   step2Title:{
     id:`${scope}.step2Title`,
-    defaultMessage:'data pemohon'
+    defaultMessage:'Data Pribadi'
   },
   step2Subtitle:{
     id:`${scope}.step2Subtitle`,
-    defaultMessage:'informasi sesuai kartu identitas pemohon'
+    defaultMessage:'isikan dengan data identitas yang valid'
   },
   step3Title:{
     id:`${scope}.step3Title`,
@@ -35,7 +35,7 @@ export default defineMessages({
   },
   step3Subtitle:{
     id:`${scope}.step3Subtitle`,
-    defaultMessage:'data sesuai dengan tempat pemohon bekerja'
+    defaultMessage:'isikan dengan data pekerjaan yang valid'
   },
   step4Title:{
     id:`${scope}.step4Title`,
@@ -43,7 +43,7 @@ export default defineMessages({
   },
   step4Subtitle:{
     id:`${scope}.step4Subtitle`,
-    defaultMessage:'closeup jelas foto dokumen atau dokumen hasil scan'
+    defaultMessage:'foto dokumen asli yang masih berlaku'
   },
   step5Title:{
     id:`${scope}.step5Title`,

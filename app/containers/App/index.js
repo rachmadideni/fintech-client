@@ -32,9 +32,9 @@ export default function App() {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - Pembiayaan Amanah"
-        defaultTitle="Pembiayaan Amanah">
-        <meta name="description" content="Aplikasi Pembiayaan Amanah" />
+        titleTemplate="%s - Pembiayaan Multi Guna"
+        defaultTitle="Pembiayaan Multi Guna">
+        <meta name="description" content="Pembiayaan Multi Guna" />
       </Helmet>
       <Switch>
         

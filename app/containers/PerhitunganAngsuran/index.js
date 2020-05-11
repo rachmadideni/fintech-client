@@ -25,7 +25,10 @@ import {
   changePlafonAction,
   changeTenorAction,
   changeAngsuranAction,
-  getParamAction  
+  getParamAction,
+  changeNmarginAction,
+  changeRateAssAction,
+  changeByaadmAction  
 } from './actions';
 
 import {
@@ -35,17 +38,12 @@ import {
 import messages from './messages';
 
 // helpers function
-import { calc_installment } from './helpers';
+import { calc_installment, hitung_nilai_margin } from './helpers';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Backdrop from '@material-ui/core/Backdrop';
 import numeral from 'numeral';
-import {
-  ArrowRightAlt,
-  ArrowRightSharp
-} from '@material-ui/icons';
-
 
 // components
 import NumberInput from '../../components/NumberInput';
@@ -54,8 +52,8 @@ import { FormItemHeaderText, FormItemText } from './components';
 
 import { color, typography } from '../../styles/constants';
 // Tour 
-import { TOUR_STEPS } from './constants';
-import Tour from 'reactour';
+// import { TOUR_STEPS } from './constants';
+// import Tour from 'reactour';
 
 const valueText = value => 'test'
 
@@ -68,19 +66,20 @@ class PerhitunganAngsuran extends React.Component {
   }
   
   componentDidMount(){
-    this.props.getParam();
+    this.props.getParam(2);// 2=ijarah
     this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
-    // this.showBackDrop();
+    this.hitungNilaiMargin(this.props.plafon,this.props.margin,this.props.tenor);    
   }
 
   componentDidUpdate(prevProps){
     if(prevProps.plafon !== this.props.plafon || prevProps.tenor !== this.props.tenor){
       this.hitungAngsuran(this.props.plafon,this.props.margin,this.props.tenor);
+      this.hitungNilaiMargin(this.props.plafon,this.props.margin,this.props.tenor);
+      this.updateMarginRateAssByaadm();
     }
   }
 
-  showBackDrop = () => {
-    console.log('showBackdrop is called!');
+  showBackDrop = () => {    
     return (
       <Backdrop 
         open={this.state.isOpen} 
@@ -103,9 +102,19 @@ class PerhitunganAngsuran extends React.Component {
 
   hitungAngsuran = (plafon, margin, tenor) => {
     let angsuran = calc_installment(plafon, margin, tenor);
-    // this.props.setSimulasiTour(open, 1);
     return this.props.changeAngsuran(angsuran);
-  }  
+  }
+
+  hitungNilaiMargin = (plafon,margin,tenor) => {
+   let nilai_margin =  hitung_nilai_margin(plafon,margin,tenor);
+   return this.props.changeNmargin(nilai_margin);
+  }
+  
+  updateMarginRateAssByaadm = () => {
+    const { ASURANSI, B_ADMIN } = this.props.parameter;    
+    this.props.changeRateAss(ASURANSI);
+    this.props.changeByaadm(B_ADMIN);
+  }
 
   // handleChangeGaji = (gaji) => {
 
@@ -141,17 +150,6 @@ class PerhitunganAngsuran extends React.Component {
   //   return cicilan;
   // }
 
-  // handleSubmit = (e) => {    
-  //   e.preventDefault();
-  //   const { history } = this.props;
-  //   return history.replace('/pinjaman/pengajuan');
-  // }
-
-  // handleTour = () => {
-  //   this.setState({
-  //     isOpen:!isOpen
-  //   })
-  // }
 
   render(){
     const { 
@@ -164,7 +162,10 @@ class PerhitunganAngsuran extends React.Component {
         container 
         wrap="nowrap"
         direction="column"
-        alignItems="center">
+        alignItems="center"
+        style={{
+          backgroundColor:'transparent'
+        }}>
           {
             this.props.stepProgress === 0 ? 
             <Backdrop 
@@ -206,7 +207,7 @@ class PerhitunganAngsuran extends React.Component {
                         fontSize:10,
                         color:color.white
                       }}>
-                        klik sembarang untuk menutup pesan ini
+                        tap pada layar untuk menutup pesan ini
                     </Typography>
                   </Grid>
                 </Grid>
@@ -214,14 +215,10 @@ class PerhitunganAngsuran extends React.Component {
             : null
           }
 
-          <Grid item xs 
+          <Grid item  
             style={{ 
-              marginTop:20
+              marginTop:20,              
           }}>
-          <Grid             
-            container 
-            wrap="nowrap"
-            direction="column">
               <FormItemHeaderText 
                 gutterBottom>
                 {intl.formatMessage(messages.pendapatanNet)}
@@ -239,29 +236,20 @@ class PerhitunganAngsuran extends React.Component {
                 onChange={ value => {
                   this.props.changeGaji(parseInt(value));
                 }} />
-          </Grid>
-
-            <Grid               
-              container 
-              wrap="nowrap"
-              justify="center"
-              alignItems="center"
-              style={{ 
-                marginTop:10
-              }}>
-                <Grid item xs>
+                      
+              <Grid item xs style={{ marginTop:15}}>
                   <FormItemHeaderText 
                     gutterBottom>
                   {intl.formatMessage(messages.plafon)}
                   </FormItemHeaderText>                
-                </Grid>
-                <Grid item xs> 
+              </Grid>
+              <Grid item xs> 
                   {/* Plafon */}
                     <FormItemText>
                       {`${numeral(this.props.plafon).format('0,0')} ${intl.formatMessage(messages.juta)}`}
                     </FormItemText>                  
-                </Grid>
-            </Grid>          
+              </Grid>
+                      
           
             <InstallmentSlider 
               color="secondary"                            
@@ -277,25 +265,20 @@ class PerhitunganAngsuran extends React.Component {
                 }}
               disabled={this.props.gaji > 0 ? false:true} />
 
-            <Grid 
-              container 
-              wrap="nowrap"
-              justify="center"
-              alignItems="center">
-                <Grid item xs>
-                  {/* Tenor */}
-                  <FormItemHeaderText 
-                    gutterBottom>
-                      {intl.formatMessage(messages.tenor)}
-                  </FormItemHeaderText>                
-                </Grid>
-                <Grid item xs>
-                  <FormItemText>
-                    {`${this.props.tenor} ${intl.formatMessage(messages.bulan)}`}
-                  </FormItemText>                
-                </Grid>
-            </Grid>
-
+            
+              <Grid item xs>                
+                <FormItemHeaderText 
+                  gutterBottom>
+                    {intl.formatMessage(messages.tenor)}
+                </FormItemHeaderText>                
+              </Grid>
+                
+              <Grid item xs>
+                <FormItemText>
+                  {`${this.props.tenor} ${intl.formatMessage(messages.bulan)}`}
+                </FormItemText>                
+              </Grid>
+            
             <InstallmentSlider              
               color="secondary"                             
               value={this.props.tenor}                           
@@ -309,25 +292,20 @@ class PerhitunganAngsuran extends React.Component {
                 return this.props.changeTenor(val);
               }}
               disabled={ this.props.gaji > 0 ? false : true } />
-
-            <Grid 
-              container 
-              wrap="nowrap"
-              justify="center"
-              alignItems="center">
-                <Grid item xs>
-                  <FormItemHeaderText 
-                    gutterBottom>
-                    {intl.formatMessage(messages.angsuran)}
-                  </FormItemHeaderText>                
-                </Grid>
-                <Grid item xs>
-                  <FormItemText>
-                    {`${intl.formatMessage(messages.rp)} `}
-                    {numeral(this.props.angsuran).format('0,0')}                    
-                  </FormItemText>                
-                </Grid>
+            
+            <Grid item xs>
+              <FormItemHeaderText 
+                gutterBottom>
+                {intl.formatMessage(messages.angsuran)}
+              </FormItemHeaderText>                
             </Grid>
+            <Grid item xs>
+              <FormItemText>
+                {`${intl.formatMessage(messages.rp)} `}
+                {numeral(this.props.angsuran).format('0,0')}                    
+              </FormItemText>                
+            </Grid>
+            
           </Grid>
           
       </Grid>
@@ -351,8 +329,11 @@ function mapDispatchToProps(dispatch) {
     changePlafon: value => dispatch(changePlafonAction(value)),
     changeTenor: value => dispatch(changeTenorAction(value)),
     changeAngsuran: value => dispatch(changeAngsuranAction(value)),
-    getParam: () => dispatch(getParamAction()),
-    setSimulasiTour: (open, count) => dispatch(setSimulasiTourAction(open, count))
+    getParam: (idprod) => dispatch(getParamAction(idprod)),
+    setSimulasiTour: (open, count) => dispatch(setSimulasiTourAction(open, count)),
+    changeNmargin: nmargin => dispatch(changeNmarginAction(nmargin)),
+    changeRateAss: ratass => dispatch(changeRateAssAction(ratass)),
+    changeByaadm: byaadm => dispatch(changeByaadmAction(byaadm))
   };
 }
 
