@@ -13,6 +13,7 @@ import {
 import {
   makeSelectCredential
 } from '../Login/selectors';
+
 import { 
   setAuthTokenAction, 
   removeAuthTokenAction,
@@ -20,6 +21,7 @@ import {
   setEmailAction,
   setNotelpAction
 } from '../App/actions';
+
 import {
   loginSuccessAction,
   loginErrorAction

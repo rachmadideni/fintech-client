@@ -19,7 +19,7 @@ export default defineMessages({
   },
   HeaderWelcomeMessage:{
     id:`${scope}.HeaderWelcomeMessage`,
-    defaultMessage:'selamat menggunakan produk multi guna'
+    defaultMessage:'selamat datang di aplikasi pembiayaan multi guna'
     // defaultMessage:'pastikan akun anda sudah terverifikasi sebelumnya'
   },
   verificationButton:{

@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -13,7 +12,7 @@ import { color } from '../../styles/constants';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
 && {
-  background-color:${color.green};
+  background-color:${color.toska['400']};
   position:fixed;
   width:100%;  
   bottom:0px;
@@ -26,8 +25,8 @@ const NavigationAction = styled(BottomNavigationAction).attrs({
   }
 })`
 && {
-  // color:${color.grey};
-  color:#68c972;
+  color:${color.lightGrey};
+  // color:#68c972;
   &.selected {      
     font-size:10px;
     color:${color.white};

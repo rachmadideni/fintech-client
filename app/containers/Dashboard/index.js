@@ -5,47 +5,48 @@
  */
 
 import React, { memo } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectDashboard from './selectors';
+// import { useInjectSaga } from 'utils/injectSaga';
+// import { useInjectReducer } from 'utils/injectReducer';
+
 import reducer from './reducer';
 import saga from './saga';
+import makeSelectDashboard from './selectors';
 import messages from './messages';
 import { TABS } from './constants';
 
-import styled from 'styled-components';
 import { color } from '../../styles/constants';
 
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
-import {   
-  Apps,
-  Book,
-  Face,
-  MailOutline 
-} from '@material-ui/icons'
+// import {   
+//   Apps,
+//   Book,
+//   Face,
+//   MailOutline 
+// } from '@material-ui/icons'
 
 import { Switch, Route } from 'react-router-dom';
 
 // Pages
-import Pinjaman from '../Pinjaman/Loadable';
-import FormPengajuan from '../FormPengajuan/Loadable';
+// import Pinjaman from '../Pinjaman/Loadable';
+// import FormPengajuan from '../FormPengajuan/Loadable';
+// import UserDashboard from 'containers/UserDashboard/Loadable';
+// import ProductSelection from 'containers/ProductSelection/Loadable';
+// import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
-import UserDashboard from 'containers/UserDashboard/Loadable';
+// pages
 import FormSubmissionStep from 'containers/FormSubmissionStep';
 import FormSummary from 'containers/FormSummary/Loadable';
 import UserProfile from 'containers/UserProfile/Loadable';
 import UserInbox from 'containers/UserInbox/Loadable';
 import ChangePasswordPage from 'containers/ChangePasswordPage/Loadable';
 import FormAkadStep from 'containers/FormAkadStep/Loadable';
-// import ProductSelection from 'containers/ProductSelection/Loadable';
-// import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
 import MainPage from 'containers/MainPage/Loadable';
 
@@ -58,7 +59,7 @@ import PageFooter from 'components/PageFooter';
 import BottomTabNavigation from 'components/BottomTabNavigation';
 import ButtonAvatar from 'components/ButtonAvatar';
 import UserAvatarIcon from 'components/UserAvatarIcon';
-import Paper from '@material-ui/core/Paper';
+
 
 class Dashboard extends React.Component {
   constructor(props){
@@ -82,14 +83,10 @@ class Dashboard extends React.Component {
   //        }
   //     })
   //  }
-  }
-
-  componentDidUpdate(prevProps){
-    // console.log(prevProps);
-    // console.log(this.props);
-  }
+  }  
 
   handleBottomTabChange = (e, value) => {    
+    
     this.setState({
       bottomTabValue:value
     });
@@ -98,17 +95,22 @@ class Dashboard extends React.Component {
     if(value === "dashboard"){
       return history.replace('/dashboard');
     }
+
     if(value === "profil"){
       return history.replace('/profil');
     }
+
     if(value === "pesan"){
       return history.replace('/inbox');
     }
+
     if(value === "pinjaman"){
       return null;
       // return history.replace('/pinjaman/angsuran');
     }
+
     return null;
+  
   }
   
   getBottomTabs = () => {    
@@ -136,7 +138,7 @@ class Dashboard extends React.Component {
                 color="primary" />} 
             avatarProps={
               <ButtonAvatar                   
-                iconProps={<UserAvatarIcon title="" />} />}
+                iconProps={<UserAvatarIcon title="DR" />} />}
                 onClick={ () => console.log(1) } />
         
             <Grid 
@@ -160,17 +162,13 @@ class Dashboard extends React.Component {
                         <Route                                                    
                           path="/dashboard"
                           render={routeProps => (                       
-                            <MainPage 
-                              history={history} 
-                              {...routeProps} />
+                            <MainPage history={history} {...routeProps} />
                           )} />
 
                         <Route                          
                           path="/dashboard/section:(pinjaman|informasi)"
                           render={routeProps => (                       
-                            <MainPage 
-                              history={history} 
-                              {...routeProps} />
+                            <MainPage history={history} {...routeProps} />
                           )} />
 
                         <Route                       
@@ -238,7 +236,7 @@ class Dashboard extends React.Component {
                   tabs={this.getBottomTabs()}
                   bottomTabValue={this.state.bottomTabValue}
                   handleBottomTabChange={this.handleBottomTabChange} />
-              } />            
+              } />
             </Grid>      
       </PageContainer>
     );

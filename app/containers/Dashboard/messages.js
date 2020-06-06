@@ -11,7 +11,7 @@ export const scope = 'app.containers.Dashboard';
 export default defineMessages({
   pageTitle:{
     id:`${scope}.pageTitle`,
-    defaultMessage:'Mitra Pembiayaan Syariah'
+    defaultMessage:'Amanah Finance'
   },
   header: {
     id: `${scope}.header`,

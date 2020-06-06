@@ -36,6 +36,8 @@ import {
   loginErrorAction
 } from './actions';
 
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -55,26 +57,30 @@ import NotificationSnackbar from 'components/NotificationSnackbar';
 
 import styled from 'styled-components';
 import { color, typography } from 'styles/constants';
-import bggreen01 from '../../images/bg_green_1.png';
 
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import bggreen01 from '../../images/bg_green_1.png';
+import envelopeBg from '../../images/envelope-bg.svg';
+
 const Wrapper = styled(Grid)`
 && {
   flex:1;
-  padding-top:100px;
-  position: relative;
-  background-image: url(${bggreen01});
+  // padding-top:100px;
+  // position: relative;
+  background-image: url(${envelopeBg});
+  // background-color:${color.green};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
   justify-content:center;
   align-items:center;
-  padding-left:25px;
-  padding-right:25px;
-  opacity: 0.9;
+  // padding-left:25px;
+  // padding-right:25px;
+  opacity: 1;
+  background-image: linear-gradient(to bottom, ${color.toska['400']} 28%, ${color.white} 45%);
   &:before {
     content: '';
     position: absolute;
@@ -82,8 +88,9 @@ const Wrapper = styled(Grid)`
     right: 0;
     bottom: 0;
     left: 0;
+    // background-image: url(${envelopeBg});
     // background-color:${color.lightGrey};
-    // background-image: linear-gradient(to right, ${color.lightGrey} 100%, ${color.lightGrey} 40%);
+    background-image: linear-gradient(to bottom, ${color.green} 15%, ${color.white} 60%);
     opacity: 1;
   }  
 }`;
@@ -245,23 +252,11 @@ class Login extends React.Component {
     }
 
     return (
-      <Wrapper 
-        container 
-        wrap="nowrap"
-        direction="column">
-          <AppBar 
-            style={{
-              backgroundColor:'transparent',
-              boxShadow:'none'
-          }}>
-            <Toolbar>
-              <div style={{ flexGrow:1 }} />              
-              <AppTitle gutterBottom>
-                pembiayaan Multi Guna
-              </AppTitle>
-              <div style={{ flexGrow:1 }} />
-            </Toolbar>
-          </AppBar>
+      <Container 
+        maxWidth="xs"
+        style={{ height:"100%" }}>
+                
+          <Box display="flex" width="100%" height="100%" alignItems="center" justifyContent="center">
           
           <Backdrop 
             open={this.props.isLoading}            
@@ -270,10 +265,8 @@ class Login extends React.Component {
               color:color.white
             }}>
               <CircularProgress color="inherit" />
-          </Backdrop>
-          
-          <Grid 
-            item xs>
+          </Backdrop>          
+          <Grid item xs>
               <Grid 
                 container 
                 wrap="nowrap"
@@ -281,18 +274,19 @@ class Login extends React.Component {
                 justify="flex-start"
                 style={{
                   justifyContent:'flex-start',
-                  alignItems:'flex-start'
+                  alignItems:'flex-start',                  
                 }}>
                   <Paper
                     ref={ paper => this.paperElement = paper}
                     elevation={0} 
                     style={{
-                      borderRadius:12,
+                      borderRadius:6,
                       paddingTop:15, 
                       paddingLeft:20, 
                       paddingRight:20,
-                      paddingBottom:20,
-                       }}>              
+                      paddingBottom:20,                      
+                       }}>
+
                     <Grid 
                       item 
                       xs 
@@ -301,22 +295,22 @@ class Login extends React.Component {
                         alignItems:'center'
                       }}>
 
-                      <form 
-                        autoComplete="off">
+                      <form autoComplete="off">
 
                         <Grid 
                           container 
                           wrap="nowrap" 
                           direction="column"
                           justify="center"
-                          alignItems="center">
+                          alignItems="center"
+                          >
                           
                           <Grid 
                             item 
                             style={{ 
                               // flex:1,
                               // marginTop:100,
-                              // backgroundColor:'transparent'
+                              // backgroundColor:color.white
                             }}>
 
                             <Typography 
@@ -344,9 +338,7 @@ class Login extends React.Component {
 
                             <div style={{ marginTop:20 }} />
                           
-                            <FormControl 
-                              margin="dense" 
-                              fullWidth>
+                            <FormControl margin="dense" fullWidth>
                               <TextField 
                                 id="nik" 
                                 name="nik"
@@ -375,6 +367,7 @@ class Login extends React.Component {
                                   textTransform:'capitalize'                                        
                                 }} />
                             </FormControl>
+
                             <FormControl 
                               margin="dense" 
                               fullWidth>
@@ -430,21 +423,7 @@ class Login extends React.Component {
                                 {intl.formatMessage(messages.loginButton)}
                             </LoginButton>
                             
-                            <div style={{ flexGrow:1, marginTop:20 }} />
-                            
-                            {/* <Typography 
-                              align="center"
-                              gutterBottom 
-                              style={{
-                                fontFamily:typography.fontFamily,
-                                fontSize:12,
-                                fontWeight:'bold',
-                                textTransform:'capitalize',
-                                padding:5
-                            }}>
-                              {intl.formatMessage(messages.forgotPasswordText)}
-                            </Typography>                             */}
-
+                            <div style={{ flexGrow:1, marginTop:15 }} />
                                                         
                             <VerificationButton
                               fullWidth 
@@ -454,14 +433,7 @@ class Login extends React.Component {
                               {intl.formatMessage(messages.verificationButton)}
                             </VerificationButton>
                             
-                            <div style={{ flexGrow:1, marginTop:10 }} />
-                            
-                            {/* <ResetPasswordButton
-                              fullWidth 
-                              variant="outlined" 
-                              color="primary">
-                                {intl.formatMessage(messages.resetPasswordButton)}
-                            </ResetPasswordButton> */}
+                            {/* <div style={{ flexGrow:1, marginTop:10 }} />                           */}
 
                           </Grid>                      
                         </Grid>                    
@@ -476,14 +448,12 @@ class Login extends React.Component {
                   </Paper>
               </Grid>
           </Grid>
-      </Wrapper>
+          
+      </Box>
+      </Container>
     );
   }
 }
-
-// Login.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-// };
 
 const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
