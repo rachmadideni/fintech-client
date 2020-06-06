@@ -15,7 +15,7 @@ const StyledBtn = styled(props=>(
 ))`
   && {
     margin-top: 10px;
-    margin-bottom:10px;
+    margin-bottom:5px;
     font-family: ${typography.fontFamily};
     font-weight: bold;
     text-transform: capitalize;

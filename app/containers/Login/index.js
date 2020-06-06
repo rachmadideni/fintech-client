@@ -36,15 +36,12 @@ import {
   loginErrorAction,
 } from './actions';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
-import Toolbar from '@material-ui/core/Toolbar';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -56,6 +53,16 @@ import PaperCustom from 'components/PaperCustom';
 
 import isEmpty from 'validator/lib/isEmpty';
 import { color, typography } from 'styles/constants';
+
+const styles = makeStyles(theme=>({
+  textField:{
+    fontFamily: typography.fontFamily,
+    fontSize: 12,
+    backgroundColor: color.grey,
+    borderRadius: 4,
+    textTransform: 'capitalize',
+  }
+}))
 
 class Login extends React.Component {
   constructor(props) {
@@ -189,184 +196,114 @@ class Login extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-        <Grid item xs>
-          <Grid
-            container
-            wrap="nowrap"
-            direction="column"
-            justify="flex-start"
-            style={{
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-            }}
-          >
-            <PaperCustom
-              ref={paper => (this.paperElement = paper)}
-              elevation={0}
+        <PaperCustom elevation={0}>
+          <form autoComplete="off">
+            <Typography
+              variant="h6"
+              color="primary"
+              align="left"
+              style={{
+                fontFamily: typography.fontFamily,
+                fontWeight: 'bold',
+                color: color.subtleBlack,
+              }}
             >
-              <Grid
-                item
-                xs
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <form autoComplete="off">
-                  <Grid
-                    container
-                    wrap="nowrap"
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Grid
-                      item
-                      style={
-                        {
-                          // flex:1,
-                          // marginTop:100,
-                          // backgroundColor:color.white
-                        }
-                      }
+              {intl.formatMessage(messages.header)}
+            </Typography>
+            <Typography
+              color="inherit"
+              align="left"
+              style={{
+                fontFamily: typography.fontFamily,
+                fontSize: 11,
+                fontWeight: 'normal',
+                color: color.subtleBlack,
+              }}
+            >
+              {intl.formatMessage(messages.HeaderWelcomeMessage)}
+            </Typography>
+
+            <TextField
+              id="nik"
+              name="nik"
+              value={credential.nik}
+              label={intl.formatMessage(messages.nik)}              
+              type="text"
+              fullWidth
+              variant="outlined"
+              margin="dense"
+              onChange={evt => {
+                if (this.state.isSubmitTriggered) {
+                  this.validateNik(evt.target.value);
+                }
+                return changeNik(evt.target.value);
+              }}
+              error={!!this.state.error.nik}
+              helperText={this.state.error.nik}              
+              className={styles.textField}
+            />
+
+            <TextField
+              id="password"
+              name="password"
+              value={credential.password}
+              label={intl.formatMessage(messages.password)}              
+              onChange={evt => {
+                if (this.state.isSubmitTriggered) {
+                  this.validatePassword(evt.target.value);
+                }
+                return changePassword(evt.target.value);
+              }}
+              type={this.state.showPassword ? 'text' : 'password'}
+              fullWidth
+              variant="outlined"
+              margin="dense"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      color="inherit"
+                      onClick={this.handleClickShowPassword}
                     >
-                      <Typography
-                        variant="h6"
-                        color="primary"
-                        align="left"
-                        style={{
-                          fontFamily: typography.fontFamily,
-                          fontWeight: 'bold',
-                          color: color.subtleBlack,
-                        }}
-                      >
-                        {intl.formatMessage(messages.header)}
-                      </Typography>
-                      <Typography
-                        color="inherit"
-                        align="left"
-                        style={{
-                          fontFamily: typography.fontFamily,
-                          fontSize: 11,
-                          fontWeight: 'normal',
-                          color: color.subtleBlack,
-                        }}
-                      >
-                        {intl.formatMessage(messages.HeaderWelcomeMessage)}
-                      </Typography>
+                      {this.state.showPassword ? (
+                        <Visibility style={{ color: color.black }} />
+                      ) : (
+                        <VisibilityOff style={{ color: color.grey }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              error={!!this.state.error.password}
+              helperText={this.state.error.password}
+            />
 
-                      <div style={{ marginTop: 20 }} />
+            <BtnCustom
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={!!this.props.errorMessage}
+              onClick={this.handleSubmit}
+              title={intl.formatMessage(messages.loginButton)}
+            />
 
-                      <FormControl margin="dense" fullWidth>
-                        <TextField
-                          id="nik"
-                          name="nik"
-                          value={credential.nik}
-                          label={intl.formatMessage(messages.nik)}
-                          style={{
-                            fontFamily: typography.fontFamily,
-                            textTransform: 'capitalize',
-                          }}
-                          type="text"
-                          fullWidth
-                          variant="outlined"
-                          margin="dense"
-                          onChange={evt => {
-                            if (this.state.isSubmitTriggered) {
-                              this.validateNik(evt.target.value);
-                            }
-                            return changeNik(evt.target.value);
-                          }}
-                          error={!!this.state.error.nik}
-                          helperText={this.state.error.nik}
-                          style={{
-                            fontFamily: typography.fontFamily,
-                            fontSize: 12,
-                            backgroundColor: color.white,
-                            borderRadius: 4,
-                            textTransform: 'capitalize',
-                          }}
-                        />
-                      </FormControl>
+            <BtnCustom
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={this.handleVerification}
+              title={intl.formatMessage(messages.verificationButton)}
+            />
 
-                      <FormControl margin="dense" fullWidth>
-                        <TextField
-                          id="password"
-                          name="password"
-                          value={credential.password}
-                          label={intl.formatMessage(messages.password)}
-                          style={{
-                            fontFamily: typography.fontFamily,
-                            fontSize: 12,
-                            backgroundColor: color.white,
-                            borderRadius: 4,
-                            textTransform: 'capitalize',
-                          }}
-                          onChange={evt => {
-                            if (this.state.isSubmitTriggered) {
-                              this.validatePassword(evt.target.value);
-                            }
-                            return changePassword(evt.target.value);
-                          }}
-                          type={this.state.showPassword ? 'text' : 'password'}
-                          fullWidth
-                          variant="outlined"
-                          margin="dense"
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  color="inherit"
-                                  onClick={this.handleClickShowPassword}
-                                >
-                                  {this.state.showPassword ? (
-                                    <Visibility
-                                      style={{ color: color.black }}
-                                    />
-                                  ) : (
-                                    <VisibilityOff
-                                      style={{ color: color.grey }}
-                                    />
-                                  )}
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                          error={!!this.state.error.password}
-                          helperText={this.state.error.password}
-                        />
-                      </FormControl>
-
-                      <BtnCustom
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={!!this.props.errorMessage}
-                        onClick={this.handleSubmit}
-                        title={intl.formatMessage(messages.loginButton)}
-                      />
-
-                      <BtnCustom
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        onClick={this.handleVerification}
-                        title={intl.formatMessage(messages.verificationButton)}
-                      />
-                    </Grid>
-                  </Grid>
-                  <NotificationSnackbar
-                    verticalPos="bottom"
-                    open={this.state.isNotificationOpen}
-                    onClose={() => this.props.logError(null)}
-                    hideDuration={3000}
-                    message={this.props.errorMessage}
-                  />
-                </form>
-              </Grid>
-            </PaperCustom>
-          </Grid>
-        </Grid>
+            <NotificationSnackbar
+              verticalPos="bottom"
+              open={this.state.isNotificationOpen}
+              onClose={() => this.props.logError(null)}
+              hideDuration={3000}
+              message={this.props.errorMessage}
+            />
+          </form>
+        </PaperCustom>
       </Box>
     );
   }

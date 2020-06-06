@@ -31,7 +31,7 @@ export default defineMessages({
   },
   btnVerifikasi:{
     id:`${scope}.btnVerifikasi`,
-    defaultMessage:'proses verifikasi'
+    defaultMessage:'proses'
   },
   btnCancel:{
     id:`${scope}.btnCancel`,
@@ -60,5 +60,17 @@ export default defineMessages({
   pleaseWaitIsLoading:{
     id:`${scope}.pleaseWaitIsLoading`,
     defaultMessage:'mohon tunggu\n sedang melakukan verifikasi'
+  },
+  placeholderNIK:{
+    id:`${scope}.placeholderNIK`,
+    defaultMessage:'nomor induk karyawan'
+  },
+  placeholderEmail:{
+    id:`${scope}.placeholderEmail`,
+    defaultMessage:'masukkan email aktif anda'
+  },
+  placeholderNoHandphone:{
+    id:`${scope}.placeholderNoHandphone`,
+    defaultMessage:'masukkan no handphone aktif anda'
   }
 });
