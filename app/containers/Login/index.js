@@ -6,6 +6,7 @@
 
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
@@ -14,15 +15,14 @@ import { compose } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { 
+import {
   makeSelectLogin,
   makeSelectCredential,
   makeSelectError,
-  makeSelectIsLoading } from './selectors';
+  makeSelectIsLoading,
+} from './selectors';
 
-import {
-  makeSelectAuthToken
-} from '../App/selectors';
+import { makeSelectAuthToken } from '../App/selectors';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -30,10 +30,10 @@ import messages from './messages';
 
 import {
   resetInputAction,
-  changeNikAction, 
+  changeNikAction,
   changePasswordAction,
   loginAction,
-  loginErrorAction
+  loginErrorAction,
 } from './actions';
 
 import Container from '@material-ui/core/Container';
@@ -41,416 +41,343 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
-import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Backdrop from '@material-ui/core/Backdrop';
+
+import NotificationSnackbar from 'components/NotificationSnackbar';
+import BtnCustom from 'components/BtnCustom';
 
 import isEmpty from 'validator/lib/isEmpty';
-import NotificationSnackbar from 'components/NotificationSnackbar';
-
-import styled from 'styled-components';
 import { color, typography } from 'styles/constants';
 
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import bggreen01 from '../../images/bg_green_1.png';
-import envelopeBg from '../../images/envelope-bg.svg';
-
-const Wrapper = styled(Grid)`
-&& {
-  flex:1;
-  // padding-top:100px;
-  // position: relative;
-  background-image: url(${envelopeBg});
-  // background-color:${color.green};
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  justify-content:center;
-  align-items:center;
-  // padding-left:25px;
-  // padding-right:25px;
-  opacity: 1;
-  background-image: linear-gradient(to bottom, ${color.toska['400']} 28%, ${color.white} 45%);
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    // background-image: url(${envelopeBg});
-    // background-color:${color.lightGrey};
-    background-image: linear-gradient(to bottom, ${color.green} 15%, ${color.white} 60%);
-    opacity: 1;
-  }  
-}`;
-
-// hal 387
-const LoginButton = styled(Button)`
-&& {
-  margin-top:10px;
-  font-family:${typography.fontFamily}; 
-  font-weight:bold;
-  text-transform:capitalize;
-  box-shadow:none;
-}`;
-
-// hal 436
-const ResetPasswordButton = styled(Button)`
-  && {
-    font-family:${typography.fontFamily};
-    text-transform:capitalize;
-    margin-top:0pz;
-  }
-`;
-
-// hal 459
-const VerificationButton = styled(Button)`
-  && {
-    font-family:${typography.fontFamily};
-    font-weight:bold;
-    text-transform:capitalize;
-    margin-top:0px;
-  }
-`;
-
-const AppTitle = styled(Typography)`
-&& {
-  font-family:${typography.fontFamily};
-  font-size:16px;
-  font-weight:bold;
-  color:${color.white};
-  text-transform:capitalize;
-}
-`;
 
 class Login extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      backdropOpen:false,      
-      error:{
-        nik:null,
-        email:null,
-        password:null
+      backdropOpen: false,
+      error: {
+        nik: null,
+        email: null,
+        password: null,
       },
-      isSubmitTriggered:false,
-      isProcessing:false,
-      showPassword:false,
-      isNotificationOpen:false
-    }
+      isSubmitTriggered: false,
+      isProcessing: false,
+      showPassword: false,
+      isNotificationOpen: false,
+    };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.resetInput();
   }
 
-  componentDidUpdate(prevProps){
-    if(!!this.props.errorMessage && prevProps.errorMessage === null){
-      this.setState(state=>({
+  componentDidUpdate(prevProps) {
+    if (!!this.props.errorMessage && prevProps.errorMessage === null) {
+      this.setState(state => ({
         ...state,
-        isNotificationOpen:true
+        isNotificationOpen: true,
       }));
-    } else if(!!prevProps.errorMessage && this.props.errorMessage === null){
-      this.setState(state=>({
+    } else if (!!prevProps.errorMessage && this.props.errorMessage === null) {
+      this.setState(state => ({
         ...state,
-        isNotificationOpen:false
+        isNotificationOpen: false,
       }));
     }
-  }  
-  
+  }
+
   validateNik = nik => {
     const { intl } = this.props;
     let isError = false;
     let errorMsg = null;
-    if(isEmpty(nik)){
+    if (isEmpty(nik)) {
       isError = true;
       errorMsg = intl.formatMessage(messages.emptyNik);
     } else {
       isError = false;
-      errorMsg = null
+      errorMsg = null;
     }
 
-    this.setState(state=>({
+    this.setState(state => ({
       ...state,
-      error:{
+      error: {
         ...state.error,
-        nik:errorMsg
-      }
+        nik: errorMsg,
+      },
     }));
     return !isError;
-  }
+  };
 
   validatePassword = password => {
     const { intl } = this.props;
     let isError = false;
     let errorMsg = null;
-    if(isEmpty(password)){
+    if (isEmpty(password)) {
       isError = true;
       errorMsg = intl.formatMessage(messages.emptyPassword);
     } else {
       isError = false;
-      errorMsg = null
+      errorMsg = null;
     }
 
-    this.setState(state=>({
+    this.setState(state => ({
       ...state,
-      error:{
+      error: {
         ...state.error,
-        password:errorMsg
-      }
+        password: errorMsg,
+      },
     }));
     return !isError;
-  }
+  };
 
   handleVerification = () => {
     const { history } = this.props;
     return history.replace('/verifikasi');
-  }
-  
+  };
+
   handleSubmit = evt => {
     evt.preventDefault();
     const { credential } = this.props;
-    this.setState(state=>({
+    this.setState(state => ({
       ...state,
-      isSubmitTriggered:true
+      isSubmitTriggered: true,
     }));
 
-    if(this.validateNik(credential.nik) && this.validatePassword(credential.password)){
+    if (
+      this.validateNik(credential.nik) &&
+      this.validatePassword(credential.password)
+    ) {
       return this.props.login();
     }
     return false;
-  }
+  };
 
   handleClickShowPassword = () => {
-    this.setState(state => ({ 
-      showPassword: !state.showPassword 
+    this.setState(state => ({
+      showPassword: !state.showPassword,
     }));
   };
 
-  render(){
-    const { 
-      intl, 
-      credential,      
-      changeNik,
-      changePassword,
-      token 
-    } = this.props;
+  render() {
+    const { intl, credential, changeNik, changePassword, token } = this.props;
 
-    if(token){
+    if (token) {
       return <Redirect to="/dashboard" />;
     }
 
     return (
-      <Container 
-        maxWidth="xs"
-        style={{ height:"100%" }}>
-                
-          <Box display="flex" width="100%" height="100%" alignItems="center" justifyContent="center">
-          
-          <Backdrop 
-            open={this.props.isLoading}            
+      
+        <Box
+          display="flex"
+          width="100%"
+          height="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Backdrop
+            open={this.props.isLoading}
             style={{
-              zIndex:3000,
-              color:color.white
+              zIndex: 3000,
+              color: color.white,
             }}>
-              <CircularProgress color="inherit" />
-          </Backdrop>          
-          <Grid item xs>
-              <Grid 
-                container 
-                wrap="nowrap"
-                direction="column"
-                justify="flex-start"
-                style={{
-                  justifyContent:'flex-start',
-                  alignItems:'flex-start',                  
-                }}>
-                  <Paper
-                    ref={ paper => this.paperElement = paper}
-                    elevation={0} 
-                    style={{
-                      borderRadius:6,
-                      paddingTop:15, 
-                      paddingLeft:20, 
-                      paddingRight:20,
-                      paddingBottom:20,                      
-                       }}>
-
-                    <Grid 
-                      item 
-                      xs 
-                      style={{ 
-                        justifyContent:'center',
-                        alignItems:'center'
-                      }}>
-
-                      <form autoComplete="off">
-
-                        <Grid 
-                          container 
-                          wrap="nowrap" 
-                          direction="column"
-                          justify="center"
-                          alignItems="center"
-                          >
-                          
-                          <Grid 
-                            item 
-                            style={{ 
-                              // flex:1,
-                              // marginTop:100,
-                              // backgroundColor:color.white
-                            }}>
-
-                            <Typography 
-                              variant="h6"
-                              color="primary"
-                              align="left"                              
-                              style={{
-                                fontFamily:typography.fontFamily,
-                                fontWeight:'bold',
-                                color:color.subtleBlack,
-                              }}>
-                                {intl.formatMessage(messages.header)}                    
-                            </Typography>
-                            <Typography                                 
-                                color="inherit"
-                                align="left"                                
-                                style={{
-                                  fontFamily:typography.fontFamily,
-                                  fontSize:11,
-                                  fontWeight:'normal',
-                                  color:color.subtleBlack                                  
-                                }}>
-                                  {intl.formatMessage(messages.HeaderWelcomeMessage)}                                
-                            </Typography>
-
-                            <div style={{ marginTop:20 }} />
-                          
-                            <FormControl margin="dense" fullWidth>
-                              <TextField 
-                                id="nik" 
-                                name="nik"
-                                value={credential.nik} 
-                                label={intl.formatMessage(messages.nik)}
-                                style={{ 
-                                  fontFamily:typography.fontFamily,
-                                  textTransform:'capitalize' }}
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                margin="dense"
-                                onChange={evt=>{
-                                  if(this.state.isSubmitTriggered){
-                                    this.validateNik(evt.target.value);
-                                  }
-                                  return changeNik(evt.target.value)
-                                }}
-                                error={!!this.state.error.nik}
-                                helperText={this.state.error.nik}
-                                style={{
-                                  fontFamily:typography.fontFamily,
-                                  fontSize:12,
-                                  backgroundColor:color.white,
-                                  borderRadius:4,
-                                  textTransform:'capitalize'                                        
-                                }} />
-                            </FormControl>
-
-                            <FormControl 
-                              margin="dense" 
-                              fullWidth>
-                              <TextField 
-                                id="password" 
-                                name="password" 
-                                value={credential.password}
-                                label={intl.formatMessage(messages.password)}
-                                style={{
-                                  fontFamily:typography.fontFamily,
-                                  fontSize:12,
-                                  backgroundColor:color.white,
-                                  borderRadius:4,
-                                  textTransform:'capitalize'                                        
-                                }}
-                                onChange={evt=>{
-                                  if(this.state.isSubmitTriggered){
-                                    this.validatePassword(evt.target.value);
-                                  }
-                                  return changePassword(evt.target.value);
-                                }}                 
-                                type={this.state.showPassword ? 'text' : 'password'} 
-                                fullWidth
-                                variant="outlined"
-                                margin="dense"
-                                InputProps={{
-                                  endAdornment:(
-                                    <InputAdornment position="end">
-                                      <IconButton 
-                                        color="inherit"
-                                        onClick={this.handleClickShowPassword}>
-                                        {
-                                          this.state.showPassword ? (
-                                            <Visibility style={{ color:color.black }} />
-                                          ) : (
-                                            <VisibilityOff style={{ color:color.grey }} />
-                                          )
-                                        }
-                                      </IconButton>
-                                    </InputAdornment>
-                                  )
-                                }}
-                                error={!!this.state.error.password}
-                                helperText={this.state.error.password} />
-                            </FormControl>
-                            
-                            <LoginButton
-                              fullWidth 
-                              variant="contained" 
-                              color="primary"
-                              disabled={!!this.props.errorMessage}
-                              onClick={this.handleSubmit}>
-                                {intl.formatMessage(messages.loginButton)}
-                            </LoginButton>
-                            
-                            <div style={{ flexGrow:1, marginTop:15 }} />
-                                                        
-                            <VerificationButton
-                              fullWidth 
-                              variant="outlined" 
-                              color="primary"
-                              onClick={this.handleVerification}>
-                              {intl.formatMessage(messages.verificationButton)}
-                            </VerificationButton>
-                            
-                            {/* <div style={{ flexGrow:1, marginTop:10 }} />                           */}
-
-                          </Grid>                      
-                        </Grid>                    
-                        <NotificationSnackbar 
-                          verticalPos="bottom"
-                          open={this.state.isNotificationOpen}
-                          onClose={()=>this.props.logError(null)}
-                          hideDuration={3000}
-                          message={this.props.errorMessage} />
-                      </form>
-                    </Grid>
-                  </Paper>
-              </Grid>
-          </Grid>
+            <CircularProgress color="inherit" />
+          </Backdrop>
           
-      </Box>
-      </Container>
+          <Grid item xs>
+            <Grid
+              container
+              wrap="nowrap"
+              direction="column"
+              justify="flex-start"
+              style={{
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Paper
+                ref={paper => (this.paperElement = paper)}
+                elevation={0}
+                style={{
+                  borderRadius: 6,
+                  paddingTop: 15,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  paddingBottom: 20,
+                }}
+              >
+                <Grid
+                  item
+                  xs
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <form autoComplete="off">
+                    <Grid
+                      container
+                      wrap="nowrap"
+                      direction="column"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <Grid
+                        item
+                        style={
+                          {
+                            // flex:1,
+                            // marginTop:100,
+                            // backgroundColor:color.white
+                          }
+                        }
+                      >
+                        <Typography
+                          variant="h6"
+                          color="primary"
+                          align="left"
+                          style={{
+                            fontFamily: typography.fontFamily,
+                            fontWeight: 'bold',
+                            color: color.subtleBlack,
+                          }}
+                        >
+                          {intl.formatMessage(messages.header)}
+                        </Typography>
+                        <Typography
+                          color="inherit"
+                          align="left"
+                          style={{
+                            fontFamily: typography.fontFamily,
+                            fontSize: 11,
+                            fontWeight: 'normal',
+                            color: color.subtleBlack,
+                          }}
+                        >
+                          {intl.formatMessage(messages.HeaderWelcomeMessage)}
+                        </Typography>
+
+                        <div style={{ marginTop: 20 }} />
+
+                        <FormControl margin="dense" fullWidth>
+                          <TextField
+                            id="nik"
+                            name="nik"
+                            value={credential.nik}
+                            label={intl.formatMessage(messages.nik)}
+                            style={{
+                              fontFamily: typography.fontFamily,
+                              textTransform: 'capitalize',
+                            }}
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            margin="dense"
+                            onChange={evt => {
+                              if (this.state.isSubmitTriggered) {
+                                this.validateNik(evt.target.value);
+                              }
+                              return changeNik(evt.target.value);
+                            }}
+                            error={!!this.state.error.nik}
+                            helperText={this.state.error.nik}
+                            style={{
+                              fontFamily: typography.fontFamily,
+                              fontSize: 12,
+                              backgroundColor: color.white,
+                              borderRadius: 4,
+                              textTransform: 'capitalize',
+                            }}
+                          />
+                        </FormControl>
+
+                        <FormControl margin="dense" fullWidth>
+                          <TextField
+                            id="password"
+                            name="password"
+                            value={credential.password}
+                            label={intl.formatMessage(messages.password)}
+                            style={{
+                              fontFamily: typography.fontFamily,
+                              fontSize: 12,
+                              backgroundColor: color.white,
+                              borderRadius: 4,
+                              textTransform: 'capitalize',
+                            }}
+                            onChange={evt => {
+                              if (this.state.isSubmitTriggered) {
+                                this.validatePassword(evt.target.value);
+                              }
+                              return changePassword(evt.target.value);
+                            }}
+                            type={this.state.showPassword ? 'text' : 'password'}
+                            fullWidth
+                            variant="outlined"
+                            margin="dense"
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    color="inherit"
+                                    onClick={this.handleClickShowPassword}
+                                  >
+                                    {this.state.showPassword ? (
+                                      <Visibility
+                                        style={{ color: color.black }}
+                                      />
+                                    ) : (
+                                      <VisibilityOff
+                                        style={{ color: color.grey }}
+                                      />
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                            error={!!this.state.error.password}
+                            helperText={this.state.error.password}
+                          />
+                        </FormControl>
+
+                        <BtnCustom
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          disabled={!!this.props.errorMessage}
+                          onClick={this.handleSubmit}
+                          title={intl.formatMessage(messages.loginButton)}
+                        />
+
+                        <BtnCustom
+                          fullWidth
+                          variant="outlined"
+                          color="primary"
+                          onClick={this.handleVerification}
+                          title={intl.formatMessage(
+                            messages.verificationButton,
+                          )}
+                        />
+                      </Grid>
+                    </Grid>
+                    <NotificationSnackbar
+                      verticalPos="bottom"
+                      open={this.state.isNotificationOpen}
+                      onClose={() => this.props.logError(null)}
+                      hideDuration={3000}
+                      message={this.props.errorMessage}
+                    />
+                  </form>
+                </Grid>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>      
     );
   }
 }
@@ -460,16 +387,16 @@ const mapStateToProps = createStructuredSelector({
   credential: makeSelectCredential(),
   isLoading: makeSelectIsLoading(),
   token: makeSelectAuthToken(),
-  errorMessage: makeSelectError()
+  errorMessage: makeSelectError(),
 });
 
 function mapDispatchToProps(dispatch) {
-  return {    
+  return {
     changeNik: nik => dispatch(changeNikAction(nik)),
     changePassword: password => dispatch(changePasswordAction(password)),
     login: () => dispatch(loginAction()),
     resetInput: () => dispatch(resetInputAction()),
-    logError: (error) =>dispatch(loginErrorAction(error))
+    logError: error => dispatch(loginErrorAction(error)),
   };
 }
 
@@ -479,8 +406,8 @@ const withConnect = connect(
 );
 
 export default compose(
-  injectReducer({ key:"login", reducer }),
-  injectSaga({ key:"saga", saga }),
+  injectReducer({ key: 'login', reducer }),
+  injectSaga({ key: 'saga', saga }),
   withConnect,
   injectIntl,
   memo,
