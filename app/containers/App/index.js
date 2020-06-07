@@ -14,13 +14,12 @@ import AuthGuard from 'containers/AuthGuard';
 import GlobalStyle from '../../global-styles';
 import { color } from '../../styles/constants';
 
-const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
+const AppWrapper = styled.div`  
+  width:100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: ${color.lightGrey};
+  // background-color: ${color.green};
 `;
 
 export default function App() {
@@ -32,7 +31,7 @@ export default function App() {
       >
         <meta name="description" content="Pembiayaan Multi Guna" />
       </Helmet>
-      <Container maxWidth="xs" style={{ height: '100%' }}>
+      <Container maxWidth="xs" style={{ paddingLeft: 0, paddingRight: 0,}}>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/login" />} />
           <Route path="/login" component={Login} />
@@ -48,9 +47,9 @@ export default function App() {
           <Route
             path="/dashboard"
             render={routeProps => (
-              <AuthGuard>
+              // <AuthGuard>
                 <Dashboard {...routeProps} />
-              </AuthGuard>
+              // </AuthGuard>
             )}
           />
 

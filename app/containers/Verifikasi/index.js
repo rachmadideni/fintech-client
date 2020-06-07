@@ -218,7 +218,7 @@ class Verifikasi extends React.Component {
           alignItems="center"
           justifyContent="center"
         >
-          <PaperCustom elevation={0}>
+          <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20,}}>
             <form autoComplete="off">
               <PaperTitle variant="h6" align="left">
                 {intl.formatMessage(messages.verifikasi)}

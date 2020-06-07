@@ -11,5 +11,14 @@ export const theme = createMuiTheme({
             main:themeColor.secondary,
             contrastText:color.white
         }
+    },
+    breakpoints:{
+        values:{
+            xs:360,
+            sm:600,
+            md:900,
+            lg:1280,
+            xl:1920
+        }
     }
 })

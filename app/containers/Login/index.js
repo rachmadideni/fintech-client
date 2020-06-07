@@ -182,7 +182,7 @@ class Login extends React.Component {
       <Box
         display="flex"
         width="100%"
-        height="100%"
+        height="100vh"
         alignItems="center"
         justifyContent="center"
       >
@@ -196,7 +196,7 @@ class Login extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-        <PaperCustom elevation={0}>
+        <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20,}}>
           <form autoComplete="off">
             <Typography
               variant="h6"

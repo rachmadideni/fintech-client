@@ -25,11 +25,11 @@ function PageHeader(props) {
   return (
     <AppBarStyled>
       <Toolbar>
-      <div style={{ flexGrow:1 }} />      
+      {/* <div style={{ flexGrow:1 }} />       */}
       {titleProps}
-      <div style={{ flexGrow:1 }} />      
+      {/* <div style={{ flexGrow:1 }} />       */}
       {avatarProps}
-      {/* <div style={{ flexGrow:1 }} /> */}
+      
       </Toolbar>
     </AppBarStyled>
   );

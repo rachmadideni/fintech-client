@@ -11,52 +11,56 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { color } from '../../styles/constants';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
-&& {
-  background-color:${color.toska['400']};
-  position:fixed;
-  width:100%;  
-  bottom:0px;
-}`;
+  && {
+    background-color: ${color.toska['400']};
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+  }
+`;
 
 const NavigationAction = styled(BottomNavigationAction).attrs({
-  classes:{
+  classes: {
     selected: 'selected',
-    label: 'label'
-  }
+    label: 'label',
+  },
 })`
-&& {
-  color:${color.lightGrey};
-  // color:#68c972;
-  &.selected {      
-    font-size:10px;
-    color:${color.white};
+  && {
+    color: ${color.lightGrey};
+    // color:#68c972;
+    &.selected {
+      font-size: 10px;
+      color: ${color.white};
+    }
+    .label {
+      text-transform: capitalize;
+      padding-top: 2px;
+      font-size: 10px;
+      font-weight: bold;
+      color: ${color.white};
+    }
   }
-  .label {
-    text-transform:capitalize;
-    padding-top:2px;
-    font-size:10px;
-    font-weight:bold;
-    color:${color.white};
-  } 
-}
 `;
 
 function BottomTabNavigation(props) {
-  const { tabs, bottomTabValue, handleBottomTabChange } =  props;  
+  const { tabs, bottomTabValue, handleBottomTabChange } = props;
   return (
-    <BottomNavigationStyled 
+    <BottomNavigationStyled
       color="primary"
       value={bottomTabValue}
-      onChange={handleBottomTabChange}>
-    {tabs.map(tab=> {
-      return (
-        <NavigationAction             
-            key={`${tab.label}`} 
-            label={tab.label} 
-            value={tab.value} 
-            icon={<tab.icon/>} />
-      );
-    })}
+      onChange={handleBottomTabChange}
+    >
+      {tabs.map(tab => {
+        return (
+          <NavigationAction
+            key={`${tab.label}`}
+            label={tab.label}
+            value={tab.value}
+            icon={<tab.icon />}
+          />
+        );
+      })}
     </BottomNavigationStyled>
   );
 }

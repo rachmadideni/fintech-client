@@ -5,40 +5,21 @@
  */
 
 import React, { memo } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
-// import { useInjectSaga } from 'utils/injectSaga';
-// import { useInjectReducer } from 'utils/injectReducer';
+import { Switch, Route } from 'react-router-dom';
+import { color, typography } from '../../styles/constants';
 
-import reducer from './reducer';
-import saga from './saga';
 import makeSelectDashboard from './selectors';
 import messages from './messages';
 import { TABS } from './constants';
-
-import { color } from '../../styles/constants';
-
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-
-// import {   
-//   Apps,
-//   Book,
-//   Face,
-//   MailOutline 
-// } from '@material-ui/icons'
-
-import { Switch, Route } from 'react-router-dom';
-
-// Pages
-// import Pinjaman from '../Pinjaman/Loadable';
-// import FormPengajuan from '../FormPengajuan/Loadable';
-// import UserDashboard from 'containers/UserDashboard/Loadable';
-// import ProductSelection from 'containers/ProductSelection/Loadable';
-// import PerhitunganAngsuran from '../PerhitunganAngsuran';
 
 // pages
 import FormSubmissionStep from 'containers/FormSubmissionStep';
@@ -51,194 +32,207 @@ import FormAkadStep from 'containers/FormAkadStep/Loadable';
 import MainPage from 'containers/MainPage/Loadable';
 
 // components
-import PageContainer from 'components/PageContainer';
-import PageHeader from 'components/PageHeader';
-import PageTitle from 'components/PageTitle';
-import PageContent from 'components/PageContent';
-import PageFooter from 'components/PageFooter';
 import BottomTabNavigation from 'components/BottomTabNavigation';
-import ButtonAvatar from 'components/ButtonAvatar';
-import UserAvatarIcon from 'components/UserAvatarIcon';
+import PaperCustom from 'components/PaperCustom';
 
+// import PageContainer from 'components/PageContainer';
+// import PageHeader from 'components/PageHeader';
+// import PageTitle from 'components/PageTitle';
+// import PageContent from 'components/PageContent';
+// import PageFooter from 'components/PageFooter';
+// import ButtonAvatar from 'components/ButtonAvatar';
+// import UserAvatarIcon from 'components/UserAvatarIcon';
+
+import bgFinanceTest from 'images/world_wide_web_monochromatic.svg';
+import bgDashboard from 'images/bg-dashboard.png';
+
+const Wrapper = styled(Grid)`
+&& {
+  flex:1;
+  position: relative;
+  background-image:url(${bgDashboard});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  height: 100vh;
+  //padding-left:25px;
+  //padding-right:25px;
+  opacity: 1;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    // background-color:${color.lightGreen};
+    // background-image: linear-gradient(to bottom, ${color.white} 50%, ${color.green} 100%);
+    opacity: 0.5;
+  }  
+}`;
+
+const AppTitle = styled(Typography)`
+  && {
+    font-family: ${typography.fontFamily};
+    font-size: 16px;
+    font-weight: bold;
+    color: ${color.subtleBlack};
+    padding: 0px 10px 0px 0px;
+  }
+`;
 
 class Dashboard extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      bottomTabValue:"dashboard"
-    }
+      bottomTabValue: 'dashboard',
+    };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // console.log(this.props);
     // console.log(window.navigator.appVersion);
-  //   if(/Android [4-6]/.test(window.navigator.appVersion)) {
-  //     window.addEventListener("resize", function() {
-  //       console.log('eventListener Added');
-  //       console.log(document.activeElement.tagName);
-  //       if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {            
-  //         window.setTimeout(function() {
-  //              document.activeElement.scrollIntoViewIfNeeded();
-  //           },0);
-  //        }
-  //     })
-  //  }
-  }  
+    //   if(/Android [4-6]/.test(window.navigator.appVersion)) {
+    //     window.addEventListener("resize", function() {
+    //       console.log('eventListener Added');
+    //       console.log(document.activeElement.tagName);
+    //       if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+    //         window.setTimeout(function() {
+    //              document.activeElement.scrollIntoViewIfNeeded();
+    //           },0);
+    //        }
+    //     })
+    //  }
+  }
 
-  handleBottomTabChange = (e, value) => {    
-    
+  handleBottomTabChange = (e, value) => {
     this.setState({
-      bottomTabValue:value
+      bottomTabValue: value,
     });
 
     const { history } = this.props;
-    if(value === "dashboard"){
+    if (value === 'dashboard') {
       return history.replace('/dashboard');
     }
 
-    if(value === "profil"){
+    if (value === 'profil') {
       return history.replace('/profil');
     }
 
-    if(value === "pesan"){
+    if (value === 'pesan') {
       return history.replace('/inbox');
     }
 
-    if(value === "pinjaman"){
+    if (value === 'pinjaman') {
       return null;
       // return history.replace('/pinjaman/angsuran');
     }
 
     return null;
-  
-  }
-  
-  getBottomTabs = () => {    
-    return TABS.map(tab => ({
-      label:tab.label,
-      value:tab.value,
-      icon:tab.icon
-    }));
-  }
+  };
 
-  render(){
+  getBottomTabs = () => {
+    return TABS.map(tab => ({
+      label: tab.label,
+      value: tab.value,
+      icon: tab.icon,
+    }));
+  };
+
+  render() {
     const { intl, history } = this.props;
     return (
-      
-      <PageContainer 
-        container 
-        wrap="nowrap" 
-        direction="column">
-          
-          <PageHeader 
-            titleProps={
-              <PageTitle 
-                gutterBottom
-                title={intl.formatMessage(messages.pageTitle)} 
-                color="primary" />} 
-            avatarProps={
-              <ButtonAvatar                   
-                iconProps={<UserAvatarIcon title="DR" />} />}
-                onClick={ () => console.log(1) } />
-        
-            <Grid 
-              item xs>
+      <Wrapper container wrap="nowrap" direction="column">
+        <Box
+          width="100%"
+          height="100%"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+        >
+          <PaperCustom
+            elevation={0}
+            style={{ height:'85vh', boxShadow:'0px 1px 2px #EAEAEA', opacity:1, marginTop: 20, marginLeft: 20, marginRight: 20 }}
+          >
+            <AppTitle color="primary" gutterBottom>
+              {intl.formatMessage(messages.pageTitle)}
+            </AppTitle>
+            
+            <Switch>
+              <Route
+                path="/dashboard"
+                render={routeProps => (
+                  <MainPage history={history} {...routeProps} />
+                )}
+              />
 
-              <PageContent 
-                container 
-                wrap="nowrap">
-                  <Paper
-                    ref={ paper => this.paperElement = paper}
-                    elevation={0} 
-                    style={{
-                      height:'80vh',
-                      backgroundColor:color.white,
-                      borderRadius:12,
-                      paddingBottom:20,
-                       }}>
-                    
-                    <Switch>
-                        
-                        <Route                                                    
-                          path="/dashboard"
-                          render={routeProps => (                       
-                            <MainPage history={history} {...routeProps} />
-                          )} />
+              <Route
+                path="/dashboard/section:(pinjaman|informasi)"
+                render={routeProps => (
+                  <MainPage history={history} {...routeProps} />
+                )}
+              />
 
-                        <Route                          
-                          path="/dashboard/section:(pinjaman|informasi)"
-                          render={routeProps => (                       
-                            <MainPage history={history} {...routeProps} />
-                          )} />
+              <Route
+                path="/application-form/step/customer"
+                render={routeProps => (
+                  <FormSubmissionStep history={history} {...routeProps} />
+                )}
+              />
 
-                        <Route                       
-                          path="/application-form/step/customer"
-                          render={ routeProps => (
-                            <FormSubmissionStep 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                      
-                        <Route                       
-                          path="/application-form/step/customer/section:(installment|personal-details|work-history|documents|summary)"
-                          render={ routeProps => (
-                            <FormSubmissionStep 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                        
-                        <Route 
-                          path="/summary"
-                          render={ routeProps => (
-                            <FormSummary 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                        
-                        <Route 
-                          path="/akad"
-                          render={ routeProps => (
-                            <FormAkadStep 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                        
-                        <Route 
-                          path="/profil"
-                          render={ routeProps => (
-                            <UserProfile 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                        
-                        <Route 
-                          path="/inbox"
-                          render={ routeProps => (
-                            <UserInbox 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                        
-                        <Route 
-                          path="/changePassword"
-                          render={ routeProps => (
-                            <ChangePasswordPage 
-                              history={history} 
-                              {...routeProps} />
-                          )} />
-                      </Switch>
-                    </Paper>
-              </PageContent>                                                      
-              <PageFooter                              
-                item              
-                navigationProp = {
-                <BottomTabNavigation               
-                  tabs={this.getBottomTabs()}
-                  bottomTabValue={this.state.bottomTabValue}
-                  handleBottomTabChange={this.handleBottomTabChange} />
-              } />
-            </Grid>      
-      </PageContainer>
+              <Route
+                path="/application-form/step/customer/section:(installment|personal-details|work-history|documents|summary)"
+                render={routeProps => (
+                  <FormSubmissionStep history={history} {...routeProps} />
+                )}
+              />
+
+              <Route
+                path="/summary"
+                render={routeProps => (
+                  <FormSummary history={history} {...routeProps} />
+                )}
+              />
+
+              <Route
+                path="/akad"
+                render={routeProps => (
+                  <FormAkadStep history={history} {...routeProps} />
+                )}
+              />
+
+              <Route
+                path="/profil"
+                render={routeProps => (
+                  <UserProfile history={history} {...routeProps} />
+                )}
+              />
+
+              <Route
+                path="/inbox"
+                render={routeProps => (
+                  <UserInbox history={history} {...routeProps} />
+                )}
+              />
+
+              <Route
+                path="/changePassword"
+                render={routeProps => (
+                  <ChangePasswordPage history={history} {...routeProps} />
+                )}
+              />
+            </Switch>
+
+            <BottomTabNavigation
+              tabs={this.getBottomTabs()}
+              bottomTabValue={this.state.bottomTabValue}
+              handleBottomTabChange={this.handleBottomTabChange}
+            />
+          </PaperCustom>
+        </Box>
+      </Wrapper>
     );
   }
 }
