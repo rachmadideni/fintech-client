@@ -10,24 +10,23 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
+// import { getTokenAuthFromStorage } from 'containers/Login/helpers';
 import { makeSelectAuthToken } from '../App/selectors';
 
-class AuthGuard extends React.Component {
-  render(){
-    if(!this.props.token){
-      return <Redirect to="/login" />
-    }
-    return <React.Fragment>{this.props.children}</React.Fragment>;    
+const AuthGuard = props => {
+  if (!props.token) {
+    return <Redirect to="/login" />;
   }
-}
+  return <React.Fragment>{props.children}</React.Fragment>;
+};
 
 AuthGuard.propTypes = {
-  token:PropTypes.string,
-  children:PropTypes.node
+  token: PropTypes.string,
+  children: PropTypes.node,
 };
 
 const mapStateToProps = createStructuredSelector({
-  token: makeSelectAuthToken()
+  token: makeSelectAuthToken(),
 });
 
 function mapDispatchToProps(dispatch) {

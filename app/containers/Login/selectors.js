@@ -10,21 +10,33 @@ const makeSelectLogin = () =>
   );
 
 const makeSelectCredential = () =>
-    createSelector(
-      selectLoginDomain,
-      substate => substate.credential);
+  createSelector(
+    selectLoginDomain,
+    substate => substate.credential,
+  );
 
-const makeSelectError = () => 
-  createSelector(selectLoginDomain,
-    substate => substate.error.message);
+const makeSelectError = () =>
+  createSelector(
+    selectLoginDomain,
+    substate => substate.error.message,
+  );
 
-const makeSelectIsLoading = () => 
-  createSelector(selectLoginDomain,
-    substate => substate.isLoading);
+const makeSelectLoginSuccessMessage = () =>
+  createSelector(
+    selectLoginDomain,
+    substate => substate.success.message,
+  );
 
-export { 
+const makeSelectIsLoading = () =>
+  createSelector(
+    selectLoginDomain,
+    substate => substate.isLoading,
+  );
+
+export {
   makeSelectLogin,
   makeSelectCredential,
   makeSelectError,
-  makeSelectIsLoading
+  makeSelectLoginSuccessMessage,
+  makeSelectIsLoading,
 };

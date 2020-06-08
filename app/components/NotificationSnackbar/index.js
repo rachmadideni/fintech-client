@@ -5,32 +5,78 @@
  */
 
 import React from 'react';
-// import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
-import { color, typography } from '../../styles/constants';
+import MuiAlert from '@material-ui/lab/Alert';
+import Slide from '@material-ui/core/Slide';
+
+import { typography } from '../../styles/constants';
 
 function NotificationSnackbar(props) {
-  const { open, onClose, message, hideDuration, verticalPos, ...otherProps } = props;
+  const {
+    notificationType,
+    open,
+    onClose,
+    message,
+    hideDuration,
+    verticalPos,
+    ...otherProps
+  } = props;
+
+  const displayNotificationResultType = () => {
+    if (notificationType === 'success') {
+      return (
+        <MuiAlert variant="filled" severity="success" style={{ width: '100%' }}>
+          {message}
+        </MuiAlert>
+      );
+    }
+    if (notificationType === 'error') {
+      return (
+        <MuiAlert variant="filled" severity="error" style={{ width: '100%' }}>
+          {message}
+        </MuiAlert>
+      );
+    }
+    if (notificationType === 'warning') {
+      return (
+        <MuiAlert variant="filled" severity="warning" style={{ width: '100%' }}>
+          {message}
+        </MuiAlert>
+      );
+    }
+    return false;
+  };
+
   return (
-    <Snackbar 
+    <Snackbar
       anchorOrigin={{
-        vertical:verticalPos,
-        horizontal:'left'
+        vertical: verticalPos,
+        horizontal: 'left',
       }}
       open={open}
       onClose={onClose}
       autoHideDuration={hideDuration}
-      message={<span>{message}</span>}
+      TransitionComponent={Slide}
+      key={Slide.name}
       {...otherProps}
       style={{
-        fontFamily:typography.fontFamily,
-        fontSize:10,
-        // backgroundColor:color.green
+        fontFamily: typography.fontFamily,
+        fontSize: 10,
       }}
-    />
+    >
+      {displayNotificationResultType()}
+    </Snackbar>
   );
 }
 
-NotificationSnackbar.propTypes = {};
+NotificationSnackbar.propTypes = {
+  notificationType: PropTypes.string,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  message: PropTypes.string,
+  hideDuration: PropTypes.number,
+  verticalPos: PropTypes.string,
+};
 
 export default NotificationSnackbar;

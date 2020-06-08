@@ -6,35 +6,13 @@
 
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import {
-  makeSelectLogin,
-  makeSelectCredential,
-  makeSelectError,
-  makeSelectIsLoading,
-} from './selectors';
-
-import { makeSelectAuthToken } from '../App/selectors';
-
-import reducer from './reducer';
-import saga from './saga';
-import messages from './messages';
-
-import {
-  resetInputAction,
-  changeNikAction,
-  changePasswordAction,
-  loginAction,
-  loginErrorAction,
-} from './actions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -53,16 +31,35 @@ import PaperCustom from 'components/PaperCustom';
 
 import isEmpty from 'validator/lib/isEmpty';
 import { color, typography } from 'styles/constants';
+import {
+  resetInputAction,
+  changeNikAction,
+  changePasswordAction,
+  loginAction,
+  loginErrorAction,
+  loginSuccessAction,
+} from './actions';
+import messages from './messages';
+import reducer from './reducer';
+import saga from './saga';
+import { makeSelectAuthToken } from '../App/selectors';
+import {
+  makeSelectLogin,
+  makeSelectCredential,
+  makeSelectError,
+  makeSelectLoginSuccessMessage,
+  makeSelectIsLoading,
+} from './selectors';
 
-const styles = makeStyles(theme=>({
-  textField:{
+const styles = makeStyles(() => ({
+  textField: {
     fontFamily: typography.fontFamily,
     fontSize: 12,
     backgroundColor: color.grey,
     borderRadius: 4,
     textTransform: 'capitalize',
-  }
-}))
+  },
+}));
 
 class Login extends React.Component {
   constructor(props) {
@@ -78,6 +75,7 @@ class Login extends React.Component {
       isProcessing: false,
       showPassword: false,
       isNotificationOpen: false,
+      isUserLoginSuccessNotificationOpen: false,
     };
   }
 
@@ -85,17 +83,27 @@ class Login extends React.Component {
     this.props.resetInput();
   }
 
+  handleNotificationState = (name, value) => {
+    this.setState(state => ({
+      ...state,
+      [name]: value,
+    }));
+  };
+
   componentDidUpdate(prevProps) {
     if (!!this.props.errorMessage && prevProps.errorMessage === null) {
-      this.setState(state => ({
-        ...state,
-        isNotificationOpen: true,
-      }));
+      this.handleNotificationState('isNotificationOpen', true);
     } else if (!!prevProps.errorMessage && this.props.errorMessage === null) {
-      this.setState(state => ({
-        ...state,
-        isNotificationOpen: false,
-      }));
+      this.handleNotificationState('isNotificationOpen', false);
+    }
+
+    if (!!this.props.successMessage && prevProps.successMessage === null) {
+      this.handleNotificationState('isUserLoginSuccessNotificationOpen', true);
+    } else if (
+      !!prevProps.successMessage &&
+      this.props.successMessage === null
+    ) {
+      this.handleNotificationState('isUserLoginSuccessNotificationOpen', false);
     }
   }
 
@@ -172,11 +180,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const { intl, credential, changeNik, changePassword, token } = this.props;
-
-    if (token) {
-      return <Redirect to="/dashboard" />;
-    }
+    const { intl, credential, changeNik, changePassword } = this.props;
 
     return (
       <Box
@@ -196,7 +200,16 @@ class Login extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-        <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20,}}>
+        <NotificationSnackbar
+          verticalPos="top"
+          open={this.state.isUserLoginSuccessNotificationOpen}
+          onClose={() => this.props.successMessage(null)}
+          hideDuration={3000}
+          message={this.props.successMessage}
+          notificationType="success"
+        />
+
+        <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20 }}>
           <form autoComplete="off">
             <Typography
               variant="h6"
@@ -227,7 +240,7 @@ class Login extends React.Component {
               id="nik"
               name="nik"
               value={credential.nik}
-              label={intl.formatMessage(messages.nik)}              
+              label={intl.formatMessage(messages.nik)}
               type="text"
               fullWidth
               variant="outlined"
@@ -239,7 +252,7 @@ class Login extends React.Component {
                 return changeNik(evt.target.value);
               }}
               error={!!this.state.error.nik}
-              helperText={this.state.error.nik}              
+              helperText={this.state.error.nik}
               className={styles.textField}
             />
 
@@ -247,7 +260,7 @@ class Login extends React.Component {
               id="password"
               name="password"
               value={credential.password}
-              label={intl.formatMessage(messages.password)}              
+              label={intl.formatMessage(messages.password)}
               onChange={evt => {
                 if (this.state.isSubmitTriggered) {
                   this.validatePassword(evt.target.value);
@@ -301,6 +314,7 @@ class Login extends React.Component {
               onClose={() => this.props.logError(null)}
               hideDuration={3000}
               message={this.props.errorMessage}
+              notificationType="error"
             />
           </form>
         </PaperCustom>
@@ -309,12 +323,27 @@ class Login extends React.Component {
   }
 }
 
+Login.propTypes = {
+  resetInput: PropTypes.func,
+  errorMessage: PropTypes.string,
+  intl: PropTypes.object,
+  history: PropTypes.object,
+  credential: PropTypes.object,
+  login: PropTypes.func,
+  changeNik: PropTypes.func,
+  changePassword: PropTypes.func,
+  isLoading: PropTypes.bool,
+  successMessage: PropTypes.string,
+  logError: PropTypes.func,
+};
+
 const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
   credential: makeSelectCredential(),
   isLoading: makeSelectIsLoading(),
   token: makeSelectAuthToken(),
   errorMessage: makeSelectError(),
+  successMessage: makeSelectLoginSuccessMessage(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -324,6 +353,7 @@ function mapDispatchToProps(dispatch) {
     login: () => dispatch(loginAction()),
     resetInput: () => dispatch(resetInputAction()),
     logError: error => dispatch(loginErrorAction(error)),
+    logSuccessMessage: message => dispatch(loginSuccessAction(message)),
   };
 }
 

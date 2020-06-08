@@ -71,6 +71,7 @@
     "@material-ui/pickers": "^3.2.10",
     "blob-util": "^2.0.2",
     "chalk": "^2.4.2",
+    "classnames": "^2.2.6",
     "compression": "1.7.4",
     "compressorjs": "^1.0.6",
     "connected-react-router": "6.4.0",

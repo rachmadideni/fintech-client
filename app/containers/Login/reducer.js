@@ -4,7 +4,7 @@
  *
  */
 import produce from 'immer';
-import { 
+import {
   // DEFAULT_ACTION,
   CHANGE_NIK,
   CHANGE_EMAIL,
@@ -12,28 +12,31 @@ import {
   LOGIN_ACTION,
   LOGIN_SUCCESS_ACTION,
   LOGIN_ERROR_ACTION,
-  RESET_INPUT_ACTION
+  RESET_INPUT_ACTION,
 } from './constants';
 
 export const initialState = {
-  isLoading:false,
-  credential:{
-    email:"",
-    nik:"",
-    password:""
+  isLoading: false,
+  credential: {
+    email: '',
+    nik: '',
+    password: '',
   },
-  error:{
-    message:null
-  }
+  error: {
+    message: null,
+  },
+  success: {
+    message: null,
+  },
 };
 
 /* eslint-disable default-case, no-param-reassign */
 const loginReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case RESET_INPUT_ACTION:{
-        draft.credential.nik = "";
-        draft.credential.password = "";        
+      case RESET_INPUT_ACTION: {
+        draft.credential.nik = '';
+        draft.credential.password = '';
         return draft;
       }
       case CHANGE_NIK:
@@ -51,8 +54,9 @@ const loginReducer = (state = initialState, action) =>
         return draft;
       case LOGIN_SUCCESS_ACTION:
         draft.isLoading = false;
+        draft.success.message = action.payload;
         return draft;
-      case LOGIN_ERROR_ACTION:        
+      case LOGIN_ERROR_ACTION:
         draft.isLoading = false;
         draft.error.message = action.payload;
         return draft;
