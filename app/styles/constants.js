@@ -13,12 +13,13 @@ export const color = {
   },
   biru: {
     '100': '#4581cc',
+    '400': '#0474d1',
   },
 };
 
 export const themeColor = {
   primary: color.green,
-  secondary: color.blue,
+  secondary: color.biru['400'],
   textPrimary: color.black,
 };
 

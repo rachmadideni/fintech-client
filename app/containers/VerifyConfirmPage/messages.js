@@ -11,7 +11,7 @@ export const scope = 'app.containers.VerifyConfirmPage';
 export default defineMessages({
   header: {
     id: `${scope}.header`,
-    defaultMessage: 'Konfirmasi kode aktifasi',
+    defaultMessage: 'Konfirmasi kode',
   },
   kodeAktifasi: {
     id: `${scope}.kodeAktifasi`,
@@ -21,7 +21,7 @@ export default defineMessages({
     id: `${scope}.emptyCode`,
     defaultMessage: 'Kode Aktifasi wajib diisi',
   },
-  codeNotMatch:{
+  codeNotMatch: {
     id: `${scope}.codeNotMatch`,
     defaultMessage: 'kode aktifasi tidak cocok',
   },
@@ -29,12 +29,12 @@ export default defineMessages({
     id: `${scope}.btnConfirm`,
     defaultMessage: 'Konfirmasi kode',
   },
-  codeIsMatch:{
+  codeIsMatch: {
     id: `${scope}.codeIsMatch`,
     defaultMessage: 'kode verifikasi sesuai. mohon tunggu',
   },
-  tokenExpired:{
+  tokenExpired: {
     id: `${scope}.tokenExpired`,
     defaultMessage: 'kode verifikasi expired',
-  }
+  },
 });

@@ -71,10 +71,10 @@ export default defineMessages({
   },
   userLoginFailed: {
     id: `${scope}.userLoginFailed`,
-    defaultMessage: 'anda tidak berhasil login. cek ulang data login',
+    defaultMessage: 'anda tidak berhasil login. silahkan cek ulang data anda',
   },
   user_not_exists: {
     id: `${scope}.user_not_exists`,
-    defaultMessage: 'user tidak ditemukan atau akun anda belum terverifikasi',
+    defaultMessage: 'user tidak ditemukan atau anda belum melakukan registrasi',
   },
 });

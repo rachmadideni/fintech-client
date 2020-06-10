@@ -12,11 +12,10 @@ import StepBackButton from './StepBackButton';
 import StepNextButton from './StepNextButton';
 import StepCircularProgress from './StepCircularProgress';
 import StepContentComp from './StepContentComp';
-import { check_max_installment } from '../../containers/PerhitunganAngsuran/helpers';
+import { checkMaxInstallment } from '../../containers/PerhitunganAngsuran/helpers';
 
 function FormStepper(props) {
   const {
-    intl,
     title,
     subtitle,
     activeStep,
@@ -32,117 +31,118 @@ function FormStepper(props) {
     nasabah,
     work,
     documents,
-    pengajuan,
-    tour_simulasi
+    // pengajuan,
+    // tourSimulasi,
   } = props;
 
-  let currstep = completedStep[activeStep].number;
-  let totalstep = completedStep.length;
+  const currstep = completedStep[activeStep].number;
+  const totalstep = completedStep.length;
 
-  const check_customer_form = nasabah => {
-    if(nasabah.fullname && nasabah.birthplace && nasabah.birthdate && nasabah.address && nasabah.gender && nasabah.mother_maiden_name){
-      return false;
-    }
-    return true
-  }
-  
-  const check_work_form = work => {
-    if(work.company && work.companyJoinDate){
+  const checkCustomerForm = () => {
+    if (
+      nasabah.fullname &&
+      nasabah.birthplace &&
+      nasabah.birthdate &&
+      nasabah.address &&
+      nasabah.gender &&
+      nasabah.mother_maiden_name
+    ) {
       return false;
     }
     return true;
-  }
-  
-  const check_document_form = documents => {
-    let ktp = documents.uploaded.findIndex((elem) => elem.idberk === 3);  
-    let idcard = documents.uploaded.findIndex((elem) => elem.idberk === 5);  
-    let npwp = documents.uploaded.findIndex((elem) => elem.idberk === 6);  
+  };
+
+  const checkWorkForm = () => {
+    if (work.company && work.companyJoinDate) {
+      return false;
+    }
+    return true;
+  };
+
+  const checkDocumentForm = () => {
+    const ktp = documents.uploaded.findIndex(elem => elem.idberk === 3);
+    // const idcard = documents.uploaded.findIndex(elem => elem.idberk === 5);
+    // const npwp = documents.uploaded.findIndex(elem => elem.idberk === 6);
     // if(ktp > -1 && idcard > -1 && npwp > -1){
-    if(ktp > -1){
+    if (ktp > -1) {
       return false;
     }
     return true;
-  }
+  };
 
-  const check_pengajuan_form = pengajuan => {
-    if(pengajuan.jenis && pengajuan.tujuan) {
-      return false;
-    }
-    return true;
-  }
+  // const checkPengajuanForm = pengajuan => {
+  //   if (pengajuan.jenis && pengajuan.tujuan) {
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   // setStepSimulasiTourOpen = (bool) => {
   //   if(!!bool){
-  //     // action set 
+  //     // action set
   //     // draft.data.tour_simulasi.open = true;
-  //     // draft.data.tour_simulasi.count += 1; 
+  //     // draft.data.tour_simulasi.count += 1;
   //   }
   // }
 
-  const isNextStepDisabled = () => {
-    if(gaji < 1 || check_max_installment(limitAngsuran,plafon,margin,tenor)){
-      console.log(true);
-      // props.setSimulasiTour(true, 1);
-      return true;
-    }
-    console.log(false);
-    props.setSimulasiTour(false, 0);
-    return false;
-  }
+  // const isNextStepDisabled = () => {
+  //   if (gaji < 1 || checkMaxInstallment(limitAngsuran, plafon, margin, tenor)) {
+  //     return true;
+  //   }
+  //   props.setSimulasiTour(false, 0);
+  //   return false;
+  // };
 
   return (
-    <Grid 
-      container 
+    <Grid
+      container
       wrap="nowrap"
       style={{
-        marginBottom:10
-      }}>
-        { 
-          activeStep > 0 && 
-          <StepBackButton active={true} onClickBack={onClickBack} />
-        }
-        
-        <StepCircularProgress 
-          stepvalue={stepProgress}
-          currentstep={currstep}
-          totalstep={totalstep} />
-         
-        <StepContentComp 
-          title={title}
-          subtitle={subtitle} />
-        
-        {
-          activeStep === 0 ? 
-          <StepNextButton             
-            onClickNext={onClickNext}
-            isDisabled={ gaji < 1 || check_max_installment(limitAngsuran, plafon, margin, tenor) } /> : null
-        }
-        { activeStep === 1 ? 
+        marginBottom: 10,
+      }}
+    >
+      {activeStep > 0 && <StepBackButton active onClickBack={onClickBack} />}
+
+      <StepCircularProgress
+        stepvalue={stepProgress}
+        currentstep={currstep}
+        totalstep={totalstep}
+      />
+      <StepContentComp title={title} subtitle={subtitle} />
+
+      {activeStep === 0 && (
+        <StepNextButton
+          onClickNext={onClickNext}
+          isDisabled={
+            gaji < 1 ||
+            checkMaxInstallment(limitAngsuran, plafon, margin, tenor)
+          }
+        />
+      )}
+
+      {activeStep === 1 ? (
+        <StepNextButton
+          onClickNext={onClickNext}
+          isDisabled={checkCustomerForm(nasabah)}
+        />
+      ) : null}
+      {activeStep === 2 ? (
+        <StepNextButton
+          onClickNext={onClickNext}
+          isDisabled={checkWorkForm(work)}
+        />
+      ) : null}
+      {activeStep === 3 ? (
+        <StepNextButton
+          onClickNext={onClickNext}
+          isDisabled={checkDocumentForm(documents)}
+        />
+      ) : null}
+      {/* { activeStep === 4 ? 
           <StepNextButton 
             onClickNext={onClickNext}
             isDisabled={
-              check_customer_form(nasabah)
-            } /> : null
-        }
-        { activeStep === 2 ? 
-          <StepNextButton 
-            onClickNext={onClickNext}
-            isDisabled={
-              check_work_form(work)
-            } /> : null
-        }
-        { activeStep === 3 ? 
-          <StepNextButton 
-            onClickNext={onClickNext}
-            isDisabled={
-              check_document_form(documents)
-            } /> : null
-        }
-        {/* { activeStep === 4 ? 
-          <StepNextButton 
-            onClickNext={onClickNext}
-            isDisabled={
-              check_pengajuan_form(pengajuan)
+              checkPengajuanForm(pengajuan)
             } /> : null
         } */}
     </Grid>
@@ -150,10 +150,22 @@ function FormStepper(props) {
 }
 
 FormStepper.propTypes = {
-  stepProgress:PropTypes.number.isRequired,
-  completedStep:PropTypes.array.isRequired,
-  onClickNext:PropTypes.func.isRequired,
-  onClickBack:PropTypes.func.isRequired
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  activeStep: PropTypes.number,
+  gaji: PropTypes.number,
+  plafon: PropTypes.number,
+  margin: PropTypes.number,
+  tenor: PropTypes.number,
+  limitAngsuran: PropTypes.number,
+  nasabah: PropTypes.object,
+  work: PropTypes.object,
+  documents: PropTypes.object,
+  // pengajuan: PropTypes.object,
+  stepProgress: PropTypes.number.isRequired,
+  completedStep: PropTypes.array.isRequired,
+  onClickNext: PropTypes.func.isRequired,
+  onClickBack: PropTypes.func.isRequired,
 };
 
 export default FormStepper;

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -12,7 +13,8 @@ import { color } from '../../styles/constants';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
   && {
-    background-color: ${color.toska['400']};
+    // background-color: ${color.toska['400']};
+    background-color: ${color.biru['400']};
     position: fixed;
     width: 100%;
     bottom: 0px;
@@ -51,20 +53,22 @@ function BottomTabNavigation(props) {
       value={bottomTabValue}
       onChange={handleBottomTabChange}
     >
-      {tabs.map(tab => {
-        return (
-          <NavigationAction
-            key={`${tab.label}`}
-            label={tab.label}
-            value={tab.value}
-            icon={<tab.icon />}
-          />
-        );
-      })}
+      {tabs.map(tab => (
+        <NavigationAction
+          key={`${tab.label}`}
+          label={tab.label}
+          value={tab.value}
+          icon={<tab.icon />}
+        />
+      ))}
     </BottomNavigationStyled>
   );
 }
 
-BottomTabNavigation.propTypes = {};
+BottomTabNavigation.propTypes = {
+  tabs: PropTypes.array,
+  bottomTabValue: PropTypes.number,
+  handleBottomTabChange: PropTypes.func,
+};
 
 export default BottomTabNavigation;

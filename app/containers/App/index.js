@@ -26,12 +26,12 @@ export default function App() {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - Pembiayaan Multi Guna"
-        defaultTitle="Pembiayaan Multi Guna"
+        titleTemplate="%s - Pembiayaan Amanah"
+        defaultTitle="Pembiayaan Amanah"
       >
-        <meta name="description" content="Pembiayaan Multi Guna" />
+        <meta name="description" content="Pembiayaan Amanah" />
       </Helmet>
-      <Container maxWidth="xs" style={{ paddingLeft: 0, paddingRight: 0,}}>
+      <Container maxWidth="xs" style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/login" />} />
           <Route path="/login" component={Login} />
@@ -47,9 +47,9 @@ export default function App() {
           <Route
             path="/dashboard"
             render={routeProps => (
-              // <AuthGuard>
+              <AuthGuard>
                 <Dashboard {...routeProps} />
-              // </AuthGuard>
+              </AuthGuard>
             )}
           />
 

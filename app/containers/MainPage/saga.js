@@ -1,189 +1,187 @@
 import { takeLatest, call, all, put, select } from 'redux-saga/effects';
-import request, {
-  requestBlob
-} from 'utils/request';
+import request, { requestBlob } from 'utils/request';
 import { api } from 'environments';
 
-import { 
+import {
   CEK_PINJAMAN_ACTION,
   DOWNLOAD_AKAD_ACTION,
   DOWNLOAD_SPN_ACTION,
   DOWNLOAD_SRP_ACTION,
-  DOWNLOAD_SPGK_ACTION
+  DOWNLOAD_SPGK_ACTION,
 } from './constants';
-import { 
+import {
   cekPinjamanSuccessAction,
   downloadAKadSuccessAction,
   downloadSpnSuccessAction,
   downloadSrpSuccessAction,
-  downloadSpgkSuccessAction
-} from './actions'
+  downloadSpgkSuccessAction,
+} from './actions';
 import { makeSelectAuthToken } from '../App/selectors';
-import { makeSelectCredential } from '../Login/selectors'
+import { makeSelectCredential } from '../Login/selectors';
 
-export function* cekPengajuan(nomrek){
+export function* cekPengajuan(nomrek) {
   try {
     const token = yield select(makeSelectAuthToken());
     const endpoint = `${api.host}/api/cek_pengajuan/${nomrek}`;
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':token
-      }
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
     };
 
     const response = yield call(request, endpoint, requestOpt);
     return response.data;
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    // console.log(err);
+    throw new Error(err);
   }
 }
 
-export function* getNomrek(nobase){
+export function* getNomrek(nobase) {
   try {
     const endpoint = `${api.host}/api/getNomrek/${nobase}`;
     const token = yield select(makeSelectAuthToken());
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':token
-      }
-    };    
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    };
     const response = yield call(request, endpoint, requestOpt);
-    if(response.status){
+    if (response.status) {
       return response.data[0].NOMREK;
     }
-
-  } catch(err){
-    console.log(err);
+    return false;
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
-export function* cekPinjaman(){
-  try {    
+export function* cekPinjaman() {
+  try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
-    if(nomrek){
-      const dt_pengajuan = yield call(cekPengajuan, nomrek);
-      if(dt_pengajuan.length > 0){
-        const status_aplikasi = dt_pengajuan.map((item,i)=>{
-          console.log(item.STSAPP);
-          if(item.NOMREK && item.STSKWN !== null){
+    if (nomrek) {
+      const dataPengajuan = yield call(cekPengajuan, nomrek);
+      if (dataPengajuan.length > 0) {
+        const statusAplikasi = dataPengajuan.map(item => {
+          if (item.NOMREK && item.STSKWN !== null) {
             return 3; // user sudah mengisi form tahap 2
           }
-          else if(item.NOMREK && item.STSAPP === "1"){
+          if (item.NOMREK && item.STSAPP === '1') {
             return 2; // user sudah mengisi form tahap 1 & sdh diapprove
-          } 
-          else if(item.NOMREK && item.STSAPP === null){
-            return 1; // user sudah melakukan pengajuan
-          } else {
-            return 0; // user belum mengajukan pinjaman
           }
+          if (item.NOMREK && item.STSAPP === null) {
+            return 1; // user sudah melakukan pengajuan
+          }
+          return 0; // user belum mengajukan pinjaman
         });
-        console.log(status_aplikasi[0]);
-        yield put(cekPinjamanSuccessAction(status_aplikasi[0]));
+        yield put(cekPinjamanSuccessAction(statusAplikasi[0]));
       }
+    } else {
+      yield put(cekPinjamanSuccessAction(0));
     }
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
-export function* downloadAkad(){
+export function* downloadAkad() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
     const endpoint = `${api.host}/api/download_akad/nomrek/${nomrek}`;
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/pdf',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf',
       },
-      responseType:'blob'
-    };    
+      responseType: 'blob',
+    };
 
     // response is returning blob
     const response = yield call(requestBlob, endpoint, requestOpt);
-    const file = new Blob([response], {type: 'application/pdf'});
+    const file = new Blob([response], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     yield put(downloadAKadSuccessAction(fileURL));
     window.open(fileURL);
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
-export function* downloadSpn(){
+export function* downloadSpn() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
     const endpoint = `${api.host}/api/download_spn/nomrek/${nomrek}`;
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/pdf',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf',
       },
-      responseType:'blob'
-    };    
+      responseType: 'blob',
+    };
 
     // response is returning blob
     const response = yield call(requestBlob, endpoint, requestOpt);
-    const file = new Blob([response], {type: 'application/pdf'});
+    const file = new Blob([response], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     yield put(downloadSpnSuccessAction(fileURL));
     window.open(fileURL);
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
-export function* downloadSrp(){
+export function* downloadSrp() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
     const endpoint = `${api.host}/api/download_srp/nomrek/${nomrek}`;
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/pdf',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf',
       },
-      responseType:'blob'
-    };    
+      responseType: 'blob',
+    };
 
     // response is returning blob
     const response = yield call(requestBlob, endpoint, requestOpt);
-    const file = new Blob([response], {type: 'application/pdf'});
+    const file = new Blob([response], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     yield put(downloadSrpSuccessAction(fileURL));
     window.open(fileURL);
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
-export function* downloadSpgk(){
+export function* downloadSpgk() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
     const endpoint = `${api.host}/api/download_spgk/nomrek/${nomrek}`;
     const requestOpt = {
-      method:'GET',
-      headers:{
-        'Content-Type':'application/pdf',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf',
       },
-      responseType:'blob'
-    };    
+      responseType: 'blob',
+    };
 
     // response is returning blob
     const response = yield call(requestBlob, endpoint, requestOpt);
-    const file = new Blob([response], {type: 'application/pdf'});
+    const file = new Blob([response], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     yield put(downloadSpgkSuccessAction(fileURL));
     window.open(fileURL);
-  } catch(err){
-    console.log(err);
+  } catch (err) {
+    throw new Error(err);
   }
 }
 
@@ -193,6 +191,6 @@ export default function* mainPageSaga() {
     takeLatest(DOWNLOAD_AKAD_ACTION, downloadAkad),
     takeLatest(DOWNLOAD_SPN_ACTION, downloadSpn),
     takeLatest(DOWNLOAD_SRP_ACTION, downloadSrp),
-    takeLatest(DOWNLOAD_SPGK_ACTION, downloadSpgk)
-  ])
+    takeLatest(DOWNLOAD_SPGK_ACTION, downloadSpgk),
+  ]);
 }

@@ -9,9 +9,9 @@ import { defineMessages } from 'react-intl';
 export const scope = 'app.containers.Dashboard';
 
 export default defineMessages({
-  pageTitle:{
-    id:`${scope}.pageTitle`,
-    defaultMessage:'Amanah Finance'
+  pageTitle: {
+    id: `${scope}.pageTitle`,
+    defaultMessage: 'Amanah Finance Syariah',
   },
   header: {
     id: `${scope}.header`,

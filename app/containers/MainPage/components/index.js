@@ -50,7 +50,7 @@ const GridItem = styled(({ active, ...otherProps }) => (
   <Grid {...otherProps} />
 ))`
   && {
-    background-color: ${active => (active ? color.green : color.lightGrey)};
+    background-color: ${active => (active ? color.biru[400] : color.lightGrey)};
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

@@ -11,20 +11,6 @@ import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import {
-  makeSelectOpsiDokumenTahap1,
-  makeSelectUploadedFiles
-} from '../FormSubmissionStep/selectors';
-
-import {
-  // addDokumenAction,
-  getOpsiDokumenTahap1Action,
-  uploadAction
-} from './actions'
-
-import messages from './messages';
-import { color, typography } from '../../styles/constants';
-
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -34,67 +20,56 @@ import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
+// import { createBlob, createObjectURL } from 'blob-util';
+import { color, typography } from '../../styles/constants';
+import { getOpsiDokumenTahap1Action, uploadAction } from './actions';
+
 import {
-  createBlob,
-  createObjectURL
-} from 'blob-util';
+  makeSelectOpsiDokumenTahap1,
+  makeSelectUploadedFiles,
+} from '../FormSubmissionStep/selectors';
 
-
-const Wrapper = styled(props=>{
-  return (
-    <Grid {...props} />
-  )})`
-&& {
-  background-color:transparent;
-  padding-left:20px;
-  padding-right:20px;
-  padding-top:10px;
-}`;
+const Wrapper = styled(props => <Grid {...props} />)`
+  && {
+    background-color: transparent;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 5px;
+  }
+`;
 
 const CardMediaStyled = styled(CardMedia)`
-&& {
-  height:120px;
-}`;
+  && {
+    height: 120px;
+  }
+`;
 
 const Overlay = styled.div`
-  display:flex;
-  width:100%;
-  background-color:#000000;
-  position:absolute;
-  opacity:0.7;
-  z-index:0;
-  right:0px;
-  bottom:0px;
-  padding-left:10px;
-  padding-top:5px;
-  padding-bottom:5px;
+  display: flex;
+  width: 100%;
+  background-color: #000000;
+  position: absolute;
+  opacity: 0.7;
+  z-index: 0;
+  right: 0px;
+  bottom: 0px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 `;
 
 const TextOverlay = styled(Typography)`
-&& {
-  font-family:${typography.fontFamily};
-  font-weight:bold;
-  font-size:10px;
-  color:${color.white};
-  text-transform:capitalize;
-}`;
-
-class FormDocument extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      // selfieImageName:"",
-      // selfieImage:null,
-      // imageKTPName:"",
-      // imageKTP:null,
-      // imageIdCardName:"",
-      // imageIdCard:null,
-      // files:[]
-    }
-    // this.onSingleUpload = this.onSingleUpload.bind(this);
+  && {
+    font-family: ${typography.fontFamily};
+    font-weight: bold;
+    font-size: 10px;
+    color: ${color.white};
+    text-transform: capitalize;
   }
+`;
 
-  componentDidMount(){
+class FormDocument extends React.Component {
+  componentDidMount() {
     this.props.getOpsiDokumenTahap1();
     // navigator.mediaDevices.enumerateDevices().then(result=>console.log(result))
     // navigator.mediaDevices.getUserMedia({video: true}).then(result=>console.log(result))
@@ -110,131 +85,117 @@ class FormDocument extends React.Component{
   //       [statefile]:base64
   //     });
   //   })
-  // }  
-  
-  
-  getAsBase64 = (file) => {
-    return new Promise((resolve,reject)=>{
+  // }
+
+  getAsBase64 = file =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => reject(error);
       reader.readAsDataURL(file);
     });
-  }
-  
+
   handleFile = (event, idberk) => {
-    if(!!event.target.files && !!event.target.files[0])
-    {
-      console.log(event.target.files);
-      const objectURL = URL.createObjectURL(event.target.files[0]);      
+    if (!!event.target.files && !!event.target.files[0]) {
+      // console.log(event.target.files);
+      const objectURL = URL.createObjectURL(event.target.files[0]);
       const file = event.target.files[0];
       return this.props.upload(idberk, file, objectURL);
       // const base64Img = this.getAsBase64(event.target.files[0]).then(base64 => base64);
     }
     return false;
-  }
+  };
 
-  render(){
-
-    const { 
-      // intl,
-      // documents,
-      // changeDokumenKtp,
-      // changeDokumenIdcard,
-      opsiDokumenTahap1
-    } = this.props;
-
-    // console.log(this.state.files);
+  render() {
+    const { opsiDokumenTahap1 } = this.props;
 
     return (
-      <Wrapper 
-        container 
+      <Wrapper
+        container
         wrap="nowrap"
         direction="column"
         alignItems="flex-end"
-        justify="flex-end">
-          <Grid item>
-            <form autoComplete="off"> 
-              {
-                opsiDokumenTahap1.map((item,index) => (
-                <FormControl 
-                  margin="dense" 
-                  fullWidth>
-                  
-                  <Button
-                    key={`item-${index}`} 
-                    color="primary"
-                    fullWidth
-                    variant="outlined" 
-                    component="label"                
-                    onChange={ 
-                      evt => this.handleFile(evt, item.IDBERK)
-                      }>
-                    {item.NMBERK}
-                    <input 
-                      id={item.IDBERK}
-                      name={item.NMBERK} 
-                      type="file"
-                      multiple 
-                      accept="image/x-png,image/jpeg" 
-                      style={{ display:'none' }} />
-                  </Button>
-                </FormControl>
-              ))}
+        justify="flex-end"
+      >
+        <Grid item>
+          <form autoComplete="off">
+            {opsiDokumenTahap1.map(item => (
+              <FormControl margin="dense" fullWidth>
+                <Button
+                  key={`item-${item.IDBERK}`}
+                  color="primary"
+                  fullWidth
+                  variant="outlined"
+                  component="label"
+                  onChange={evt => this.handleFile(evt, item.IDBERK)}
+                >
+                  {item.NMBERK}
+                  <input
+                    id={item.IDBERK}
+                    name={item.NMBERK}
+                    type="file"
+                    multiple
+                    accept="image/x-png,image/jpeg"
+                    style={{ display: 'none' }}
+                  />
+                </Button>
+              </FormControl>
+            ))}
 
-              {/* 
+            {/* 
                 RENDER FILE SETELAH USER PICK DOKUMEN (dari storage atau hasil jepret kamera)
               */}
 
-              <Grid 
-                container 
-                wrap="wrap" 
-                direction="row"
-                justify="space-between"
-                alignItems="flex-start">
-                
-                {/* display uploaded files */}
-
-                {this.props.uploadedFiles.map((item,index)=>(
-                  <Grid 
-                    item 
-                    style={{ marginBottom:15 }}>                   
-                    
-                    <Grid style={{ marginTop:12, width:'130px',height:'120px' }}> 
-                      <Card raised={false}>
-                        <CardActionArea >
-                          <CardMediaStyled image={`${item.objectURL}`} />
-                          <Overlay>
-                              <TextOverlay>
-                                {opsiDokumenTahap1[index].NMBERK}                                
-                              </TextOverlay>
-                          </Overlay>
-                        </CardActionArea>
-                      </Card>
-                    </Grid>
-                  </Grid>  
-                ))}
-              </Grid>
-            </form>
-          </Grid>          
+            <Grid
+              container
+              wrap="wrap"
+              direction="row"
+              justify="space-between"
+              alignItems="flex-start"
+            >
+              {this.props.uploadedFiles.map((item, index) => (
+                <Grid item style={{ marginBottom: 15 }}>
+                  <Grid
+                    style={{ marginTop: 12, width: '130px', height: '120px' }}
+                  >
+                    <Card raised={false}>
+                      <CardActionArea>
+                        <CardMediaStyled image={`${item.objectURL}`} />
+                        <Overlay>
+                          <TextOverlay>
+                            {opsiDokumenTahap1[index].NMBERK}
+                          </TextOverlay>
+                        </Overlay>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+          </form>
+        </Grid>
       </Wrapper>
-    )
+    );
   }
 }
 
-const mapStateToProps = createStructuredSelector({  
-  // documents: makeSelectDocuments(),
+FormDocument.propTypes = {
+  opsiDokumenTahap1: PropTypes.array,
+  uploadedFiles: PropTypes.array,
+  getOpsiDokumenTahap1: PropTypes.func,
+  upload: PropTypes.func,
+};
+
+const mapStateToProps = createStructuredSelector({
   opsiDokumenTahap1: makeSelectOpsiDokumenTahap1(),
-  uploadedFiles: makeSelectUploadedFiles()
+  uploadedFiles: makeSelectUploadedFiles(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    // changeDokumenKtp: value => dispatch(changeDokumenKtpAction(value)),
-    // changeDokumenIdcard: value => dispatch(changeDokumenIdcardAction(value)),
-    // addDokumen: (key, file) => dispatch(addDokumenAction(key, file)),
     getOpsiDokumenTahap1: () => dispatch(getOpsiDokumenTahap1Action()),
-    upload: (idberk, file, objectURL) => dispatch(uploadAction(idberk, file, objectURL))
+    upload: (idberk, file, objectURL) =>
+      dispatch(uploadAction(idberk, file, objectURL)),
   };
 }
 

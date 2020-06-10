@@ -1,37 +1,33 @@
-export const calc_installment = (plafon, margin, tenor) => {
+export const calcInstallment = (plafon, margin, tenor) => {
+  const tahunTenor = tenor / 12;
+  const tmargin = ((plafon * margin) / 100) * tahunTenor;
+  const npokok = plafon / tenor;
+  const nmargin = tmargin / tenor;
+  const angsuran = npokok + nmargin;
+  return angsuran;
+  // return (plafon + plafon*margin/100) / tenor;
+};
 
-    let tahun_tenor = tenor/12;
-    let tmargin = (plafon*margin/100)*tahun_tenor;
-    let npokok = plafon/tenor;
-    let nmargin = tmargin/tenor;
-    let angsuran = npokok + nmargin;    
-    return angsuran;
-    //return (plafon + plafon*margin/100) / tenor; 
-}
+// check_max_installment
+export const checkMaxInstallment = (maxInstallment, plafon, margin, tenor) => {
+  const tahunTenor = tenor / 12;
+  const tmargin = ((plafon * margin) / 100) * tahunTenor;
+  const npokok = plafon / tenor;
+  const nmargin = tmargin / tenor;
+  const angsuran = npokok + nmargin;
+  // let angsuran = (plafon + plafon*margin/100)/tenor;
+  if (angsuran > maxInstallment) {
+    return true;
+  }
+  return false;
+};
 
-export const check_max_installment = (maxInstallment,plafon,margin,tenor) => {
-    let tahun_tenor = tenor/12;
-    let tmargin = (plafon*margin/100)*tahun_tenor;
-    let npokok = plafon/tenor;
-    let nmargin = tmargin/tenor;
-    let angsuran = npokok + nmargin;
-    // let angsuran = (plafon + plafon*margin/100)/tenor;
-    if(angsuran > maxInstallment){
-        console.log('angsuran lebih dari DSR');
-        console.log(maxInstallment);
-        return true;
-    } else {
-        console.log('angsuran bisa diambil tdk lebih dari DSR ');
-        console.log(maxInstallment);
-        return false;
-    }
-}
-
-export const hitung_nilai_margin = (plafon,margin,tenor) => {
-    let tahun_tenor = tenor/12;
-    let nilai_margin = (plafon*margin/100)*tahun_tenor;
-    return nilai_margin;
-}
+export const hitungNilaiMargin = (plafon, margin, tenor) => {
+  const tahunTenor = tenor / 12;
+  const nilaiMargin = ((plafon * margin) / 100) * tahunTenor;
+  return nilaiMargin;
+};
 
 // ini bisa disebut juga DSR
-export const calc_acceptable_installment = pendapatan => 30/100*parseInt(pendapatan);
+// export const calcAcceptableInstallment = pendapatan =>
+//   (30 / 100) * parseInt(pendapatan);
