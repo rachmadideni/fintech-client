@@ -29,5 +29,5 @@ export const hitungNilaiMargin = (plafon, margin, tenor) => {
 };
 
 // ini bisa disebut juga DSR
-// export const calcAcceptableInstallment = pendapatan =>
-//   (30 / 100) * parseInt(pendapatan);
+export const calcAcceptableInstallment = pendapatan =>
+  (30 / 100) * parseInt(pendapatan, 0);

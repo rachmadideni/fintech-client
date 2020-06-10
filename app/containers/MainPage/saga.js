@@ -64,6 +64,7 @@ export function* cekPinjaman() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
+    console.log(nomrek);
     if (nomrek) {
       const dataPengajuan = yield call(cekPengajuan, nomrek);
       if (dataPengajuan.length > 0) {
