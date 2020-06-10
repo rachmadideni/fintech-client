@@ -6,37 +6,31 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { color, typography } from '../../../styles/constants';
-import bggreen01 from '../../../images/bg_green_1.png';
+import background from '../../../images/wave-red-bg.png';
 
 const Wrapper = styled(Grid)`
-&& {
-  flex:1;
-//   padding-top:100px;
-  position: relative;
-//   background-image: url(${bggreen01});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  justify-content:center;
-  align-items:center;
-//   padding-left:25px;
-//   padding-right:25px;
-  opacity: 0.9;
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    // background-color:${color.lightGrey};
-    // background-image: linear-gradient(to right, ${color.lightGrey} 100%, ${
-  color.lightGrey
-} 40%);
-    opacity: 1;
-  }  
-}`;
+  && {
+    flex: 1;
+    position: relative;
+    background-image: url(${background});
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.9;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 1;
+    }
+  }
+`;
 
 const StyledPaper = styled(Paper)`
   && {
@@ -45,12 +39,12 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-const AppTitle = styled(Typography)`
+const AppTitle = styled(props => <Typography {...props} />)`
   && {
     font-family: ${typography.fontFamily};
     font-size: 16px;
     font-weight: bold;
-    color: ${color.subtleBlack};
+    color: ${color.white};
     padding: 0px 10px 0px 0px;
   }
 `;

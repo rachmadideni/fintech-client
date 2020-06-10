@@ -13,21 +13,6 @@ import { compose } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import {
-  makeSelectIsLoading,
-  makeSelectUser,
-  makeSelectErrorMessage,
-} from './selectors';
-import reducer from './reducer';
-import saga from './saga';
-import messages from './messages';
-
-import {
-  changeNikAction,
-  changeEmailAction,
-  changeTeleponAction,
-  verifikasiAction,
-} from './actions';
 
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
@@ -40,14 +25,27 @@ import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 // import isMobilePhone from 'validator/lib/isMobilePhone';
 
-import { color } from '../../styles/constants';
 import { ArrowBack, ArrowForward } from '@material-ui/icons';
 // import { TweenLite } from 'gsap';
 
-import { Wrapper, AppTitle, PaperTitle, PaperSubtitle } from './components';
-
 import PaperCustom from 'components/PaperCustom';
 import BtnCustom from 'components/BtnCustom';
+import { Wrapper, AppTitle, PaperTitle, PaperSubtitle } from './components';
+import { color } from '../../styles/constants';
+import {
+  changeNikAction,
+  changeEmailAction,
+  changeTeleponAction,
+  verifikasiAction,
+} from './actions';
+import messages from './messages';
+import saga from './saga';
+import reducer from './reducer';
+import {
+  makeSelectIsLoading,
+  makeSelectUser,
+  makeSelectErrorMessage,
+} from './selectors';
 
 class Verifikasi extends React.Component {
   constructor(props) {
@@ -170,15 +168,12 @@ class Verifikasi extends React.Component {
     return history.replace('/login');
   };
 
-  handleNotification = () => {
-    this.setState({
-      isNotificationOpen: !isNotificationOpen,
-    });
-  };
-
-  checkOffline = () => {
-    <Offline>{this.handleNotification}</Offline>;
-  };
+  // handleNotification = () => {
+  //   this.setState(state => ({
+  //     ...state,
+  //     isNotificationOpen: !isNotificationOpen,
+  //   }));
+  // };
 
   render() {
     const {
@@ -202,7 +197,7 @@ class Verifikasi extends React.Component {
           <Toolbar>
             <IconButton
               onClick={this.handleBack}
-              style={{ color: color.subtleBlack }}
+              style={{ color: color.white }}
             >
               <ArrowBack />
             </IconButton>
@@ -218,7 +213,10 @@ class Verifikasi extends React.Component {
           alignItems="center"
           justifyContent="center"
         >
-          <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20,}}>
+          <PaperCustom
+            elevation={0}
+            style={{ marginLeft: 20, marginRight: 20 }}
+          >
             <form autoComplete="off">
               <PaperTitle variant="h6" align="left">
                 {intl.formatMessage(messages.verifikasi)}
@@ -314,11 +312,13 @@ class Verifikasi extends React.Component {
 Verifikasi.propTypes = {
   isLoading: PropTypes.bool,
   user: PropTypes.object,
-  error: PropTypes.object,
+  // error: PropTypes.object,
   changeNik: PropTypes.func,
   changeEmail: PropTypes.func,
   changeTelepon: PropTypes.func,
   verifikasi: PropTypes.func,
+  intl: PropTypes.object,
+  history: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({

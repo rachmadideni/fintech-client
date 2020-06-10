@@ -11,66 +11,66 @@ export const scope = 'app.containers.Verifikasi';
 export default defineMessages({
   verifikasi: {
     id: `${scope}.header`,
-    defaultMessage: 'Verifikasi akun',
+    defaultMessage: 'Registrasi',
   },
-  paperSubtitle:{
-    id:`${scope}.paperSubtitle`,
-    defaultMessage:'proses verifikasi akun user'
+  paperSubtitle: {
+    id: `${scope}.paperSubtitle`,
+    defaultMessage: 'proses registrasi akun',
   },
-  nik:{
-    id:`${scope}.nik`,
-    defaultMessage:'NIK'
+  nik: {
+    id: `${scope}.nik`,
+    defaultMessage: 'NIK',
   },
-  email:{
-    id:`${scope}.email`,
-    defaultMessage:'email'
+  email: {
+    id: `${scope}.email`,
+    defaultMessage: 'email',
   },
-  nomorTelpon:{
-    id:`${scope}.nomorTelpon`,
-    defaultMessage:'nomor handphone'
+  nomorTelpon: {
+    id: `${scope}.nomorTelpon`,
+    defaultMessage: 'nomor handphone',
   },
-  btnVerifikasi:{
-    id:`${scope}.btnVerifikasi`,
-    defaultMessage:'proses'
+  btnVerifikasi: {
+    id: `${scope}.btnVerifikasi`,
+    defaultMessage: 'proses',
   },
-  btnCancel:{
-    id:`${scope}.btnCancel`,
-    defaultMessage:'Batal'
+  btnCancel: {
+    id: `${scope}.btnCancel`,
+    defaultMessage: 'Batal',
   },
-  goBack:{
-    id:`${scope}.goBack`,
-    defaultMessage:'kembali'
+  goBack: {
+    id: `${scope}.goBack`,
+    defaultMessage: 'kembali',
   },
-  emptyNik:{
-    id:`${scope}.emptyNik`,
-    defaultMessage:'NIK wajib diisi'
+  emptyNik: {
+    id: `${scope}.emptyNik`,
+    defaultMessage: 'NIK wajib diisi',
   },
-  emptyEmail:{
-    id:`${scope}.emptyEmail`,
-    defaultMessage:'alamat email wajib diisi'
+  emptyEmail: {
+    id: `${scope}.emptyEmail`,
+    defaultMessage: 'alamat email wajib diisi',
   },
-  wrongEmailFormat:{
-    id:`${scope}.wrongEmailFormat`,
-    defaultMessage:'format email salah'
+  wrongEmailFormat: {
+    id: `${scope}.wrongEmailFormat`,
+    defaultMessage: 'format email salah',
   },
-  emptyNomorTelpon:{
-    id:`${scope}.emptyNomorTelpon`,
-    defaultMessage:'nomor telpon wajib diisi'
+  emptyNomorTelpon: {
+    id: `${scope}.emptyNomorTelpon`,
+    defaultMessage: 'nomor telpon wajib diisi',
   },
-  pleaseWaitIsLoading:{
-    id:`${scope}.pleaseWaitIsLoading`,
-    defaultMessage:'mohon tunggu\n sedang melakukan verifikasi'
+  pleaseWaitIsLoading: {
+    id: `${scope}.pleaseWaitIsLoading`,
+    defaultMessage: 'mohon tunggu\n sedang melakukan verifikasi',
   },
-  placeholderNIK:{
-    id:`${scope}.placeholderNIK`,
-    defaultMessage:'nomor induk karyawan'
+  placeholderNIK: {
+    id: `${scope}.placeholderNIK`,
+    defaultMessage: 'nomor induk karyawan',
   },
-  placeholderEmail:{
-    id:`${scope}.placeholderEmail`,
-    defaultMessage:'masukkan email aktif anda'
+  placeholderEmail: {
+    id: `${scope}.placeholderEmail`,
+    defaultMessage: 'masukkan email aktif anda',
   },
-  placeholderNoHandphone:{
-    id:`${scope}.placeholderNoHandphone`,
-    defaultMessage:'masukkan no handphone aktif anda'
-  }
+  placeholderNoHandphone: {
+    id: `${scope}.placeholderNoHandphone`,
+    defaultMessage: 'masukkan no handphone aktif anda',
+  },
 });

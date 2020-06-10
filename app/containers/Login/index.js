@@ -31,6 +31,8 @@ import PaperCustom from 'components/PaperCustom';
 
 import isEmpty from 'validator/lib/isEmpty';
 import { color, typography } from 'styles/constants';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import {
   resetInputAction,
   changeNikAction,
@@ -50,6 +52,8 @@ import {
   makeSelectLoginSuccessMessage,
   makeSelectIsLoading,
 } from './selectors';
+
+import { Wrapper, AppTitle } from '../Verifikasi/components';
 
 const styles = makeStyles(() => ({
   textField: {
@@ -183,142 +187,159 @@ class Login extends React.Component {
     const { intl, credential, changeNik, changePassword } = this.props;
 
     return (
-      <Box
-        display="flex"
-        width="100%"
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Backdrop
-          open={this.props.isLoading}
+      <Wrapper container wrap="nowrap" direction="column">
+        <AppBar
           style={{
-            zIndex: 3000,
-            color: color.white,
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
           }}
         >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+          <Toolbar style={{ justifyContent: 'center' }}>
+            <AppTitle gutterBottom>
+              {intl.formatMessage(messages.appTitle)}
+            </AppTitle>
+          </Toolbar>
+        </AppBar>
+        <Box
+          display="flex"
+          width="100%"
+          height="100vh"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Backdrop
+            open={this.props.isLoading}
+            style={{
+              zIndex: 3000,
+              color: color.white,
+            }}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
 
-        <NotificationSnackbar
-          verticalPos="top"
-          open={this.state.isUserLoginSuccessNotificationOpen}
-          onClose={() => this.props.successMessage(null)}
-          hideDuration={3000}
-          message={this.props.successMessage}
-          notificationType="success"
-        />
+          <NotificationSnackbar
+            verticalPos="top"
+            open={this.state.isUserLoginSuccessNotificationOpen}
+            onClose={() => this.props.successMessage(null)}
+            hideDuration={3000}
+            message={this.props.successMessage}
+            notificationType="success"
+          />
 
-        <PaperCustom elevation={0} style={{ marginLeft: 20, marginRight: 20 }}>
-          <form autoComplete="off">
-            <Typography
-              variant="h6"
-              color="primary"
-              align="left"
-              style={{
-                fontFamily: typography.fontFamily,
-                fontWeight: 'bold',
-                color: color.subtleBlack,
-              }}
-            >
-              {intl.formatMessage(messages.header)}
-            </Typography>
-            <Typography
-              color="inherit"
-              align="left"
-              style={{
-                fontFamily: typography.fontFamily,
-                fontSize: 11,
-                fontWeight: 'normal',
-                color: color.subtleBlack,
-              }}
-            >
-              {intl.formatMessage(messages.HeaderWelcomeMessage)}
-            </Typography>
+          <PaperCustom
+            elevation={0}
+            style={{ marginLeft: 20, marginRight: 20 }}
+          >
+            <form autoComplete="off">
+              <Typography
+                variant="h6"
+                color="primary"
+                align="left"
+                style={{
+                  fontFamily: typography.fontFamily,
+                  fontWeight: 'bold',
+                  color: color.subtleBlack,
+                }}
+              >
+                {intl.formatMessage(messages.header)}
+              </Typography>
+              <Typography
+                color="inherit"
+                align="left"
+                style={{
+                  fontFamily: typography.fontFamily,
+                  fontSize: 10,
+                  fontWeight: 'normal',
+                  color: color.subtleBlack,
+                }}
+              >
+                {intl.formatMessage(messages.HeaderWelcomeMessage)}
+              </Typography>
 
-            <TextField
-              id="nik"
-              name="nik"
-              value={credential.nik}
-              label={intl.formatMessage(messages.nik)}
-              type="text"
-              fullWidth
-              variant="outlined"
-              margin="dense"
-              onChange={evt => {
-                if (this.state.isSubmitTriggered) {
-                  this.validateNik(evt.target.value);
-                }
-                return changeNik(evt.target.value);
-              }}
-              error={!!this.state.error.nik}
-              helperText={this.state.error.nik}
-              className={styles.textField}
-            />
+              <TextField
+                id="nik"
+                name="nik"
+                value={credential.nik}
+                label={intl.formatMessage(messages.nik)}
+                type="text"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+                onChange={evt => {
+                  if (this.state.isSubmitTriggered) {
+                    this.validateNik(evt.target.value);
+                  }
+                  return changeNik(evt.target.value);
+                }}
+                error={!!this.state.error.nik}
+                helperText={this.state.error.nik}
+                className={styles.textField}
+              />
 
-            <TextField
-              id="password"
-              name="password"
-              value={credential.password}
-              label={intl.formatMessage(messages.password)}
-              onChange={evt => {
-                if (this.state.isSubmitTriggered) {
-                  this.validatePassword(evt.target.value);
-                }
-                return changePassword(evt.target.value);
-              }}
-              type={this.state.showPassword ? 'text' : 'password'}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      color="inherit"
-                      onClick={this.handleClickShowPassword}
-                    >
-                      {this.state.showPassword ? (
-                        <Visibility style={{ color: color.black }} />
-                      ) : (
-                        <VisibilityOff style={{ color: color.grey }} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              error={!!this.state.error.password}
-              helperText={this.state.error.password}
-            />
+              <TextField
+                id="password"
+                name="password"
+                value={credential.password}
+                label={intl.formatMessage(messages.password)}
+                onChange={evt => {
+                  if (this.state.isSubmitTriggered) {
+                    this.validatePassword(evt.target.value);
+                  }
+                  return changePassword(evt.target.value);
+                }}
+                type={this.state.showPassword ? 'text' : 'password'}
+                fullWidth
+                variant="outlined"
+                margin="dense"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        color="inherit"
+                        onClick={this.handleClickShowPassword}
+                      >
+                        {this.state.showPassword ? (
+                          <Visibility style={{ color: color.black }} />
+                        ) : (
+                          <VisibilityOff style={{ color: color.grey }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                error={!!this.state.error.password}
+                helperText={this.state.error.password}
+              />
 
-            <BtnCustom
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={!!this.props.errorMessage}
-              onClick={this.handleSubmit}
-              title={intl.formatMessage(messages.loginButton)}
-            />
+              <BtnCustom
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={!!this.props.errorMessage}
+                onClick={this.handleSubmit}
+                title={intl.formatMessage(messages.loginButton)}
+              />
 
-            <BtnCustom
-              fullWidth
-              variant="outlined"
-              color="primary"
-              onClick={this.handleVerification}
-              title={intl.formatMessage(messages.verificationButton)}
-            />
+              <BtnCustom
+                fullWidth
+                variant="outlined"
+                color="primary"
+                onClick={this.handleVerification}
+                title={intl.formatMessage(messages.registerButton)}
+              />
 
-            <NotificationSnackbar
-              verticalPos="bottom"
-              open={this.state.isNotificationOpen}
-              onClose={() => this.props.logError(null)}
-              hideDuration={3000}
-              message={this.props.errorMessage}
-              notificationType="error"
-            />
-          </form>
-        </PaperCustom>
-      </Box>
+              <NotificationSnackbar
+                verticalPos="bottom"
+                open={this.state.isNotificationOpen}
+                onClose={() => this.props.logError(null)}
+                hideDuration={3000}
+                message={this.props.errorMessage}
+                notificationType="error"
+              />
+            </form>
+          </PaperCustom>
+        </Box>
+      </Wrapper>
     );
   }
 }

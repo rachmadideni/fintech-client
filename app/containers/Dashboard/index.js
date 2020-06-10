@@ -5,6 +5,7 @@
  */
 
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -15,11 +16,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { Switch, Route } from 'react-router-dom';
-import { color, typography } from '../../styles/constants';
-
-import makeSelectDashboard from './selectors';
-import messages from './messages';
-import { TABS } from './constants';
 
 // pages
 import FormSubmissionStep from 'containers/FormSubmissionStep';
@@ -43,8 +39,11 @@ import PaperCustom from 'components/PaperCustom';
 // import ButtonAvatar from 'components/ButtonAvatar';
 // import UserAvatarIcon from 'components/UserAvatarIcon';
 
-import bgFinanceTest from 'images/world_wide_web_monochromatic.svg';
-import bgDashboard from 'images/bg-dashboard.png';
+import bgDashboard from 'images/wave-red-bg.png';
+import { TABS } from './constants';
+import messages from './messages';
+import makeSelectDashboard from './selectors';
+import { color, typography } from '../../styles/constants';
 
 const Wrapper = styled(Grid)`
 && {
@@ -69,7 +68,9 @@ const Wrapper = styled(Grid)`
     bottom: 0;
     left: 0;
     // background-color:${color.lightGreen};
-    // background-image: linear-gradient(to bottom, ${color.white} 50%, ${color.green} 100%);
+    // background-image: linear-gradient(to bottom, ${color.white} 50%, ${
+  color.green
+} 100%);
     opacity: 0.5;
   }  
 }`;
@@ -134,13 +135,12 @@ class Dashboard extends React.Component {
     return null;
   };
 
-  getBottomTabs = () => {
-    return TABS.map(tab => ({
+  getBottomTabs = () =>
+    TABS.map(tab => ({
       label: tab.label,
       value: tab.value,
       icon: tab.icon,
     }));
-  };
 
   render() {
     const { intl, history } = this.props;
@@ -154,12 +154,19 @@ class Dashboard extends React.Component {
         >
           <PaperCustom
             elevation={0}
-            style={{ height:'85vh', boxShadow:'0px 1px 2px #EAEAEA', opacity:1, marginTop: 20, marginLeft: 20, marginRight: 20 }}
+            style={{
+              height: '85vh',
+              boxShadow: '0px 1px 2px #EAEAEA',
+              opacity: 1,
+              marginTop: 20,
+              marginLeft: 20,
+              marginRight: 20,
+            }}
           >
             <AppTitle color="primary" gutterBottom>
               {intl.formatMessage(messages.pageTitle)}
             </AppTitle>
-            
+
             <Switch>
               <Route
                 path="/dashboard"
@@ -236,6 +243,11 @@ class Dashboard extends React.Component {
     );
   }
 }
+
+Dashboard.propTypes = {
+  history: PropTypes.object,
+  intl: PropTypes.object,
+};
 
 const mapStateToProps = createStructuredSelector({
   dashboard: makeSelectDashboard(),

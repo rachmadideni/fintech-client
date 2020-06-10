@@ -13,17 +13,21 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'Login',
   },
+  appTitle: {
+    id: `${scope}.appTitle`,
+    defaultMessage: 'Pembiayaan Amanah',
+  },
   loginButton: {
     id: `${scope}.loginButton`,
     defaultMessage: 'Login',
   },
   HeaderWelcomeMessage: {
     id: `${scope}.HeaderWelcomeMessage`,
-    defaultMessage: 'selamat datang di aplikasi pembiayaan multi guna',
+    defaultMessage: 'selamat datang di aplikasi Amanah Finance Syariah (AFS)',
   },
-  verificationButton: {
-    id: `${scope}.verificationButton`,
-    defaultMessage: 'Verifikasi akun',
+  registerButton: {
+    id: `${scope}.registerButton`,
+    defaultMessage: 'Registrasi',
   },
   forgotPasswordText: {
     id: `${scope}.forgotPasswordText`,
