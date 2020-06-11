@@ -15,7 +15,7 @@ export default defineMessages({
   },
   appTitle: {
     id: `${scope}.appTitle`,
-    defaultMessage: 'Pembiayaan Amanah',
+    defaultMessage: 'Amanah Finance Syariah',
   },
   loginButton: {
     id: `${scope}.loginButton`,
