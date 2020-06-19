@@ -4,25 +4,26 @@
  *
  */
 
-import { 
+import {
   DEFAULT_ACTION,
   CHANGE_COMPANY_ACTION,
   CHANGE_COMPANY_JOINDATE_ACTION,
+  CHANGE_WORKING_YEARS_ACTION,
   GET_OPSI_SBU_ACTION,
-  GET_OPSI_SBU_SUCCESS_ACTION
+  GET_OPSI_SBU_SUCCESS_ACTION,
 } from './constants';
 
-export function getOpsiSbuAction(){
+export function getOpsiSbuAction() {
   return {
-    type:GET_OPSI_SBU_ACTION
-  }
+    type: GET_OPSI_SBU_ACTION,
+  };
 }
 
-export function getOpsiSbuSuccessAction(sbu){
+export function getOpsiSbuSuccessAction(sbu) {
   return {
-    type:GET_OPSI_SBU_SUCCESS_ACTION,
-    payload:sbu
-  }
+    type: GET_OPSI_SBU_SUCCESS_ACTION,
+    payload: sbu,
+  };
 }
 
 export function defaultAction() {
@@ -38,19 +39,26 @@ export function defaultAction() {
 //   };
 // }
 
-export function changeCompanyAction(company,jenisProduk) {
+export function changeCompanyAction(company, jenisProduk) {
   return {
     type: CHANGE_COMPANY_ACTION,
-    payload:{
+    payload: {
       company,
-      jenisProduk
-    }
+      jenisProduk,
+    },
   };
 }
 
 export function changeCompanyJoinDateAction(companyJoinDate) {
   return {
     type: CHANGE_COMPANY_JOINDATE_ACTION,
-    payload:companyJoinDate
+    payload: companyJoinDate,
+  };
+}
+
+export function changeWorkingYearsAction(years) {
+  return {
+    type: CHANGE_WORKING_YEARS_ACTION,
+    payload: years,
   };
 }

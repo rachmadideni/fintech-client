@@ -56,7 +56,8 @@ export function* getNomrek(nobase) {
     }
     return false;
   } catch (err) {
-    throw new Error(err);
+    // throw new Error(err);
+    return err;
   }
 }
 
@@ -64,7 +65,7 @@ export function* cekPinjaman() {
   try {
     const credential = yield select(makeSelectCredential());
     const nomrek = yield call(getNomrek, credential.nik);
-    console.log(nomrek);
+    // console.log(nomrek);
     if (nomrek) {
       const dataPengajuan = yield call(cekPengajuan, nomrek);
       if (dataPengajuan.length > 0) {
@@ -80,13 +81,15 @@ export function* cekPinjaman() {
           }
           return 0; // user belum mengajukan pinjaman
         });
+        // console.log(statusAplikasi);
         yield put(cekPinjamanSuccessAction(statusAplikasi[0]));
       }
     } else {
       yield put(cekPinjamanSuccessAction(0));
     }
   } catch (err) {
-    throw new Error(err);
+    // throw new Error(err);
+    // console.log(err);
   }
 }
 
@@ -110,7 +113,7 @@ export function* downloadAkad() {
     yield put(downloadAKadSuccessAction(fileURL));
     window.open(fileURL);
   } catch (err) {
-    throw new Error(err);
+    // throw new Error(err);
   }
 }
 
@@ -134,7 +137,7 @@ export function* downloadSpn() {
     yield put(downloadSpnSuccessAction(fileURL));
     window.open(fileURL);
   } catch (err) {
-    throw new Error(err);
+    // throw new Error(err);
   }
 }
 

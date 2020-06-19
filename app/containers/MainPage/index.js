@@ -3,32 +3,36 @@
  * MainPage
  *
  */
-
-import React, { memo } from 'react';
+import 'swiper/css/swiper.css';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import React, { memo } from 'react';
+import Swipeables from 'react-id-swiper';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { Route, Switch } from 'react-router-dom';
 import { compose } from 'redux';
-import { Switch, Route } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import styled from 'styled-components';
+import { color } from 'styles/constants';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { color } from 'styles/constants';
-import styled from 'styled-components';
-import Grid from '@material-ui/core/Grid';
-import ReactSwipe from 'react-swipe';
-import { makeSelectActiveStep, makeSelectStatusAplikasi } from './selectors';
-
+import SectionInformasi from '../SectionInformasi/Loadable';
+import SectionPinjaman from '../SectionPinjaman/Loadable';
+import { cekPinjamanAction, changeStepAction } from './actions';
+import {
+  GridWrapper as SwipeableWrapper,
+  SwipeableItem,
+  SwipeablesHowTo,
+  WelcomeUser,
+  Content,
+  SwipeableItemsWrap,
+} from './components';
+import { SWIPEABLES, SWIPEABLE_PARAM } from './constants';
+import messages from './messages';
 import reducer from './reducer';
 import saga from './saga';
-
-import { ITEMS } from './constants';
-
-import { GridWrapper, QuickMenuItem } from './components';
-
-import { changeStepAction, cekPinjamanAction } from './actions';
-
-import SectionPinjaman from '../SectionPinjaman/Loadable';
-import SectionInformasi from '../SectionInformasi/Loadable';
+import { makeSelectActiveStep, makeSelectStatusAplikasi } from './selectors';
 
 const Wrapper = styled(props => <Grid {...props}>{props.children}</Grid>)`
   && {
@@ -42,10 +46,8 @@ const Wrapper = styled(props => <Grid {...props}>{props.children}</Grid>)`
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
-    this.renderMenus = this.renderMenus.bind(this);
-    this.handleMenu = this.handleMenu.bind(this);
-    // this.reactSwipeEl = reactSwipeEl;
-    this.reactSwipeEl = React.createRef();
+    this.renderSwipeables = this.renderSwipeables.bind(this);
+    this.onSwipeablesClick = this.onSwipeablesClick.bind(this);
   }
 
   componentDidMount() {
@@ -62,6 +64,7 @@ class MainPage extends React.Component {
       }
 
       if (activeStep === 1) {
+        this.props.cekPinjaman();
         return history.push('/dashboard/pinjaman');
       }
 
@@ -72,37 +75,41 @@ class MainPage extends React.Component {
     return false;
   }
 
-  renderMenus() {
-    return ITEMS.map(item => (
-      <QuickMenuItem
-        key={`quick-menu-${item.step}`}
-        item={item}
-        handleMenu={this.handleMenu}
-      />
+  renderSwipeables() {
+    return SWIPEABLES.map(item => (
+      <SwipeableItemsWrap image={item.image}>
+        <SwipeableItem
+          key={`quick-menu-${item.step}`}
+          item={item}
+          onSwipeablesClick={this.onSwipeablesClick}
+        />
+      </SwipeableItemsWrap>
     ));
   }
 
-  handleMenu(value) {
+  onSwipeablesClick(value) {
     this.props.changeStep(value);
   }
 
   render() {
-    const { history } = this.props;
+    const { intl, history } = this.props;
     return (
       <Wrapper container wrap="nowrap" direction="column">
         <Grid item>
-          <GridWrapper container wrap="nowrap">
-            <ReactSwipe
-              className="carousel"
-              swipeOptions={{ continuous: false }}
-              childCount={ITEMS.length}
-              ref={this.reactSwipeEl}
-            >
-              {this.renderMenus()}
-            </ReactSwipe>
-          </GridWrapper>
+          <WelcomeUser>{intl.formatMessage(messages.welcomeUser)}</WelcomeUser>
+
+          <SwipeablesHowTo>
+            {intl.formatMessage(messages.swipeablesHowTo)}
+          </SwipeablesHowTo>
+
+          <SwipeableWrapper>
+            <Swipeables {...SWIPEABLE_PARAM}>
+              {this.renderSwipeables()}
+            </Swipeables>
+          </SwipeableWrapper>
         </Grid>
-        <Grid item style={{ marginTop: 10 }}>
+
+        <Content item>
           <Switch>
             <Route
               exact
@@ -117,13 +124,14 @@ class MainPage extends React.Component {
               render={routeProps => <SectionInformasi {...routeProps} />}
             />
           </Switch>
-        </Grid>
+        </Content>
       </Wrapper>
     );
   }
 }
 
 MainPage.propTypes = {
+  intl: PropTypes.object,
   history: PropTypes.object,
   changeStep: PropTypes.func,
   cekPinjaman: PropTypes.func,
@@ -153,6 +161,7 @@ const withSaga = injectSaga({ key: 'mainPage', saga });
 export default compose(
   withReducer,
   withSaga,
+  injectIntl,
   withConnect,
   memo,
 )(MainPage);

@@ -20,7 +20,6 @@ import { compose } from 'redux';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 
-// MUI
 import Grid from '@material-ui/core/Grid';
 
 // PAGES
@@ -198,6 +197,7 @@ class FormSubmissionStep extends React.Component {
           <Switch>
             {STEPS.map(route => (
               <Route
+                key={`route-${route.step}`}
                 path={route.url}
                 render={routeProps => (
                   <route.item history={history} {...routeProps} />
@@ -215,7 +215,7 @@ FormSubmissionStep.propTypes = {
   intl: PropTypes.object,
   history: PropTypes.object,
   activeStep: PropTypes.number,
-  completedStep: PropTypes.number,
+  completedStep: PropTypes.array,
   setActiveStep: PropTypes.func,
   setCompletedStep: PropTypes.func,
   setSimulasiTour: PropTypes.func,
@@ -229,7 +229,7 @@ FormSubmissionStep.propTypes = {
   tourSimulasi: PropTypes.object,
   documents: PropTypes.object,
   pengajuan: PropTypes.object,
-  FormStepper: PropTypes.element.isRequired,
+  FormStepper: PropTypes.element,
   stepProgress: PropTypes.number,
 };
 

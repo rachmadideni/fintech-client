@@ -13,28 +13,35 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'Pembiayaan',
   },
-  tidakAdaPinjaman:{
-    id:`${scope}.tidakAdaPinjaman`,
-    defaultMessage:'anda belum memiliki pengajuan saat ini. klik tombol dibawah untuk mulai'
+  firstCustomer: {
+    id: `${scope}.firstCustomer`,
+    defaultMessage: `anda belum memiliki data pinjaman saat ini. klik tombol dibawah untuk memulai`,
   },
-  actionButton:{
-    id:`${scope}.actionButton`,
-    defaultMessage:'Pengajuan Pembiayaan'
+  tidakAdaPinjaman: {
+    id: `${scope}.tidakAdaPinjaman`,
+    defaultMessage:
+      'anda belum memiliki pengajuan saat ini. klik tombol dibawah untuk mulai',
   },
-  actionButtonStep2:{
-    id:`${scope}.actionButtonStep2`,
-    defaultMessage:'Formulir Tahap 2'
+  actionButton: {
+    id: `${scope}.actionButton`,
+    defaultMessage: 'Ajukan Pembiayaan',
   },
-  tahapPengajuan:{
-    id:`${scope}.tahapPengajuan`,
-    defaultMessage:'pengajuan anda sudah kami terima dan sedang dalam proses approval'
+  actionButtonStep2: {
+    id: `${scope}.actionButtonStep2`,
+    defaultMessage: 'Formulir Tahap 2',
   },
-  tahapPaskaApproval:{
-    id:`${scope}.tahapPaskaApproval`,
-    defaultMessage:'pengajuan anda sudah disetujui. silahkan melengkapi form berikutnya '
+  tahapPengajuan: {
+    id: `${scope}.tahapPengajuan`,
+    defaultMessage:
+      'pengajuan anda sudah kami terima dan sedang dalam proses approval',
   },
-  tahapDownloadDokumen:{
-    id:`${scope}.tahapDownloadDokumen`,
-    defaultMessage:'silahkan download dokumen dibawah'
-  }
+  tahapPaskaApproval: {
+    id: `${scope}.tahapPaskaApproval`,
+    defaultMessage:
+      'pengajuan anda sudah disetujui. silahkan melengkapi form berikutnya ',
+  },
+  tahapDownloadDokumen: {
+    id: `${scope}.tahapDownloadDokumen`,
+    defaultMessage: 'silahkan download dokumen dibawah',
+  },
 });

@@ -19,8 +19,10 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import Backdrop from '@material-ui/core/Backdrop';
 
-// import { createBlob, createObjectURL } from 'blob-util';
+// import { createBlob, createObjectURL, base64StringToBlob } from 'blob-util';
+import Camera from 'react-webcam';
 import { color, typography } from '../../styles/constants';
 import { getOpsiDokumenTahap1Action, uploadAction } from './actions';
 
@@ -68,12 +70,53 @@ const TextOverlay = styled(Typography)`
   }
 `;
 
+const blobToFile = (blob, filename) => {
+  const newBlob = blob;
+  newBlob.lastModifiedDate = new Date();
+  newBlob.name = filename;
+  return newBlob;
+};
+
 class FormDocument extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      backdropOpen: false,
+      isPhotoCaptured: false,
+      photo: null,
+      orientation: 'portrait',
+    };
+    this.cameraRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.getOpsiDokumenTahap1();
-    // navigator.mediaDevices.enumerateDevices().then(result=>console.log(result))
+    window.addEventListener('orientationchange', this.setOrientation, false);
+    // navigator.mediaDevices
+    //   .enumerateDevices()
+    //   .then(result => console.log(result));
     // navigator.mediaDevices.getUserMedia({video: true}).then(result=>console.log(result))
   }
+
+  componentWillUnmount() {
+    // console.log(this.cameraRef.current)
+    window.removeEventListener('orientationchange', this.setOrientation, false);
+  }
+
+  setOrientation = () => {
+    if (window.matchMedia('(orientation:portrait)').matches) {
+      this.setState({
+        orientation: 'landscape',
+        backdropOpen: false,
+      });
+    }
+
+    if (window.matchMedia('(orientation:landscape)').matches) {
+      this.setState({
+        orientation: 'landscape',
+      });
+    }
+  };
 
   // onSingleUpload( evt, statename, statefile){
   //   let file = evt.target.files[0];
@@ -106,6 +149,35 @@ class FormDocument extends React.Component {
     return false;
   };
 
+  toggleCameraBackdrop = () => {
+    // do not access camera yet. instead open modal for taking pictures
+    this.setState(state => ({
+      ...state,
+      backdropOpen: !state.backdropOpen,
+    }));
+  };
+
+  // openCamera = () => {
+  //   const camera = this.cameraRef.current;
+  //   const photo = camera.getScreenshot();
+  // };
+
+  takePhoto = () => {
+    // const camera = this.cameraRef;
+    const photo = this.cameraRef.current.getScreenshot(); // return as base64
+    const canvas = this.cameraRef.current.getCanvas(); // return as canvas
+
+    canvas.toBlob(blob => {
+      // console.log(blob);
+      const fileFromBlob = blobToFile(blob, 'foto-selfie.png');
+      const objectURLFromBlob = URL.createObjectURL(fileFromBlob);
+      // console.log(fileFromBlob)
+      this.setState({ photo });
+      this.props.upload(8, fileFromBlob, objectURLFromBlob);
+      this.toggleCameraBackdrop();
+    });
+  };
+
   render() {
     const { opsiDokumenTahap1 } = this.props;
 
@@ -119,28 +191,98 @@ class FormDocument extends React.Component {
       >
         <Grid item>
           <form autoComplete="off">
-            {opsiDokumenTahap1.map(item => (
-              <FormControl margin="dense" fullWidth>
-                <Button
-                  key={`item-${item.IDBERK}`}
-                  color="primary"
+            {opsiDokumenTahap1
+              .filter(doc => doc.IDBERK < 8)
+              .map(item => (
+                <FormControl
+                  key={`upload-${item.IDBERK}`}
+                  margin="dense"
                   fullWidth
-                  variant="outlined"
-                  component="label"
-                  onChange={evt => this.handleFile(evt, item.IDBERK)}
                 >
-                  {item.NMBERK}
-                  <input
-                    id={item.IDBERK}
-                    name={item.NMBERK}
-                    type="file"
-                    multiple
-                    accept="image/x-png,image/jpeg"
-                    style={{ display: 'none' }}
-                  />
-                </Button>
-              </FormControl>
-            ))}
+                  <Button
+                    color="primary"
+                    fullWidth
+                    variant="outlined"
+                    component="label"
+                    onChange={evt => this.handleFile(evt, item.IDBERK)}
+                  >
+                    {item.NMBERK}
+
+                    <input
+                      id={item.IDBERK}
+                      name={item.NMBERK}
+                      type="file"
+                      multiple
+                      accept="image/x-png,image/jpeg"
+                      style={{ display: 'none' }}
+                    />
+                  </Button>
+                </FormControl>
+              ))}
+            {/* Tombol Selfie */}
+            <FormControl margin="dense" fullWidth>
+              <Button
+                color="primary"
+                variant="outlined"
+                fullWidth
+                onClick={() => {
+                  this.toggleCameraBackdrop();
+                  // this.setOrientation()
+                }}
+              >
+                Foto Selfie
+              </Button>
+            </FormControl>
+
+            {this.state.backdropOpen && (
+              <Backdrop
+                style={{ zIndex: 5000 }}
+                open={this.state.backdropOpen}
+                onClick={() => {
+                  // this.toggleCameraBackdrop()
+                  // this.openCamera;
+                }}
+              >
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  justify="center"
+                >
+                  <Grid item>
+                    <Camera
+                      ref={this.cameraRef}
+                      audio={false}
+                      screenshotFormat="image/png"
+                      width={window.innerWidth}
+                      height={window.innerHeight}
+                      mirrored={false}
+                      screenshotQuality={1}
+                      videoConstraints={{
+                        facingMode: 'user',
+                      }}
+                      capture={() => this.takePhoto()}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => this.takePhoto()}
+                    >
+                      ambil foto selfie
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Backdrop>
+            )}
 
             {/* 
                 RENDER FILE SETELAH USER PICK DOKUMEN (dari storage atau hasil jepret kamera)
@@ -156,7 +298,11 @@ class FormDocument extends React.Component {
               {this.props.uploadedFiles.map((item, index) => (
                 <Grid item style={{ marginBottom: 15 }}>
                   <Grid
-                    style={{ marginTop: 12, width: '130px', height: '120px' }}
+                    style={{
+                      marginTop: 12,
+                      width: '130px',
+                      height: '120px',
+                    }}
                   >
                     <Card raised={false}>
                       <CardActionArea>
@@ -171,6 +317,31 @@ class FormDocument extends React.Component {
                   </Grid>
                 </Grid>
               ))}
+              {this.state.photo && (
+                <Grid item style={{ marginBottom: 15 }}>
+                  <Grid
+                    style={{
+                      marginTop: 12,
+                      width: '130px',
+                      height: '120px',
+                    }}
+                  >
+                    <Card raised={false}>
+                      <CardActionArea>
+                        {/* <CardMediaStyled image={`${window.URL.createObjectURL(this.state.photo)}`} /> */}
+                        <img
+                          alt="foto_selfie"
+                          src={this.state.photo}
+                          style={{ width: '100%', height: '120px' }}
+                        />
+                        <Overlay>
+                          <TextOverlay>Foto Selfie</TextOverlay>
+                        </Overlay>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </form>
         </Grid>

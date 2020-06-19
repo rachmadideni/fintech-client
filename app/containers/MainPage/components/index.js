@@ -1,13 +1,57 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ButtonBase from '@material-ui/core/ButtonBase';
+import bgDashboard from 'images/wave-green-bg.png';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { color, typography } from '../../../styles/constants';
 
+// Welcome user
+export const WelcomeUser = styled(typographyProps => (
+  <Typography variant="body" align="left" gutterBottom {...typographyProps} />
+))`
+  && {
+    font-weight: bold;
+  }
+`;
+
+// Swipeables How To Text
+export const SwipeablesHowTo = styled(typographyProps => (
+  <Typography
+    variant="subtitle1"
+    align="left"
+    gutterBottom
+    {...typographyProps}
+  />
+))`
+  && {
+    font-size: 10px;
+    font-weight: 500;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+`;
+
+// content section
+export const Content = styled(Grid)`
+  width: 100%;
+  margin-top: 10px;
+`;
+
+export const SwipeableItemsWrap = styled(props => <div {...props} />)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-image: url(${props => props.image});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding-right: 10px;
+`;
+
 // HEADER
-const Header = styled(props => (
+export const Header = styled(props => (
   <Grid item {...props}>
     <HeaderText align="left">Menu</HeaderText>
   </Grid>
@@ -19,7 +63,7 @@ const Header = styled(props => (
   }
 `;
 
-const HeaderText = styled(Typography)`
+export const HeaderText = styled(Typography)`
   && {
     font-family: ${typography.fontFamily};
     font-size: 13px;
@@ -30,27 +74,31 @@ const HeaderText = styled(Typography)`
 `;
 
 // GRID WRAPPER
-const GridWrapper = styled(props => <Grid {...props} />)`
+export const GridWrapper = styled(props => (
+  <Grid container wrap="nowrap" {...props} />
+))`
   && {
     flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     max-width: 330px;
     width: 280px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     background-color: ${color.lightGrey};
     border-radius: 6px;
   }
 `;
 
 // Grid Item
-const GridItem = styled(({ active, ...otherProps }) => (
+export const GridItem = styled(({ active, ...otherProps }) => (
   <Grid {...otherProps} />
 ))`
   && {
-    background-color: ${active => (active ? color.biru[400] : color.lightGrey)};
+    // background-color: ${active =>
+    active ? color.biru[400] : color.lightGrey};    
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -66,7 +114,7 @@ const GridItem = styled(({ active, ...otherProps }) => (
 `;
 
 // Quick Menu ITem
-const MenuType = styled(Typography)`
+export const MenuType = styled(Typography)`
   && {
     padding-top: 2px;
     font-family: ${typography.fontFamily};
@@ -77,32 +125,44 @@ const MenuType = styled(Typography)`
   }
 `;
 
-const QuickMenuItem = ({ item, i, handleMenu }) => (
-  <ButtonBase
-    key={`item-${i}`}
+const StyledButtonBase = styled(props => <ButtonBase {...props} />)`
+&& {
+  // .root {
+  //   background-color:green;
+  //   width:100px;
+  // }
+  border-radius: 6px;
+  // background-color:${color.toska[400]};      
+  margin-top:30px;
+  margin-bottom:40px;
+  background-image:url(${bgDashboard});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}`;
+
+export const SwipeableItem = ({ item, onSwipeablesClick }) => (
+  <StyledButtonBase
     centerRipple
     disabled={!item.active}
-    style={{ borderRadius: 6 }}
-    onClick={() => handleMenu(item.step)}
+    variant="outlined"
+    onClick={() => onSwipeablesClick(item.step)}
   >
     <GridItem item active={item.active}>
       <item.icon
         style={{
           color: item.active ? `${color.white}` : `${color.grey}`,
-          fontSize: 20,
+          fontSize: 28,
         }}
       />
       <MenuType align="center" gutterBottom active={item.active}>
         {item.name}
       </MenuType>
     </GridItem>
-  </ButtonBase>
+  </StyledButtonBase>
 );
 
-QuickMenuItem.propTypes = {
+SwipeableItem.propTypes = {
   item: PropTypes.object,
-  i: PropTypes.number,
-  handleMenu: PropTypes.func,
+  onSwipeablesClick: PropTypes.func,
 };
-
-export { Header, GridWrapper, GridItem, QuickMenuItem };

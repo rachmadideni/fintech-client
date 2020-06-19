@@ -1,25 +1,22 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
-import { Switch, Route, Redirect } from 'react-router-dom';
-
 import Container from '@material-ui/core/Container';
-import Login from 'containers/Login/Loadable';
-import Verifikasi from 'containers/Verifikasi/Loadable';
-import VerifyConfirmPage from 'containers/VerifyConfirmPage';
+import AuthGuard from 'containers/AuthGuard';
 import CreatePassword from 'containers/CreatePassword/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
+import Login from 'containers/Login/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import AuthGuard from 'containers/AuthGuard';
+import Verifikasi from 'containers/Verifikasi/Loadable';
+import VerifyConfirmPage from 'containers/VerifyConfirmPage';
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 import GlobalStyle from '../../global-styles';
-import { color } from '../../styles/constants';
 
-const AppWrapper = styled.div`  
-  width:100%;
+const AppWrapper = styled.div`
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  // background-color: ${color.green};
 `;
 
 export default function App() {
@@ -35,15 +32,26 @@ export default function App() {
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/login" />} />
           <Route path="/login" component={Login} />
+
           <Route exact path="/verifikasi" component={Verifikasi} />
+
           <Route
             exact
             path="/verifikasi/confirm"
             component={VerifyConfirmPage}
           />
+
           <Route exact path="/createPassword" component={CreatePassword} />
 
-          {/* ada exact di path /dashboard */}
+          <Route
+            path="/changePassword"
+            render={routeProps => (
+              <AuthGuard>
+                <Dashboard {...routeProps} />
+              </AuthGuard>
+            )}
+          />
+
           <Route
             path="/dashboard"
             render={routeProps => (
@@ -116,15 +124,6 @@ export default function App() {
             )}
           />
 
-          <Route
-            path="/changePassword"
-            render={routeProps => (
-              <AuthGuard>
-                <Dashboard {...routeProps} />
-              </AuthGuard>
-            )}
-          />
-
           <Route path="" component={NotFoundPage} />
         </Switch>
       </Container>
@@ -132,3 +131,5 @@ export default function App() {
     </AppWrapper>
   );
 }
+
+/**/

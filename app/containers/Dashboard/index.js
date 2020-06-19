@@ -13,7 +13,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 
 import { Switch, Route } from 'react-router-dom';
 
@@ -41,9 +41,9 @@ import PaperCustom from 'components/PaperCustom';
 
 import bgDashboard from 'images/wave-red-bg.png';
 import { TABS } from './constants';
-import messages from './messages';
+
 import makeSelectDashboard from './selectors';
-import { color, typography } from '../../styles/constants';
+import { color } from '../../styles/constants';
 
 const Wrapper = styled(Grid)`
 && {
@@ -75,15 +75,15 @@ const Wrapper = styled(Grid)`
   }  
 }`;
 
-const AppTitle = styled(Typography)`
-  && {
-    font-family: ${typography.fontFamily};
-    font-size: 16px;
-    font-weight: bold;
-    color: ${color.subtleBlack};
-    padding: 0px 10px 0px 0px;
-  }
-`;
+// const AppTitle = styled(Typography)`
+//   && {
+//     font-family: ${typography.fontFamily};
+//     font-size: 16px;
+//     font-weight: bold;
+//     color: ${color.subtleBlack};
+//     padding: 0px 10px 0px 0px;
+//   }
+// `;
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -143,7 +143,7 @@ class Dashboard extends React.Component {
     }));
 
   render() {
-    const { intl, history } = this.props;
+    const { history } = this.props;
     return (
       <Wrapper container wrap="nowrap" direction="column">
         <Box
@@ -161,11 +161,12 @@ class Dashboard extends React.Component {
               marginTop: 20,
               marginLeft: 20,
               marginRight: 20,
+              overflowY: 'auto',
             }}
           >
-            <AppTitle color="primary" gutterBottom>
+            {/* <AppTitle color="primary" gutterBottom>
               {intl.formatMessage(messages.pageTitle)}
-            </AppTitle>
+            </AppTitle> */}
 
             <Switch>
               <Route

@@ -19,6 +19,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 // import { Scrollbars } from 'react-custom-scrollbars';
 
 import Backdrop from '@material-ui/core/Backdrop';
@@ -52,11 +54,28 @@ const Wrapper = styled(props => <Grid {...props} />)`
   }
 `;
 
+const UserAgreementLabel = styled(props => (
+  <FormControlLabel
+    classes={{
+      label: 'label',
+    }}
+    {...props}
+  />
+))`
+  && {
+    .label {
+      width: 100%;
+      font-size: 12px;
+    }
+  }
+`;
+
 class FormPengajuan extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pemanfaatanLainnyaIsActive: false,
+      userSetuju: false,
     };
     this.renderTujuanPengajuan = this.renderTujuanPengajuan.bind(this);
   }
@@ -110,7 +129,7 @@ class FormPengajuan extends React.Component {
   };
 
   checkPengajuanForm = pengajuan => {
-    if (pengajuan.jenis && pengajuan.tujuan) {
+    if (pengajuan.jenis && pengajuan.tujuan && this.state.userSetuju) {
       return false;
     }
     return true;
@@ -119,6 +138,12 @@ class FormPengajuan extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
     this.props.mapPengajuan();
+  };
+
+  handleAgreement = evt => {
+    this.setState({
+      userSetuju: evt.target.checked,
+    });
   };
 
   render() {
@@ -212,6 +237,20 @@ class FormPengajuan extends React.Component {
                   fontFamily: typography.fontFamily,
                   fontSize: 12,
                 }}
+              />
+            </FormControl>
+
+            <FormControl margin="dense" fullWidth>
+              <UserAgreementLabel
+                color="secondary"
+                label="saya dengan ini menyetujui persyaratan yang berlaku dalam pembiayaan di Amanah Finance Syariah "
+                name="userSetuju"
+                control={
+                  <Checkbox
+                    checked={this.state.userSetuju}
+                    onChange={this.handleAgreement}
+                  />
+                }
               />
             </FormControl>
 

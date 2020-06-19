@@ -14,7 +14,7 @@ function StepBackButton(props) {
         edge="start"
         size="small"
         color={active ? 'primary' : 'default'}
-        disable={active}
+        disable={active.toString()}
         disableRipple={!active}
         onClick={onClickBack}
         style={{

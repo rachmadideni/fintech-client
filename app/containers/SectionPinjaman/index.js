@@ -11,12 +11,13 @@ import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import Grid from '@material-ui/core/Grid';
+import confetti from 'images/confetti.png';
 import makeSelectSectionPinjaman from './selectors';
 import { makeSelectStatusAplikasi } from '../MainPage/selectors';
 import messages from './messages';
 
 import {
-  HeaderText,
+  // HeaderText,
   GridWrapper,
   ContentText,
   ActionButton,
@@ -32,6 +33,7 @@ import {
 } from '../MainPage/actions';
 
 class SectionPinjaman extends React.Component {
+  //
   handleFormTahap1 = () => {
     const { history, statusAplikasi } = this.props;
     if (statusAplikasi === 0) {
@@ -64,13 +66,55 @@ class SectionPinjaman extends React.Component {
     const { intl, statusAplikasi } = this.props;
 
     return (
-      <Grid container wrap="nowrap" direction="column">
+      <Grid
+        container
+        wrap="nowrap"
+        direction="column"
+        style={{
+          marginTop: 10,
+        }}
+      >
+        {/* 
         <HeaderText gutterBottom>
           {intl.formatMessage(messages.header)}
-        </HeaderText>
+        </HeaderText> */}
 
         <GridWrapper>
           {statusAplikasi === 0 && (
+            <Grid
+              container
+              wrap="nowrap"
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <div style={{ marginBottom: 10 }}>
+                <img alt="confetti" src={confetti} />
+              </div>
+              <ContentText align="center">
+                {intl.formatMessage(messages.firstCustomer)}
+              </ContentText>
+              <Grid
+                item
+                style={{
+                  paddingTop: 10,
+                }}
+              >
+                <ActionButton
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={this.handleFormTahap1}
+                >
+                  {intl.formatMessage(messages.actionButton)}
+                </ActionButton>
+              </Grid>
+            </Grid>
+          )}
+
+          {/* user baru */}
+          {/*
+            statusAplikasi === 0 && (
             <React.Fragment>
               <ContentText align="left">
                 {intl.formatMessage(messages.tidakAdaPinjaman)}
@@ -91,8 +135,9 @@ class SectionPinjaman extends React.Component {
                 </ActionButton>
               </Grid>
             </React.Fragment>
-          )}
+              ) */}
 
+          {/* user akan mengisi form tahap ke dua */}
           {statusAplikasi === 1 && (
             <React.Fragment>
               <ContentText align="left">
@@ -101,6 +146,7 @@ class SectionPinjaman extends React.Component {
             </React.Fragment>
           )}
 
+          {/* user menunggu approval */}
           {statusAplikasi === 2 && (
             <React.Fragment>
               <ContentText align="left">
@@ -138,7 +184,7 @@ class SectionPinjaman extends React.Component {
               >
                 {DAFTAR_DOKUMEN.map(item => (
                   <ActionButton
-                    variant="outlined"
+                    variant="contained"
                     color="primary"
                     fullWidth
                     onClick={() => this.handleDownloadDokumen(item.type)}

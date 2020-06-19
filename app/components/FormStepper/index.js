@@ -53,7 +53,12 @@ function FormStepper(props) {
   };
 
   const checkWorkForm = () => {
-    if (work.company && work.companyJoinDate) {
+    // if false is returned means it dosnt pass validation
+    if (
+      work.company &&
+      work.workingYears &&
+      !work.workingYears.startsWith('0')
+    ) {
       return false;
     }
     return true;

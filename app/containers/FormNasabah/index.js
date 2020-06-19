@@ -374,7 +374,7 @@ FormNasabah.propTypes = {
   birthplace: PropTypes.string,
   birthdate: PropTypes.string,
   address: PropTypes.string,
-  gender: PropTypes.string,
+  gender: PropTypes.number,
   motherMaidenName: PropTypes.string,
   errorFullname: PropTypes.string,
   errorBirthplace: PropTypes.string,

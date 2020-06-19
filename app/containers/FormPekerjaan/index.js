@@ -22,7 +22,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import {
   changeCompanyAction,
-  changeCompanyJoinDateAction,
+  // changeCompanyJoinDateAction,
+  changeWorkingYearsAction,
   getOpsiSbuAction,
 } from './actions';
 import messages from './messages';
@@ -30,6 +31,8 @@ import {
   makeSelectWorkData,
   makeSelectSbu,
 } from '../FormSubmissionStep/selectors';
+
+// import { WORKING_YEARS_OPTIONS } from './constants';
 
 const Wrapper = styled(props => <Grid {...props} />)`
   && {
@@ -47,6 +50,7 @@ class FormPekerjaan extends React.Component {
       error: {
         company: null,
         companyJoinDate: null,
+        workingYears: null,
       },
     };
 
@@ -98,7 +102,13 @@ class FormPekerjaan extends React.Component {
   };
 
   render() {
-    const { intl, work, changeCompanyJoinDate, opsiSbu } = this.props;
+    const {
+      intl,
+      work,
+      // changeCompanyJoinDate,
+      changeWorkingYears,
+      opsiSbu,
+    } = this.props;
     return (
       <Wrapper
         container
@@ -146,7 +156,8 @@ class FormPekerjaan extends React.Component {
                 ))}
               </Select>
             </FormControl>
-            <FormControl variant="outlined" margin="dense" fullWidth>
+
+            {/* <FormControl variant="outlined" margin="dense" fullWidth>
               <TextField
                 id="companyJoinDate"
                 name="companyJoinDate"
@@ -161,7 +172,54 @@ class FormPekerjaan extends React.Component {
                 variant="outlined"
                 margin="dense"
               />
-            </FormControl>
+            </FormControl> */}
+
+            {/* pake input tahun bekerja */}
+            <TextField
+              id="lamaBekerja"
+              name="lamaBekerja"
+              label="lama tahun bekerja"
+              InputLabelProps={{ shrink: true }}
+              type="text"
+              value={work.workingYears}
+              inputProps={{ min: '-99', max: '99', maxLength: 2 }}
+              onChange={evt => changeWorkingYears(evt.target.value)}
+              fullWidth
+              color="secondary"
+              variant="outlined"
+              margin="dense"
+            />
+
+            {/* pake opsi */}
+            {/* <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel color="secondary" shrink>
+                {"lama bekerja"}
+              </InputLabel>
+              <Select
+                id="opsi_lama_kerja"
+                name="opsi_lama_kerja"
+                value={work.workingYears}
+                fullWidth
+                onChange={evt => { this.checkJenisProduk(evt.target.value); }}
+                error={!!this.state.error.company}
+                helpertext={this.state.error.company}
+                variant="outlined"
+                margin="dense"
+                color="secondary"
+                labelWidth={110}
+                style={{
+                  textTransform: 'Capitalize',
+                }}>
+                {WORKING_YEARS_OPTIONS.map(item => (
+                  <MenuItem
+                    key={`${item.id}`}
+                    value={item.id}
+                    style={{ textTransform: 'Capitalize' }}>
+                    {item.ketera}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl> */}
           </form>
         </Grid>
       </Wrapper>
@@ -175,7 +233,8 @@ FormPekerjaan.propTypes = {
   opsiSbu: PropTypes.array,
   getOpsiSbu: PropTypes.func,
   changeCompany: PropTypes.func,
-  changeCompanyJoinDate: PropTypes.func,
+  // changeCompanyJoinDate: PropTypes.func,
+  changeWorkingYears: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -187,8 +246,9 @@ function mapDispatchToProps(dispatch) {
   return {
     changeCompany: (company, jenisProduk) =>
       dispatch(changeCompanyAction(company, jenisProduk)),
-    changeCompanyJoinDate: value =>
-      dispatch(changeCompanyJoinDateAction(value)),
+    // changeCompanyJoinDate: value =>
+    //   dispatch(changeCompanyJoinDateAction(value)),
+    changeWorkingYears: years => dispatch(changeWorkingYearsAction(years)),
     getOpsiSbu: () => dispatch(getOpsiSbuAction()),
   };
 }
