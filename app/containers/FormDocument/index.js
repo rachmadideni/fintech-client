@@ -220,19 +220,19 @@ class FormDocument extends React.Component {
                 </FormControl>
               ))}
             {/* Tombol Selfie */}
-            <FormControl margin="dense" fullWidth>
+            {/* di disable sementara karena https belum jalan */}
+            {/* <FormControl margin="dense" fullWidth>
               <Button
                 color="primary"
                 variant="outlined"
                 fullWidth
                 onClick={() => {
-                  this.toggleCameraBackdrop();
-                  // this.setOrientation()
+                  this.toggleCameraBackdrop();                  
                 }}
               >
                 Foto Selfie
               </Button>
-            </FormControl>
+            </FormControl> */}
 
             {this.state.backdropOpen && (
               <Backdrop

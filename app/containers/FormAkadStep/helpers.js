@@ -28,6 +28,21 @@ export function mapping_form_akad(data){
                 return {
                     'name': 'JMLANK',
                     'value': item
+                }            
+            case 'idkota':
+                return {
+                    'name':'IDKOTA',
+                    'value': item
+                }
+            case 'idkecm':
+                return {
+                    'name':'IDKECM',
+                    'value': item
+                }
+            case 'idkelr':
+                return {
+                    'name':'IDKELR',
+                    'value': item
                 }
         }
     });

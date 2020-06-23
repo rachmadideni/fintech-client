@@ -6,10 +6,12 @@
 
 export const DEFAULT_ACTION = 'app/SectionPinjaman/DEFAULT_ACTION';
 
-export const DAFTAR_DOKUMEN = [{
-    type:'akad',
-    name:'akad'
-},{
+export const DAFTAR_DOKUMEN = [
+// {
+//     type:'akad',
+//     name:'akad'
+// },
+{
     type:'spn',
     name:'surat pernyataan nasabah'
 },{

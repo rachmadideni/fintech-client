@@ -19,11 +19,19 @@ import {
 
 import {
   GET_OPSI_DOKUMEN_ACTION,
+  GET_OPSI_PROPINSI_ACTION,
+  GET_OPSI_KOTA_ACTION,
+  GET_OPSI_KECAMATAN_ACTION,
+  GET_OPSI_KELURAHAN_ACTION,
   SUBMIT_FORM_AKAD_ACTION
 } from './constants'
 
 import {
   getOpsiDokumenSuccessAction,
+  getOpsiPropinsiSuccessAction,
+  getOpsiKotaSuccessAction,
+  getOpsiKecamatanSuccessAction,
+  getOpsiKelurahanSuccessAction,
   submitFormAkadSuccessAction,
   resetFormSuccessAction
 } from './actions';
@@ -47,6 +55,103 @@ export function* getOpsiDokumen(){
     const response = yield call(request, endpoint, requestOpt);
     if(response.status){
       yield put(getOpsiDokumenSuccessAction(response.data));
+    }
+
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* getOpsiPropinsi(){
+  try {
+    const endpoint = `${api.host}/api/getOpsiPropinsi`;
+    const token = yield select(makeSelectAuthToken());
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':token
+      }
+    };
+
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      yield put(getOpsiPropinsiSuccessAction(response.data));
+    }
+
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* getOpsiKota(){
+  try {
+    const domisili = yield select(formAkadData());
+    const { idprop } = domisili;
+
+    const endpoint = `${api.host}/api/getOpsiKota?idprop=${idprop}`;
+    const token = yield select(makeSelectAuthToken());
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':token
+      }
+    };
+
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      yield put(getOpsiKotaSuccessAction(response.data));
+    }
+
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* getOpsiKecamatan(){
+  try {
+    const domisili = yield select(formAkadData());
+    const { idkota } = domisili;
+
+    const endpoint = `${api.host}/api/getOpsiKecamatan?idkota=${idkota}`;
+    const token = yield select(makeSelectAuthToken());
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':token
+      }
+    };
+
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      yield put(getOpsiKecamatanSuccessAction(response.data));
+    }
+
+  } catch(err){
+    console.log(err);
+  }
+}
+
+export function* getOpsiKelurahan(){
+  try {
+    const domisili = yield select(formAkadData());
+    const { idkecm } = domisili;
+
+    const endpoint = `${api.host}/api/getOpsiKelurahan?idkecm=${idkecm}`;
+    const token = yield select(makeSelectAuthToken());
+    const requestOpt = {
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':token
+      }
+    };
+
+    const response = yield call(request, endpoint, requestOpt);
+    if(response.status){
+      yield put(getOpsiKelurahanSuccessAction(response.data));
     }
 
   } catch(err){
@@ -138,6 +243,10 @@ export function* submitFormAkad(){
 export default function* formAkadStepSaga() {
   yield all([
     takeLatest(GET_OPSI_DOKUMEN_ACTION, getOpsiDokumen),
+    takeLatest(GET_OPSI_PROPINSI_ACTION, getOpsiPropinsi),
+    takeLatest(GET_OPSI_KOTA_ACTION, getOpsiKota),
+    takeLatest(GET_OPSI_KECAMATAN_ACTION, getOpsiKecamatan),
+    takeLatest(GET_OPSI_KELURAHAN_ACTION, getOpsiKelurahan),
     takeLatest(SUBMIT_FORM_AKAD_ACTION, submitFormAkad)
   ])
 }

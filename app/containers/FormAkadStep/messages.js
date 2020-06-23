@@ -11,7 +11,11 @@ export const scope = 'app.containers.FormAkadStep';
 export default defineMessages({  
   form_title: {
     id: `${scope}.form_title`,
-    defaultMessage: 'form akad',
+    defaultMessage: 'form Tahap 2',
+  },
+  form_description: {
+    id: `${scope}.form_description`,
+    defaultMessage: 'silahkan melengkapi isian pada form dibawah',
   },
   status_pernikahan: {
     id: `${scope}.status_pernikahan`,
@@ -52,5 +56,21 @@ export default defineMessages({
   btnSubmit:{
     id: `${scope}.btnSubmit`,
     defaultMessage: 'submit form',
+  },
+  opsiPropinsi:{
+    id: `${scope}.opsiPropinsi`,
+    defaultMessage: 'propinsi',
+  },
+  opsiKota:{
+    id: `${scope}.opsiKota`,
+    defaultMessage: 'Kota/Kabupaten',
+  },
+  opsiKecamatan:{
+    id: `${scope}.opsiKecamatan`,
+    defaultMessage: 'Kecamatan',
+  },
+  opsiKelurahan:{
+    id: `${scope}.opsiKelurahan`,
+    defaultMessage: 'Kelurahan',
   },
 });

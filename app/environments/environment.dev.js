@@ -1,6 +1,6 @@
 export default {
     api: {
-      host:'http://localhost:80',    
+      host:'http://localhost:8080',    
       version: '1',
     },
     // chatbot: {
