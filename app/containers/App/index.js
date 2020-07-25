@@ -6,6 +6,8 @@ import Login from 'containers/Login/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Verifikasi from 'containers/Verifikasi/Loadable';
 import VerifyConfirmPage from 'containers/VerifyConfirmPage';
+import ForgotPassword from "containers/ForgotPassword";
+
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -30,18 +32,36 @@ export default function App() {
       </Helmet>
       <Container maxWidth="xs" style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Switch>
-          <Route exact path="/" render={() => <Redirect to="/login" />} />
-          <Route path="/login" component={Login} />
+          
+          <Route 
+            exact 
+            path="/" 
+            render={() => <Redirect to="/login" />} 
+          />
 
-          <Route exact path="/verifikasi" component={Verifikasi} />
+          <Route 
+            path="/login" 
+            component={Login} />
+
+          <Route 
+            exact 
+            path="/verifikasi" 
+            component={Verifikasi} />
 
           <Route
             exact
             path="/verifikasi/confirm"
-            component={VerifyConfirmPage}
-          />
+            component={VerifyConfirmPage} />
+          
+          <Route
+            exact
+            path="/resetPassword"
+            component={ForgotPassword} />
 
-          <Route exact path="/createPassword" component={CreatePassword} />
+          <Route 
+            exact 
+            path="/createPassword" 
+            component={CreatePassword} />
 
           <Route
             path="/changePassword"
