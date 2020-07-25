@@ -10,11 +10,18 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
-// import { getTokenAuthFromStorage } from 'containers/Login/helpers';
+
+// ambil token dari local storage browser
+import { getTokenAuthFromStorage } from 'containers/Login/helpers';
+
+// ambil token dari state
 import { makeSelectAuthToken } from '../App/selectors';
+
+const userToken = getTokenAuthFromStorage();
 
 const AuthGuard = props => {
   if (!props.token) {
+  //if(!userToken){
     return <Redirect to="/login" />;
   }
   return <React.Fragment>{props.children}</React.Fragment>;
