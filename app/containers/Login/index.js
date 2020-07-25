@@ -220,7 +220,7 @@ class Login extends React.Component {
           <NotificationSnackbar
             verticalPos="top"
             open={this.state.isUserLoginSuccessNotificationOpen}
-            onClose={() => this.props.successMessage(null)}
+            onClose={() => this.props.logSuccessMessage(null)}
             hideDuration={3000}
             message={this.props.successMessage}
             notificationType="success"
