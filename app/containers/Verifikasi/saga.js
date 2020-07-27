@@ -4,7 +4,8 @@ import { api } from 'environments';
 import { replace } from 'connected-react-router';
 
 import {
-  VERIFIKASI_ACTION
+  VERIFIKASI_ACTION,
+  RESEND_KODE_VERIFIKASI
 } from './constants';
 
 import {
@@ -18,7 +19,8 @@ import {
 
 import {
   verifikasiSuccessAction,
-  verifikasiErrorAction
+  verifikasiErrorAction,
+  notifyUserIsExistAction
 } from './actions';
 
 import {
@@ -29,7 +31,7 @@ import {
 export function* requestVerifikasi(){
   
   const { nik, email, nomtel } = yield select(makeSelectUser());
-  const endpoint = `${api.host}/api/verifikasi_user`
+  const endpoint = `${api.host}/api/verifikasi_user`;
   const requestOpt = {
     method:'POST',
     headers:{
@@ -45,13 +47,24 @@ export function* requestVerifikasi(){
   try {
     
     const response = yield call(request, endpoint, requestOpt);
-    if(response.status && response.data > 0){
+    // console.log(response);
+    if(response.status){
+      if(response.data.length > 0){
+        const [{ NEMAIL, NIK, NOTELP, PASSWD, STATUS }] = response.data;
+        if(STATUS === 0){          
+          // aplikasi detect munculkan notifikasi user sdh terdaftar
+          yield(put(notifyUserIsExistAction(1, 'email dan NIK sudah terdaftar sebelumnya. kode verifikasi expired!')));
+        } else if(STATUS === 1){
+          yield(put(notifyUserIsExistAction(2, 'email dan NIK sudah terdaftar sebelumnya.')));
+        }
+      } else {
+        yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
+        yield put(setEmailAction(email));
+        yield put(setNikAction(nik));
+        yield call(setTokenVerifikasi, response.token_verifikasi);
+        yield put(replace('/verifikasi/confirm'));
+      }      
       
-      yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
-      yield put(setEmailAction(email));
-      yield put(setNikAction(nik));
-      yield call(setTokenVerifikasi, response.token_verifikasi);
-      yield put(replace('/verifikasi/confirm')); // jika sukses mengirim request verifikasi. otomatis redirect utk memasukkan kode     
     
     } else {
       
@@ -67,8 +80,36 @@ export function* requestVerifikasi(){
   }
 }
 
+export function* resendKodeAktifasi(){
+  const { nik, email, nomtel } = yield select(makeSelectUser());
+  const endpoint = `${api.host}/api/resend_kodeverifikasi`;
+  const requestOpt = {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body: JSON.stringify({
+      nik,
+      email,
+      nomohp:nomtel
+    })
+  };
+
+  try {
+    const response = yield call(request, endpoint, requestOpt);
+    console.log('resend response:', response); // return response;
+    if(response.status === true){
+      yield call(setTokenVerifikasi, response.token_verifikasi);
+      yield put(verifikasiSuccessAction(response.token_verifikasi, response.kode_verifikasi, false));
+    }
+  } catch(err){
+    console.log(err);
+  }
+}
+
 export default function* verifikasiSaga(){
   yield all([
     takeLatest(VERIFIKASI_ACTION, requestVerifikasi),
+    takeLatest(RESEND_KODE_VERIFIKASI, resendKodeAktifasi)
   ]);
 }

@@ -1,20 +1,7 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
-/**
- * Direct selector to the verifyConfirmPage state domain
- */
-
-const selectVerifyConfirmPageDomain = state =>
-  state.verifyConfirmPage || initialState;
-
-/**
- * Other specific selectors
- */
-
-/**
- * Default selector used by VerifyConfirmPage
- */
+const selectVerifyConfirmPageDomain = state => state.verifyConfirmPage || initialState;
 
 const makeSelectVerifyConfirmPage = () =>
   createSelector(
@@ -33,8 +20,6 @@ const makeSelectError = () => createSelector(selectVerifyConfirmPageDomain,
 
 const makeSelectSuccess = () => createSelector(selectVerifyConfirmPageDomain,
   substate => substate.confirm.successMessage)
-
-
 
 export default makeSelectVerifyConfirmPage;
 export { 

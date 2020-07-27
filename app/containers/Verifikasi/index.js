@@ -20,23 +20,28 @@ import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import LoadingPage from 'components/LoadingPage';
+import Button from '@material-ui/core/Button';
+import { ArrowBack, ArrowForward } from '@material-ui/icons';
 
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 // import isMobilePhone from 'validator/lib/isMobilePhone';
 
-import { ArrowBack, ArrowForward } from '@material-ui/icons';
 // import { TweenLite } from 'gsap';
 
+// custom components
 import PaperCustom from 'components/PaperCustom';
 import BtnCustom from 'components/BtnCustom';
+import NotificationSnackbar from 'components/NotificationSnackbar';
 import { Wrapper, AppTitle, PaperTitle, PaperSubtitle } from './components';
 import { color } from '../../styles/constants';
+
 import {
   changeNikAction,
   changeEmailAction,
   changeTeleponAction,
   verifikasiAction,
+  resendKodeVerifikasiAction
 } from './actions';
 import messages from './messages';
 import saga from './saga';
@@ -45,6 +50,7 @@ import {
   makeSelectIsLoading,
   makeSelectUser,
   makeSelectErrorMessage,
+  makeSelectErrorType
 } from './selectors';
 
 class Verifikasi extends React.Component {
@@ -55,10 +61,14 @@ class Verifikasi extends React.Component {
         nik: null,
         email: null,
         nomorTelpon: null,
+        userAlreadyExists: null,
       },
       isSubmitTriggered: false,
+      notificationType: 'warning',
       isNotificationOpen: false,
+      isUserRegistrationSuccess: false,
     };
+    
     // reference to the DOM node
     // this.paperElement = null;
     // reference to the animation
@@ -69,6 +79,19 @@ class Verifikasi extends React.Component {
     // this.myPaperTween = TweenLite.to(this.paperElement, 0.3, { y: 25 });
   }
 
+  componentDidUpdate(prevProps) {
+    if (!!this.props.error && prevProps.error === null) {
+      this.setState({
+        isNotificationOpen: true,
+      });
+    } else if (!!prevProps.error && this.props.error === null) {
+      this.setState({
+        isNotificationOpen: false,
+      });
+    }
+  }
+
+  // #region validasi NIK
   validateNik = nik => {
     const { intl } = this.props;
     let isError = false;
@@ -90,7 +113,9 @@ class Verifikasi extends React.Component {
     }));
     return !isError;
   };
+  // #endregion
 
+  // #region validasi Email
   validateEmail = email => {
     const { intl } = this.props;
     let isError = false;
@@ -115,7 +140,9 @@ class Verifikasi extends React.Component {
     }));
     return !isError;
   };
+  // #endregion
 
+  // #region validasi nomor handphone / nomor telpon
   validateTelpon = telpon => {
     const { intl } = this.props;
     let isError = false;
@@ -143,30 +170,47 @@ class Verifikasi extends React.Component {
     }));
     return !isError;
   };
+  // #endregion
 
+  // #region Submit Handler
   handleSubmit = evt => {
     evt.preventDefault();
-    const { user } = this.props;
+    const { user, history } = this.props;
 
     this.setState(state => ({
       ...state,
       isSubmitTriggered: true,
     }));
 
+    // cek jika user input valid
     if (
       this.validateNik(user.nik) &&
       this.validateEmail(user.email) &&
       this.validateTelpon(user.nomtel)
     ) {
+      // run
       return this.props.verifikasi();
+      // if(1===1){
+      //   return history.replace('verifikasi/confirm');
+      // }
     }
     return false;
   };
+  // #endregion
 
+  // #region handle jika user klik tombol arrow back
   handleBack = () => {
     const { history } = this.props;
     return history.replace('/login');
   };
+  // #endregion
+
+  // #region handle kirim ulang kode verifikasi atau kode registrasi
+  handleResendKode = () => {
+    this.props.resendKodeVerifikasi();
+    this.props.history.replace('verifikasi/confirm');
+  };
+  // #endregion
 
   // handleNotification = () => {
   //   this.setState(state => ({
@@ -174,6 +218,31 @@ class Verifikasi extends React.Component {
   //     isNotificationOpen: !isNotificationOpen,
   //   }));
   // };
+
+  // #region render notifikasi sukses untuk permintaan verifikasi
+  NotifyUserRegistrationOnSuccess = (name, value) => {
+    this.setState({
+      [name]: value,
+    });
+
+    return (
+      <>
+        <NotificationSnackbar
+          verticalPos="top"
+          open={this.state['name']}
+          onClose={() =>
+            this.setState({
+              [name]: false,
+            })
+          }
+          hideDuration={5000}
+          message="kami mengirimkan kode registrasi ke email anda"
+          notificationType="success"
+        />
+      </>
+    );
+  };
+  // #endregion
 
   render() {
     const {
@@ -209,10 +278,40 @@ class Verifikasi extends React.Component {
         <Box
           display="flex"
           width="100%"
-          height="100%"
           alignItems="center"
           justifyContent="center"
         >
+          {/* #region handle jika user sudah ada sebelumnya */}
+          <NotificationSnackbar
+            verticalPos="top"
+            open={this.state.isNotificationOpen}
+            onClose={() =>
+              this.setState({
+                isNotificationOpen: false,
+              })
+            }
+            hideDuration={5000}
+            message={
+              <>
+                {this.props.error}
+                {this.props.errorType === 1 && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    size="small"
+                    onClick={this.handleResendKode}
+                    style={{ marginTop: 10 }}
+                  >
+                    Kirim ulang kode verifikasi
+                  </Button>
+                )}
+              </>
+            }
+            notificationType={this.state.notificationType}
+          />
+          {/* #endregion  */}
+
           <PaperCustom
             elevation={0}
             style={{ marginLeft: 20, marginRight: 20 }}
@@ -325,6 +424,7 @@ const mapStateToProps = createStructuredSelector({
   isLoading: makeSelectIsLoading(),
   user: makeSelectUser(),
   error: makeSelectErrorMessage(),
+  errorType: makeSelectErrorType()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -333,6 +433,7 @@ function mapDispatchToProps(dispatch) {
     changeEmail: email => dispatch(changeEmailAction(email)),
     changeTelepon: nomtel => dispatch(changeTeleponAction(nomtel)),
     verifikasi: () => dispatch(verifikasiAction()),
+    resendKodeVerifikasi: () => dispatch(resendKodeVerifikasiAction())
   };
 }
 

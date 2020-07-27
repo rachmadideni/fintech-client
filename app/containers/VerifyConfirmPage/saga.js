@@ -11,12 +11,16 @@ import {
   logErrorAction
 } from './actions';
 
+// import {
+//   makeSelectUser
+// } from '../Verifikasi/selectors';
+
 import {
   makeSelectUser
-} from '../Verifikasi/selectors';
+} from "../UserRegistration/selectors";
 
 export function* konfirmasiKode(){
-  const user = yield select(makeSelectUser());
+  const { nik } = yield select(makeSelectUser());
 
   const endpoint = `${api.host}/api/konfirmasi_verifikasi`
   const requestOpt = {
@@ -25,7 +29,7 @@ export function* konfirmasiKode(){
       'Content-Type':'application/json'
     },
     body: JSON.stringify({
-      nik:user.nik
+      nik
     })
   };
   try {

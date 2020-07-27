@@ -5,12 +5,12 @@
  */
 
 import React, { memo } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 
@@ -21,22 +21,23 @@ import injectReducer from 'utils/injectReducer';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
 
-import isEmpty from 'validator/lib/isEmpty';
-import styled from 'styled-components';
-
-import { AppBar, Toolbar } from '@material-ui/core';
-
-import { ArrowBack } from '@material-ui/icons';
-
+// custom components
 import ReactCodeInput from 'react-code-input';
 import NotificationSnackbar from 'components/NotificationSnackbar';
 import PaperCustom from 'components/PaperCustom';
 
+import {
+  Wrapper,
+  PageAppBar,
+  AppTitle,
+  PaperTitle,
+  PaperSubtitle,
+} from 'components/PageComponents';
+
+import isEmpty from 'validator/lib/isEmpty';
 import jwtDecode from 'jwt-decode';
 import store from 'store';
-import { Wrapper, AppTitle } from '../Verifikasi/components';
 import { color, typography } from '../../styles/constants';
 import saga from './saga';
 import messages from './messages';
@@ -46,19 +47,21 @@ import {
   logErrorAction,
   logSuccessAction,
 } from './actions';
+
 import reducer from './reducer';
 import {
   makeSelectTokenVerifikasi,
   makeSelectKodeVerifikasi,
 } from '../Verifikasi/selectors';
+
 import {
-  makeSelectKodeAktifasi,
+  // makeSelectKodeAktifasi,
   makeSelectKodeFromServer,
   makeSelectError,
   makeSelectSuccess,
 } from './selectors';
 
-// const store = require('store');
+import { makeSelectKodeAktifasi } from "../UserRegistration/selectors";
 
 const StyledCodeInput = styled(ReactCodeInput)`
   && {
@@ -103,34 +106,18 @@ class VerifyConfirmPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!!this.props.errorMessage && prevProps.errorMessage === null) {
-      // this.setState(state => ({
-      //   ...state,
-      //   isNotificationOpen: true,
-      // }));
       this.handleErrorNotification(true);
     } else if (!!prevProps.errorMessage && this.props.errorMessage === null) {
-      // this.setState(state => ({
-      //   ...state,
-      //   isNotificationOpen: false,
-      // }));
       this.handleErrorNotification(false);
     } else if (
       !!prevProps.successMessage &&
       this.props.successMessage === null
     ) {
-      // this.setState(state => ({
-      //   ...state,
-      //   successNotified: false,
-      // }));
       this.handleSuccessNotification(false);
     } else if (
       !!this.props.successMessage &&
       prevProps.successMessage === null
     ) {
-      // this.setState(state => ({
-      //   ...state,
-      //   successNotified: true,
-      // }));
       this.handleSuccessNotification(true);
     }
   }
@@ -149,6 +136,7 @@ class VerifyConfirmPage extends React.Component {
     }));
   };
 
+  // #region cek status token
   isTokenExpired = () => {
     let isExpired = false;
     const tokenVerifikasi = store.get('token_verifikasi');
@@ -166,31 +154,41 @@ class VerifyConfirmPage extends React.Component {
 
     return !isExpired;
   };
+  // #endregion
 
+  // #region validasi kode aktifasi
   validateKodeAktifasi = kode => {
-    const { intl, kodeVerifikasi } = this.props;
+    const { intl, kodeVerifikasi, kodeAktifasi } = this.props;
     let isError = false;
     let errorMsg = null;
     let successMessage = null;
-
+    // console.log(typeof kode, typeof kodeAktifasi);
     if (isEmpty(kode)) {
       isError = true;
       errorMsg = intl.formatMessage(messages.emptyCode);
       successMessage = null;
-    } else if (kode !== kodeVerifikasi) {
+      console.log('kosong')
+    }
+    
+    if (kode !== kodeAktifasi) {      
       isError = true;
       errorMsg = intl.formatMessage(messages.codeNotMatch);
       successMessage = null;
-    } else if (kode === kodeVerifikasi) {
+      console.log('kode tidak sama')
+    }
+    
+    if (kode === kodeAktifasi) {
       isError = false;
       errorMsg = null;
       successMessage = intl.formatMessage(messages.codeIsMatch);
+      console.log('kode cocok')
     }
 
-    if (this.isTokenExpired()) {
-      isError = true;
-      errorMsg = intl.formatMessage(messages.tokenExpired);
-    }
+    // if (this.isTokenExpired()) {
+    //   isError = true;
+    //   errorMsg = intl.formatMessage(messages.tokenExpired);
+    //   console.log('kode expired')
+    // }
 
     this.setState(state => ({
       ...state,
@@ -205,12 +203,16 @@ class VerifyConfirmPage extends React.Component {
     }));
     return !isError;
   };
+  //#endregion
 
+  // #region handle tombol kembali ke login
   handleBack = () => {
     const { history } = this.props;
     return history.replace('/login');
   };
+  // #endregion
 
+  // #region auto submit jika input kode aktifasi cocok dgn yg di email
   autoSubmit = () => {
     const { intl } = this.props;
     this.props.logSuccess(intl.formatMessage(messages.codeIsMatch));
@@ -223,66 +225,27 @@ class VerifyConfirmPage extends React.Component {
       },
     }));
   };
+  //#endregion
 
   render() {
     const { intl } = this.props;
     return (
       <Wrapper container wrap="nowrap" direction="column">
-        <AppBar
-          style={{
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              onClick={this.handleBack}
-              style={{ color: color.white }}
-            >
-              <ArrowBack />
-            </IconButton>
-            <div style={{ flexGrow: 1 }} />
-            <AppTitle gutterBottom>Login</AppTitle>
-          </Toolbar>
-        </AppBar>
+        <PageAppBar appTitle="Login" backHandler={() => this.handleBack()} />
         <Box
           display="flex"
           width="100%"
           height="100%"
           alignItems="center"
-          justifyContent="center"
-        >
-          <PaperCustom
-            elevation={0}
-            style={{ marginLeft: 20, marginRight: 20 }}
-          >
+          justifyContent="center">
+          <PaperCustom width={90} elevation={0}>
             <form autoComplete="off">
-              <Typography
-                color="primary"
-                variant="h6"
-                align="left"
-                style={{
-                  fontFamily: typography.fontFamily,
-                  fontWeight: 'bold',
-                  color: color.subtleBlack,
-                  textTransform: 'capitalize',
-                }}
-              >
+              <PaperTitle variant="h6" align="left">
                 {intl.formatMessage(messages.header)}
-              </Typography>
-              <Typography
-                color="inherit"
-                align="left"
-                style={{
-                  fontFamily: typography.fontFamily,
-                  fontSize: 10,
-                  fontWeight: 'normal',
-                  color: color.subtleBlack,
-                }}
-              >
-                silahkan cek kode di email anda dan inputkan pada textbox
-                dibawah.
-              </Typography>
+              </PaperTitle>
+              <PaperSubtitle color="inherit" align="left">
+                {intl.formatMessage(messages.subtitle)}
+              </PaperSubtitle>
 
               <FormControl margin="dense" fullWidth error>
                 <StyledCodeInput
@@ -344,7 +307,6 @@ VerifyConfirmPage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   kodeAktifasi: makeSelectKodeAktifasi(),
   kodeFromServer: makeSelectKodeFromServer(),
-
   tokenVerifikasi: makeSelectTokenVerifikasi(),
   kodeVerifikasi: makeSelectKodeVerifikasi(),
   errorMessage: makeSelectError(),

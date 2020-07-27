@@ -13,6 +13,10 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'Konfirmasi kode',
   },
+  subtitle: {
+    id: `${scope}.subtitle`,
+    defaultMessage: 'silahkan cek kode di email anda dan inputkan pada textbox dibawah.',
+  },
   kodeAktifasi: {
     id: `${scope}.kodeAktifasi`,
     defaultMessage: 'Kode Aktifasi',

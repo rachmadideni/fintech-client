@@ -27,15 +27,16 @@ export const initialState = {
 const verifyConfirmPageReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {      
-      case CHANGE_KODE_AKTIFASI_ACTION:{
-        // draft.kodeAktifasi = action.payload;
+      case CHANGE_KODE_AKTIFASI_ACTION:{        
         draft.fromUser_activation_code = action.payload;
         draft.error.message = null;
         return draft;
       }
+      
       case LOG_ERROR_ACTION:
       draft.error.message = action.payload;  
       return draft;
+
       case LOG_SUCCESS_ACTION:
       draft.confirm.successMessage = action.payload;  
       return draft;

@@ -10,7 +10,8 @@ import {
   CHANGE_TELEPON_ACTION,
   VERIFIKASI_ACTION,
   VERIFIKASI_SUCCESS_ACTION,
-  VERIFIKASI_ERROR_ACTION
+  VERIFIKASI_ERROR_ACTION,
+  NOTIFY_USER_ISEXIST
 } from './constants';
 
 export const initialState = {
@@ -23,6 +24,7 @@ export const initialState = {
     kode_verifikasi:""
   },
   error:{
+    type:null,// 1=belum aktifasi 2=sudah teraktifasi
     message:null
   }
 };
@@ -58,7 +60,14 @@ const verifikasiReducer = (state = initialState, action) =>
         case VERIFIKASI_ERROR_ACTION:
         draft.isLoading = false;
         draft.error.message = action.payload.error;
-        return draft;      
+        return draft;
+        
+        case NOTIFY_USER_ISEXIST:
+          draft.isLoading = false;
+          draft.error.type = action.payload.type;
+          draft.error.message = action.payload.error;
+          return draft;
+
     }
     return draft;
   });
