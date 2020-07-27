@@ -40,10 +40,17 @@ const makeSelectError = () =>
     substate => substate.error.message,
   );
 
+const makeSelectSuccess = () =>
+  createSelector(
+    selectCreatePasswordDomain,
+    substate => substate.success.message,
+  );
+
 export default makeSelectCreatePassword;
 export { 
   selectCreatePasswordDomain,
   makeSelectPassword,
   makeSelectPasswordConfirm,
-  makeSelectError
+  makeSelectError,
+  makeSelectSuccess
 };
