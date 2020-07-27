@@ -7,6 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@material-ui/core/Button';
 import MuiAlert from '@material-ui/lab/Alert';
 import Slide from '@material-ui/core/Slide';
 
@@ -26,23 +27,23 @@ function NotificationSnackbar(props) {
   const displayNotificationResultType = () => {
     if (notificationType === 'success') {
       return (
-        <MuiAlert variant="filled" severity="success" style={{ width: '100%' }}>
+        <MuiAlert variant="filled" severity="success" style={{ width: '100%',lineHeight:1.2 }}>
           {message}
         </MuiAlert>
       );
     }
     if (notificationType === 'error') {
       return (
-        <MuiAlert variant="filled" severity="error" style={{ width: '100%' }}>
+        <MuiAlert variant="filled" severity="error" style={{ width: '100%',lineHeight:1.2 }}>
           {message}
         </MuiAlert>
       );
     }
     if (notificationType === 'warning') {
-      return (
-        <MuiAlert variant="filled" severity="warning" style={{ width: '100%' }}>
-          {message}
-        </MuiAlert>
+      return (        
+        <MuiAlert variant="filled" severity="warning" style={{ width: '100%',lineHeight:1.2 }}>
+          {message}          
+        </MuiAlert>        
       );
     }
     return false;
