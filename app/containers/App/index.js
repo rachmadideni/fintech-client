@@ -1,4 +1,9 @@
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { Redirect, Route, Switch } from 'react-router-dom';
+
 import Container from '@material-ui/core/Container';
+
 import AuthGuard from 'containers/AuthGuard';
 import CreatePassword from 'containers/CreatePassword/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
@@ -7,10 +12,8 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Verifikasi from 'containers/Verifikasi/Loadable';
 import VerifyConfirmPage from 'containers/VerifyConfirmPage';
 import ForgotPassword from "containers/ForgotPassword";
+import UserRegistration from "../UserRegistration/Loadable";
 
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import GlobalStyle from '../../global-styles';
 
@@ -52,6 +55,8 @@ export default function App() {
             exact
             path="/verifikasi/confirm"
             component={VerifyConfirmPage} />
+          
+          <Route exact path="/registrasi" component={UserRegistration} />
           
           <Route
             exact
@@ -151,5 +156,3 @@ export default function App() {
     </AppWrapper>
   );
 }
-
-/**/

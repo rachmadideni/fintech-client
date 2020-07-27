@@ -160,6 +160,13 @@ class Login extends React.Component {
     return history.replace('/verifikasi');
   };
 
+  // #region handle route changes 
+  handleRouteChanges = (route) => {
+    const { history } = this.props;
+    history.replace(route);
+  }
+  // #endregion
+
   handleSubmit = evt => {
     evt.preventDefault();
     const { credential } = this.props;
@@ -324,7 +331,7 @@ class Login extends React.Component {
                 fullWidth
                 variant="outlined"
                 color="primary"
-                onClick={this.handleVerification}
+                onClick={()=> this.handleRouteChanges('/registrasi')}
                 title={intl.formatMessage(messages.registerButton)}
               />
 
