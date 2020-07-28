@@ -28,7 +28,7 @@ import { ArrowForward } from '@material-ui/icons';
 import {
   Wrapper,
   PageAppBar,
-  AppTitle,
+  // AppTitle,
   PaperTitle,
   PaperSubtitle,
 } from 'components/PageComponents';

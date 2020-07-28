@@ -68,15 +68,14 @@ class UserProfile extends React.Component {
           <Grid item>
             <StyledAvatar />
           </Grid>
-          <Grid item style={{ marginBottom: 20, textAlign: 'center' }}>
-            <StyledText>MIA</StyledText>
+          <Grid item style={{ marginBottom: 20, textAlign: 'center' }}>            
             <StyledText size={12}>{email}</StyledText>
             <StyledText size={12}>{notelp}</StyledText>
           </Grid>
 
           <BtnCustom
             variant="outlined"
-            color="secondary"
+            color="primary"
             fullWidth
             onClick={() => removeAuthToken()}
             title={intl.formatMessage(messages.logout)}
@@ -85,7 +84,7 @@ class UserProfile extends React.Component {
 
           <BtnCustom
             variant="outlined"
-            color="secondary"
+            color="primary"
             fullWidth
             onClick={this.goToChangePasswordPage}
             title={intl.formatMessage(messages.ubahPassword)}

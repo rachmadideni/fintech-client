@@ -52,10 +52,8 @@ export function* login() {
       yield put(setEmailAction(response.email));
       yield put(setNotelpAction(response.notelp));
 
-      yield put(
-        loginSuccessAction('login berhasil! mengalihkan anda ke halaman user'),
-      ); // beritahu store
-      yield delay(5000);
+      yield put(loginSuccessAction('login berhasil! mengalihkan anda ke halaman user')); // beritahu store
+      // yield delay(5000);
       yield put(replace('/dashboard'));
     } else {
       const errorMsg = messages.user_not_exists.defaultMessage;

@@ -5,23 +5,14 @@
  */
 
 import React, { memo } from 'react';
-// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import makeSelectSectionInformasi from './selectors';
-import reducer from './reducer';
-import saga from './saga';
 
 export function SectionInformasi() {
-  useInjectReducer({ key: 'sectionInformasi', reducer });
-  useInjectSaga({ key: 'sectionInformasi', saga });
-
   return (
     <Grid
       container
@@ -30,20 +21,23 @@ export function SectionInformasi() {
       alignItems="center"
       justifyContent="center"
       style={{
-        backgroundColor: 'pink',
+        backgroundColor: 'transparent',
         width: '100%',
       }}
     >
-      <Grid item style={{ width: '100%' }}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Customer Services
+      <Grid item style={{ width: '100%', marginTop:20,borderRadius:6,padding:20,backgroundColor:"#FAFAFA" }}>
+        <Typography variant="body2" align="center">
+          untuk informasi lebih lanjut silahkan hubungi customer support kami melalui email <b>supporting@afs.co.id</b> <br/>atau melalui whatsapp <b>+62 811-4461-0777</b> 
         </Typography>
+        {/* <Typography variant="h6" align="center" gutterBottom>
+          Customer Services
+        </Typography> */}
       </Grid>
-      <Grid item>
+      {/* <Grid item>
         <Typography variant="h6" align="center" gutterBottom>
           supporting@afs.co.id
         </Typography>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

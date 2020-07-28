@@ -13,7 +13,6 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-// import Typography from '@material-ui/core/Typography';
 
 import { Switch, Route } from 'react-router-dom';
 
@@ -21,7 +20,7 @@ import { Switch, Route } from 'react-router-dom';
 import FormSubmissionStep from 'containers/FormSubmissionStep';
 import FormSummary from 'containers/FormSummary/Loadable';
 import UserProfile from 'containers/UserProfile/Loadable';
-import UserInbox from 'containers/UserInbox/Loadable';
+// import UserInbox from 'containers/UserInbox/Loadable';
 import ChangePasswordPage from 'containers/ChangePasswordPage/Loadable';
 import FormAkadStep from 'containers/FormAkadStep/Loadable';
 
@@ -74,16 +73,6 @@ const Wrapper = styled(Grid)`
     opacity: 0.5;
   }  
 }`;
-
-// const AppTitle = styled(Typography)`
-//   && {
-//     font-family: ${typography.fontFamily};
-//     font-size: 16px;
-//     font-weight: bold;
-//     color: ${color.subtleBlack};
-//     padding: 0px 10px 0px 0px;
-//   }
-// `;
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -153,20 +142,18 @@ class Dashboard extends React.Component {
           justifyContent="flex-start"
         >
           <PaperCustom
+            width={90}
             elevation={0}
             style={{
-              height: '85vh',
+              // height: '85vh',
+              height:"100%",
               boxShadow: '0px 1px 2px #EAEAEA',
               opacity: 1,
               marginTop: 20,
               marginLeft: 20,
               marginRight: 20,
               overflowY: 'auto',
-            }}
-          >
-            {/* <AppTitle color="primary" gutterBottom>
-              {intl.formatMessage(messages.pageTitle)}
-            </AppTitle> */}
+            }}>
 
             <Switch>
               <Route
@@ -218,12 +205,12 @@ class Dashboard extends React.Component {
                 )}
               />
 
-              <Route
+              {/* <Route
                 path="/inbox"
                 render={routeProps => (
                   <UserInbox history={history} {...routeProps} />
                 )}
-              />
+              /> */}
 
               <Route
                 path="/changePassword"

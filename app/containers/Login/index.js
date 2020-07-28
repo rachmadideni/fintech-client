@@ -53,7 +53,11 @@ import {
   makeSelectIsLoading,
 } from './selectors';
 
-import { Wrapper, AppTitle } from '../Verifikasi/components';
+// import { Wrapper, AppTitle } from '../Verifikasi/components';
+import {
+  Wrapper,
+  AppTitle,
+} from 'components/PageComponents';
 
 const styles = makeStyles(() => ({
   textField: {
@@ -399,9 +403,9 @@ const withConnect = connect(
 );
 
 export default compose(
+  memo,
   injectReducer({ key: 'login', reducer }),
   injectSaga({ key: 'saga', saga }),
   withConnect,
-  injectIntl,
-  memo,
+  injectIntl,  
 )(Login);
