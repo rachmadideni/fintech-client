@@ -10,9 +10,9 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
+
 import makeSelectForgotPassword, {
   makeSelectUserStatus,
   makeSelectErrorMessage,
@@ -20,30 +20,32 @@ import makeSelectForgotPassword, {
   makeSelectIsLoading,
   makeSelectKodeReset,
 } from './selectors';
+
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import { color, typography } from 'styles/constants';
 
-import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Mail } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Wrapper, AppTitle } from '../Verifikasi/components';
+import {
+  Wrapper,
+  PageAppBar,
+  // AppTitle,
+  PaperTitle,
+  PaperSubtitle,
+} from 'components/PageComponents';
 import PaperCustom from 'components/PaperCustom';
 import BtnCustom from 'components/BtnCustom';
 import NotificationSnackbar from 'components/NotificationSnackbar';
 
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
-import { cekNikDanEmail, logSuccessMessage } from './actions';
+import { cekNikDanEmail, logSuccessMessage, logErrorMessage, simpanPassword } from './actions';
 
 const styles = makeStyles(() => ({
   header: {
@@ -59,13 +61,16 @@ class ForgotPassword extends React.Component {
     this.state = {
       nik: '',
       email: '',
-      kodeReset:'',
+      kodeReset: '',
+      password: '',
       error: {
         nik: null,
         email: null,
-        kodeReset: null
+        kodeReset: null,
+        password: null,
       },
       isSubmitTriggered: false,
+      isButtonSimpanTriggered: false,
       openNotification: false,
       openSuccessNotification: false,
     };
@@ -145,20 +150,47 @@ class ForgotPassword extends React.Component {
     return !isError;
   };
 
+  validatePassword = password => {
+    const { intl } = this.props;
+    let isError = false;
+    let errorMsg = null;
+    if (isEmpty(password)) {
+      isError = true;
+      errorMsg = intl.formatMessage(messages.emptyPassword);
+    } else {
+      isError = false;
+      errorMsg = null;
+    }
+
+    this.setState(state => ({
+      ...state,
+      error: {
+        ...state.error,
+        password: errorMsg,
+      },
+    }));
+    return !isError;
+  };
+
   validateKodeReset = () => {
     const { intl, kodeResetDariReduxState } = this.props;
     const { kodeReset } = this.state;
     let isError = false;
     let errorMsg = null;
-    if(isEmpty(kodeReset)){
+
+    console.log(kodeReset !== kodeResetDariReduxState);
+    if (isEmpty(kodeReset)) {
       isError = true;
-      errorMsg = intl.formatMessage(messages.kodeResetKosong)
-    } else if(kodeReset !== kodeResetDariReduxState){
+      errorMsg = intl.formatMessage(messages.kodeResetKosong);
+      // console.log('inputan kode reset kosong');
+    } else if (kodeReset !== kodeResetDariReduxState) {
       isError = true;
-      errorMsg = intl.formatMessage(messages.kodeResetTidakSama)
-    } else if(kodeReset == kodeResetDariReduxState){
+      errorMsg = intl.formatMessage(messages.kodeResetTidakSama);
+      // console.log('kode reset tidak sama');
+    } else if (kodeReset === kodeResetDariReduxState) {
       isError = false;
       errorMsg = null;
+      // console.log('kode reset sama');
     }
 
     this.setState(state => ({
@@ -169,8 +201,7 @@ class ForgotPassword extends React.Component {
       },
     }));
     return !isError;
-
-  }
+  };
 
   changeInput = (name, value) => {
     this.setState({
@@ -195,56 +226,53 @@ class ForgotPassword extends React.Component {
     return false;
   };
 
+  // #region handle tombol kembali ke login
+  handleBack = () => {
+    const { history } = this.props;
+    return history.replace('/login');
+  };
+  // #endregion
+
+  handleRouteChanges = route => {
+    const { history } = this.props;
+    history.replace(route);
+  };
+
+  // #region handle simpan password baru
+  handleSimpanPassword = evt => {
+    evt.preventDefault();
+    this.setState(state => ({
+      ...state,
+      isButtonSimpanTriggered: true,
+    }));
+
+    if (
+      this.validateKodeReset() &&
+      this.validatePassword(this.state.password)
+    ) {
+      console.log('kode reset valid');
+      this.props.simpanPassword(this.state.nik, this.state.password);
+      this.resetLocalState();
+    }
+    return false;
+  };
+  // #endregion
+
+  // #region reset state lokal
+  resetLocalState = () => {
+    this.setState({
+      nik: "",
+      email: "",
+      kodeReset: "",
+      password: "",
+    });
+  }
+
   render() {
     const { intl } = this.props;
     return (
       <Wrapper container wrap="nowrap" direction="column">
-        <AppBar
-          style={{
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-          }}
-        >
-          <Toolbar style={{ justifyContent: 'center' }}>
-            <AppTitle gutterBottom>
-              {intl.formatMessage(messages.appTitle)}
-            </AppTitle>
-          </Toolbar>
-        </AppBar>
-        {/* <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: 'transparent',
-            marginTop: -30,
-            marginBottom:20,
-            padding: 10,
-            width:'50%',
-            border:'solid 2px white',
-            borderRadius:8
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            align="center"
-            style={{
-              color: 'white',
-            }}
-          >
-            Kode reset
-          </Typography>
-          <Typography
-            variant="h4"
-            align="center"
-            style={{
-              color: 'black',
-              fontWeight:'bold',
-              letterSpacing:4
-            }}
-          >
-            10adfr
-          </Typography>
-        </div> */}
+        <PageAppBar appTitle="Login" backHandler={() => this.handleBack()} />
         <Box
           display="flex"
           width="100%"
@@ -254,8 +282,11 @@ class ForgotPassword extends React.Component {
           <NotificationSnackbar
             verticalPos="top"
             open={this.state.openNotification}
-            onClose={() => this.toggleNotification('openNotification', false)}
-            hideDuration={3000}
+            onClose={() => {
+              // this.toggleNotification('openNotification', false)
+              this.props.logErrorMessage(null);
+            }}
+            hideDuration={5000}
             message={this.props.errorMessage}
             notificationType="warning"
           />
@@ -263,36 +294,23 @@ class ForgotPassword extends React.Component {
           <NotificationSnackbar
             verticalPos="top"
             open={this.state.openSuccessNotification}
-            onClose={() => this.props.logSuccessMsg(null)}
-            hideDuration={3000}
+            onClose={() => {
+              this.props.logSuccessMsg(null);
+              // this.handleRouteChanges('/login');
+            }}
+            hideDuration={5000}
             message={this.props.successMessage}
             notificationType="success"
           />
 
-          <PaperCustom
-            elevation={0}
-            style={{ marginLeft: 20, marginRight: 20 }}
-          >
+          <PaperCustom width={90} elevation={0}>
             <form autoComplete="off">
-              <Typography variant="h6" align="left" className={styles.header}>
+              <PaperTitle variant="h6" align="left">
                 {intl.formatMessage(messages.header)}
-              </Typography>
-              <Typography
-                color="inherit"
-                align="left"
-                style={{
-                  fontFamily: typography.fontFamily,
-                  fontSize: 10,
-                  fontWeight: 'normal',
-                  color: color.subtleBlack,
-                }}
-              >
-                {intl.formatMessage(messages.HeaderWelcomeMessage)}
-              </Typography>
-
-              <Grid container style={{ marginTop: 10, marginBottom: 10 }}>
-                dsakdja
-              </Grid>
+              </PaperTitle>
+              <PaperSubtitle color="inherit" align="left">
+                {intl.formatMessage(messages.headerInstruction)}
+              </PaperSubtitle>
 
               <TextField
                 type="text"
@@ -330,23 +348,19 @@ class ForgotPassword extends React.Component {
 
               {this.props.kodeResetDariReduxState && (
                 <React.Fragment>
-                  {JSON.stringify(this.state.kodeReset)}
-                  {JSON.stringify(this.state.error.kodeReset)}
+                  {/*JSON.stringify(this.state.kodeReset)*/}
+                  {/*JSON.stringify(this.state.error.kodeReset)*/}
                   <TextField
                     type="text"
                     label={intl.formatMessage(messages.resetCode)}
                     value={this.state.kodeReset}
-                    inputProps={{ maxLength:6 }}
+                    inputProps={{ maxLength: 6 }}
                     fullWidth
                     variant="outlined"
                     margin="dense"
                     error={!!this.state.error.kodeReset}
                     helperText={this.state.error.kodeReset}
-                    onChange={evt=>{
-                      if(this.state.kodeReset.length === 5){
-                        // console.log(this.state.kodeReset.length)
-                        this.validateKodeReset();
-                      }
+                    onChange={evt => {
                       return this.changeInput('kodeReset', evt.target.value);
                     }}
                   />
@@ -354,9 +368,18 @@ class ForgotPassword extends React.Component {
                   <TextField
                     type="new_password"
                     label={intl.formatMessage(messages.newPassword)}
+                    value={this.state.password}
                     fullWidth
                     variant="outlined"
                     margin="dense"
+                    error={!!this.state.error.password}
+                    helperText={this.state.error.password}
+                    onChange={evt => {
+                      if (this.state.isButtonSimpanTriggered) {
+                        this.validatePassword(evt.target.value);
+                      }
+                      return this.changeInput('password', evt.target.value);
+                    }}
                   />
                 </React.Fragment>
               )}
@@ -367,12 +390,23 @@ class ForgotPassword extends React.Component {
                 color="primary"
                 onClick={this.handleSubmit}
                 title={intl.formatMessage(messages.resetButton)}
+                disabled={this.props.kodeResetDariReduxState}
                 startIcon={
                   this.props.isLoading ? (
                     <CircularProgress size={20} style={{ color: 'white' }} />
                   ) : null
                 }
               />
+
+              {this.props.kodeResetDariReduxState && (
+                <BtnCustom
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  onClick={this.handleSimpanPassword}
+                  title={intl.formatMessage(messages.simpanPasswordButton)}
+                />
+              )}
             </form>
           </PaperCustom>
         </Box>
@@ -399,6 +433,8 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     cekNikDanEmail: (nik, email) => dispatch(cekNikDanEmail(nik, email)),
     logSuccessMsg: message => dispatch(logSuccessMessage(message)),
+    logErrorMessage: message => dispatch(logErrorMessage(message)),
+    simpanPassword: (nik, password) => dispatch(simpanPassword(nik, password)),
   };
 }
 
@@ -412,5 +448,5 @@ export default compose(
   injectReducer({ key: 'forgotPassword', reducer }),
   injectSaga({ key: 'forgotPassword', saga }),
   injectIntl,
-  memo,
+  // memo,
 )(ForgotPassword);

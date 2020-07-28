@@ -17,9 +17,9 @@ export default defineMessages({
     id: `${scope}.appTitle`,
     defaultMessage: 'Amanah Finance Syariah',
   },
-  HeaderWelcomeMessage: {
-    id: `${scope}.HeaderWelcomeMessage`,
-    defaultMessage: 'kami akan mengirimkan kode reset ke alamat email anda',
+  headerInstruction: {
+    id: `${scope}.headerInstruction`,
+    defaultMessage: 'Inputkan NIK dan email yang digunakan pada saat pendaftaran',
   },
   nik: {
     id: `${scope}.nik`,
@@ -33,6 +33,10 @@ export default defineMessages({
     id: `${scope}.resetButton`,
     defaultMessage: 'Reset',
   },
+  simpanPasswordButton: {
+    id: `${scope}.simpanPasswordButton`,
+    defaultMessage: 'Simpan Password Baru',
+  },
   emptyNik: {
     id: `${scope}.emptyNik`,
     defaultMessage: 'NIK tidak boleh kosong',
@@ -40,6 +44,10 @@ export default defineMessages({
   emptyEmail: {
     id: `${scope}.emptyEmail`,
     defaultMessage: 'alamat email tidak boleh kosong',
+  },
+  emptyPassword: {
+    id: `${scope}.emptyPassword`,
+    defaultMessage: 'password tidak boleh kosong',
   },
   wrongEmailFormat: {
     id: `${scope}.wrongEmailFormat`,

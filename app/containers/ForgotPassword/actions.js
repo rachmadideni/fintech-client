@@ -8,11 +8,39 @@ import {
   CEK_NIK_DAN_EMAIL,
   CEK_NIK_DAN_EMAIL_RESULT,
   LOG_SUCCESS_MESSAGE,
+  LOG_ERROR_MESSAGE,
   MINTA_KODE_RESET,
   MINTA_KODE_RESET_SELESAI,
   KIRIM_EMAIL,
-  KIRIM_EMAIL_RESULT
+  KIRIM_EMAIL_RESULT,
+  SIMPAN_PASSWORD,
+  SIMPAN_PASSWORD_SUKSES,
+  SIMPAN_PASSWORD_ERROR
 } from './constants';
+
+export function simpanPassword(nik, password){
+  return {
+    type:SIMPAN_PASSWORD,
+    payload:{
+      nik,
+      password
+    }
+  }
+}
+
+export function simpanPasswordSukses(message){
+  return {
+    type:SIMPAN_PASSWORD_SUKSES,
+    payload:message
+  }
+}
+
+export function simpanPasswordError(error){
+  return {
+    type:SIMPAN_PASSWORD_ERROR,
+    payload: error
+  }
+}
 
 export function kirimEmail(){
   return {
@@ -44,6 +72,15 @@ export function logSuccessMessage(successMessage){
     type:LOG_SUCCESS_MESSAGE,
     payload:{
       successMessage
+    }
+  }
+}
+
+export function logErrorMessage(errorMessage){
+  return {
+    type:LOG_ERROR_MESSAGE,
+    payload:{
+      errorMessage
     }
   }
 }

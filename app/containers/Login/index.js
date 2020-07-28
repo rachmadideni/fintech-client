@@ -334,6 +334,14 @@ class Login extends React.Component {
                 onClick={()=> this.handleRouteChanges('/registrasi')}
                 title={intl.formatMessage(messages.registerButton)}
               />
+              
+              <BtnCustom
+                fullWidth
+                variant="outlined"
+                color="primary"
+                onClick={()=> this.handleRouteChanges('/resetPassword')}
+                title={intl.formatMessage(messages.resetPasswordButton)}
+              />
 
               <NotificationSnackbar
                 verticalPos="bottom"
