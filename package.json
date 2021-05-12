@@ -111,7 +111,7 @@
     "store": "^2.0.12",
     "styled-components": "4.2.0",
     "swipe-js-iso": "^2.1.5",
-    "swiper": "^5.4.3",
+    "swiper": "^6.5.1",
     "validate.js": "^0.13.1",
     "validator": "^10.11.0"
   },
